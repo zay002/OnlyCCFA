@@ -1,0 +1,19 @@
+{
+  "files": ["README.md"],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "zay002",
+      "name": "Zhaoyang Li",
+      "avatar_url": "https://avatars.githubusercontent.com/zay002",
+      "profile": "https://github.com/zay002",
+      "contributions": ["code", "doc", "test", "maintenance"]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "OnlyCCFA",
+  "projectOwner": "zay002",
+  "repoType": "github",
+  "repoHost": "https://github.com"
+}

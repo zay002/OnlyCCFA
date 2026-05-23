@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "OnlyCCFA",
+    "description": "Extension name."
+  },
+  "extDesc": {
+    "message": "显示 CCF 推荐等级，并在 Google 学术搜索结果中默认只显示 CCF-A 论文。",
+    "description": "Extension description."
+  }
+}

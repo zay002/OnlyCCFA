@@ -1,0 +1,235 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2019-2023 WenyanLiu (https://github.com/WenyanLiu/CCFrank4dblp), Kai Chen (https://github.com/FunClip), dozed (https://github.com/dozed)
+ */
+
+const ccf = {};
+
+ccf.VENUE_STOP_WORDS = new Set([
+  "A",
+  "AN",
+  "AND",
+  "AT",
+  "CONFERENCE",
+  "IN",
+  "INTERNATIONAL",
+  "JOURNAL",
+  "MEETING",
+  "OF",
+  "ON",
+  "PROC",
+  "PROCEEDINGS",
+  "SYMPOSIUM",
+  "THE",
+  "TRANSACTIONS",
+  "WORKSHOP",
+]);
+
+ccf.normalizeVenueText = function (text) {
+  return (text || "")
+    .toUpperCase()
+    .replace(/&/g, " AND ")
+    .replace(/[‐‑‒–—]/g, "-")
+    .replace(/[^A-Z0-9+]+/g, " ")
+    .replace(/\b(19|20)\d{2}\b/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+};
+
+ccf.getVenueTokens = function (text) {
+  return ccf
+    .normalizeVenueText(text)
+    .split(" ")
+    .filter(function (token) {
+      return token.length > 1 && !ccf.VENUE_STOP_WORDS.has(token);
+    });
+};
+
+ccf.getVenueAlias = function (normalizedVenue) {
+  const aliases = {
+    "ADVANCES IN NEURAL INFORMATION PROCESSING SYSTEMS": "NeurIPS",
+    "CONFERENCE AND WORKSHOP ON NEURAL INFORMATION PROCESSING SYSTEMS":
+      "NeurIPS",
+    "IEEE CVF CONFERENCE ON COMPUTER VISION AND PATTERN RECOGNITION": "CVPR",
+    "IEEE CONFERENCE ON COMPUTER VISION AND PATTERN RECOGNITION": "CVPR",
+    "ACM SIGKDD INTERNATIONAL CONFERENCE": "SIGKDD",
+    "ACM SIGKDD CONFERENCE": "SIGKDD",
+  };
+
+  for (let alias in aliases) {
+    if (normalizedVenue.includes(alias)) {
+      return aliases[alias];
+    }
+  }
+
+  return null;
+};
+
+ccf.findAbbrInVenue = function (normalizedVenue) {
+  const abbrs = Object.keys(ccf.abbrFull || {}).filter(function (abbr) {
+    return abbr.trim().length > 1;
+  });
+
+  abbrs.sort(function (left, right) {
+    return (
+      ccf.normalizeVenueText(right).length - ccf.normalizeVenueText(left).length
+    );
+  });
+
+  for (let abbr of abbrs) {
+    let normalizedAbbr = ccf.normalizeVenueText(abbr);
+    if (
+      normalizedAbbr.length > 1 &&
+      (" " + normalizedVenue + " ").includes(" " + normalizedAbbr + " ")
+    ) {
+      return abbr;
+    }
+  }
+
+  return null;
+};
+
+ccf.findFullNameInVenue = function (normalizedVenue) {
+  const fullNames = Object.keys(ccf.fullUrl || {});
+
+  for (let fullName of fullNames) {
+    let normalizedFullName = ccf.normalizeVenueText(fullName);
+    if (
+      normalizedFullName.length > 8 &&
+      (normalizedVenue.includes(normalizedFullName) ||
+        normalizedFullName.includes(normalizedVenue))
+    ) {
+      return fullName;
+    }
+  }
+
+  const venueTokens = new Set(ccf.getVenueTokens(normalizedVenue));
+  for (let fullName of fullNames) {
+    let fullNameTokens = ccf.getVenueTokens(fullName);
+    if (fullNameTokens.length < 3) {
+      continue;
+    }
+
+    let matched = fullNameTokens.every(function (token) {
+      return venueTokens.has(token);
+    });
+    if (matched) {
+      return fullName;
+    }
+  }
+
+  return null;
+};
+
+ccf.resolveVenueText = function (venueText) {
+  const normalizedVenue = ccf.normalizeVenueText(venueText);
+  if (normalizedVenue.length == 0) {
+    return null;
+  }
+
+  let alias = ccf.getVenueAlias(normalizedVenue);
+  if (alias && ccf.abbrFull[alias]) {
+    return { refine: alias, type: "abbr" };
+  }
+
+  let abbr = ccf.findAbbrInVenue(normalizedVenue);
+  if (abbr) {
+    return { refine: abbr, type: "abbr" };
+  }
+
+  let fullName = ccf.findFullNameInVenue(normalizedVenue);
+  if (fullName) {
+    return { refine: fullName, type: "publication" };
+  }
+
+  return null;
+};
+
+ccf.getRankInfo = function (refine, type) {
+  let rankInfo = {};
+  rankInfo.ranks = [];
+  rankInfo.info = "";
+  let rank;
+  let url;
+  if (type == "url") {
+    rank = ccf.rankUrl[refine];
+    url = refine;
+  } else if (type == "abbr") {
+    if (refine === undefined) {
+      rank = "none";
+      rankInfo.info += "Not Found\n";
+    } else {
+      let full = ccf.abbrFull[refine];
+      url = ccf.fullUrl[full];
+      if (full === undefined) {
+        refine = refine.substring(0, refine.length - 1);
+        let res = Object.keys(ccf.fullUrl).filter(function (k) {
+          return k.indexOf(refine.toUpperCase()) == 0;
+        });
+        url = res ? ccf.fullUrl[res] : false;
+      }
+      rank = ccf.rankUrl[url];
+    }
+  } else if (type == "meeting") {
+    let full = ccf.abbrFull[refine];
+    url = ccf.fullUrl[full];
+    rank = ccf.rankUrl[url];
+  } else {
+    url = ccf.fullUrl[refine];
+    rank = ccf.rankUrl[url];
+  }
+  if (rank == undefined) {
+    rank = "none";
+    rankInfo.info += "Not Found\n";
+  } else {
+    rankInfo.info += ccf.rankFullName[url];
+    let abbrname = ccf.rankAbbrName[url];
+    if (abbrname != "") {
+      rankInfo.info += " (" + abbrname + ")";
+    }
+    if (rank == "E") {
+      rankInfo.info += ": Expanded\n";
+    } else if (rank == "P") {
+      rankInfo.info += ": Preprint\n";
+    } else {
+      rankInfo.info += ": CCF " + rank + "\n";
+    }
+  }
+  rankInfo.ranks.push(rank);
+  return rankInfo;
+};
+
+ccf.getRankClass = function (ranks) {
+  for (let rank of "ABCEP") {
+    for (let r of ranks) {
+      if (r[0] == rank) {
+        return "ccf-" + rank.toLowerCase();
+      }
+    }
+  }
+  return "ccf-none";
+};
+
+ccf.getRankSpan = function (refine, type) {
+  let rankInfo = ccf.getRankInfo(refine, type);
+  let span = $("<span>")
+    .addClass("ccf-rank")
+    .addClass(ccf.getRankClass(rankInfo.ranks));
+  let firstRank = rankInfo.ranks[0];
+  if (firstRank == "E") {
+    span.text("Expanded");
+  } else if (firstRank == "P") {
+    span.text("Preprint");
+  } else if (firstRank == "none") {
+    span.text("CCF None");
+  } else {
+    span.text("CCF " + rankInfo.ranks.join("/"));
+  }
+  if (rankInfo.info.length != 0) {
+    span
+      .addClass("ccf-tooltip")
+      .append($("<pre>").addClass("ccf-tooltiptext").text(rankInfo.info));
+  }
+  return span;
+};

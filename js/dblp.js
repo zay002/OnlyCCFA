@@ -1,0 +1,91 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2019-2023 WenyanLiu (https://github.com/WenyanLiu/CCFrank4dblp), FlyingFog (https://github.com/FlyingFog)
+ */
+
+const dblp = {};
+
+dblp.rankSpanList = [];
+dblp._pollInterval = null;
+
+dblp.run = function () {
+  let url = window.location.pathname;
+  if (url.includes("/pid/")) {
+    dblp.appendRanks();
+  } else if (url.includes("/db/")) {
+    if (url.includes("/index.html")) {
+      dblp.appendRank("h1");
+    } else {
+      dblp.appendRank("#breadcrumbs > ul > li > span:nth-child(3) > a > span");
+    }
+  } else {
+    let popstateBound = false;
+    dblp._pollInterval = setInterval(function () {
+      let message = $("#completesearch-publs > div > p.waiting");
+      if (message.css("display") == "none") {
+        if (!popstateBound) {
+          $(window).bind("popstate", function () {
+            dblp.appendRanks();
+          });
+          popstateBound = true;
+        }
+        dblp.appendRanks();
+      }
+    }, 700);
+  }
+};
+
+dblp.stop = function () {
+  if (dblp._pollInterval !== null) {
+    clearInterval(dblp._pollInterval);
+    dblp._pollInterval = null;
+  }
+};
+
+dblp.appendRanks = function () {
+  let elements = $("cite > a");
+  const TRAILING_NUMERIC_PATTERN = /[0-9]{1,4}(-[0-9]{1,4})?$/;
+  elements.each(function () {
+    let element = $(this);
+    let source = element.attr("href");
+    if (source.length != 0 && !element.next().hasClass("ccf-rank")) {
+      for (let getRankSpan of dblp.rankSpanList) {
+        let issueName = element.find("span[itemprop=issueNumber]").text();
+        if (issueName.length != 0 && isNaN(issueName)) {
+          var abbrName = ccf.abbrFull[issueName];
+          if (typeof abbrName != "undefined") {
+            element.after(getRankSpan(issueName, "abbr"));
+            continue;
+          }
+        }
+
+        let urls = source.substring(
+          source.indexOf("/db/") + 3,
+          source.lastIndexOf(".html"),
+        );
+        if (TRAILING_NUMERIC_PATTERN.test(urls)) {
+          urls = urls.replace(TRAILING_NUMERIC_PATTERN, "");
+        } else {
+          urls = "";
+        }
+        element.after(getRankSpan(urls, "url"));
+      }
+    }
+  });
+};
+
+dblp.appendRank = function (selector) {
+  let element = $(selector);
+  let headline = window.location.pathname;
+  if (headline.length != 0) {
+    for (let getRankSpan of dblp.rankSpanList) {
+      let urls = headline.substring(
+        headline.indexOf("/db/") + 3,
+        headline.lastIndexOf("/"),
+      );
+      let url = ccf.rankDb[urls];
+      element.after(getRankSpan(url, "url"));
+    }
+  }
+};

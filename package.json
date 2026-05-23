@@ -1,0 +1,29 @@
+{
+  "name": "onlyccfa",
+  "version": "0.1.1",
+  "private": true,
+  "description": "Chrome extension that displays CCF ranks and filters Google Scholar to CCF-A papers by default.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/zay002/OnlyCCFA.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zay002/OnlyCCFA/issues"
+  },
+  "homepage": "https://github.com/zay002/OnlyCCFA#readme",
+  "devDependencies": {
+    "git-format-staged": "^3.1.1",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "prettier": "3.3.3"
+  },
+  "scripts": {
+    "prepare": "husky",
+    "format:check": "prettier --check README.md PrivacyPolicy.md manifest.json package.json package-lock.json _locales/**/*.json css/filter.css js/apiCache.js js/ccf.js js/fetchRank.js js/filter.js js/scholar.js test/**/*.js .github/workflows/*.yaml",
+    "test": "node test/filter.test.js && node test/scholar.test.js && node test/ccf.test.js"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
+  }
+}

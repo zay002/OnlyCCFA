@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "OnlyCCFA",
+    "description": "Extension name."
+  },
+  "extDesc": {
+    "message": "Displays CCF ranks and filters Google Scholar search results to CCF-A papers by default.",
+    "description": "Extension description."
+  }
+}

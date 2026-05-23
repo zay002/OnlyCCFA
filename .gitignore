@@ -1,0 +1,14 @@
+# mac
+.DS_Store
+**/.DS_Store
+.DS_Store?
+
+# PyCharm
+.idea/
+*.iml
+
+# Node.js
+node_modules/
+
+# Claude Code
+CLAUDE.md
