@@ -1,8 +1,7 @@
-<p align="center">
-  <img src="./onlyccfa_logo.png" width="128" height="128" alt="OnlyCCFA logo">
-</p>
-
-<h1 align="center">OnlyCCFA</h1>
+<h1 align="center">
+  <img src="./onlyccfa_logo.png" width="48" height="48" alt="OnlyCCFA logo" valign="middle">
+  OnlyCCFA
+</h1>
 
 <p align="center">
   <a href="https://github.com/zay002/OnlyCCFA">
