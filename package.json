@@ -20,7 +20,8 @@
   },
   "scripts": {
     "prepare": "husky",
-    "format:check": "prettier --check README.md PrivacyPolicy.md manifest.json package.json package-lock.json _locales/**/*.json css/filter.css js/apiCache.js js/ccf.js js/fetchRank.js js/filter.js js/scholar.js test/**/*.js .github/workflows/*.yaml",
+    "format:check": "prettier --check README.md PrivacyPolicy.md manifest.json package.json package-lock.json _locales/**/*.json css/filter.css js/apiCache.js js/ccf.js js/fetchRank.js js/filter.js js/scholar.js scripts/**/*.js test/**/*.js .github/workflows/*.yaml",
+    "package": "node scripts/package-release.js",
     "test": "node test/filter.test.js && node test/scholar.test.js && node test/ccf.test.js"
   },
   "lint-staged": {

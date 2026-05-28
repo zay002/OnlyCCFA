@@ -9,6 +9,7 @@
 
 # Node.js
 node_modules/
+dist/
 
 # Claude Code
 CLAUDE.md
