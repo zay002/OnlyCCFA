@@ -1,0 +1,18 @@
+OnlyCCFA helps researchers, students, and engineers focus on higher-ranked academic papers faster.
+
+It displays China Computer Federation (CCF) recommended ranks for international conferences and journals directly on academic search result pages, including Google Scholar, dblp, Connected Papers, Semantic Scholar, and Web of Science.
+
+Unlike rank-label-only extensions, OnlyCCFA focuses on filtering. On Google Scholar, it filters results to CCF-A papers by default, while still allowing you to switch between ALL, CCF-A, CCF-B, and CCF-C results from the on-page control panel.
+
+Key features:
+- Display CCF recommended ranks on supported academic websites
+- Filter Google Scholar results to CCF-A papers by default
+- Switch between ALL, CCF-A, CCF-B, and CCF-C results
+- Save your preferred default Google Scholar filter locally
+- Choose whether unmatched papers should remain visible
+- See how many results are shown, hidden, or unmatched
+- Use local venue matching before falling back to public DBLP metadata lookup
+
+OnlyCCFA is designed for academic search workflows where you want ranking-aware filtering, not just visual labels.
+
+The extension does not collect personal information, does not sell data, and does not upload browsing history to the developer's server. Filter preferences and DBLP lookup cache are stored locally in your browser.

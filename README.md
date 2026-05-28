@@ -67,6 +67,30 @@ The tests cover:
 - Google Scholar venue extraction.
 - Local venue-to-CCF matching for common CCF-A venues.
 
+## Release
+
+Prepare a release package and Chrome Web Store listing assets:
+
+```bash
+npm run release:prepare
+```
+
+This creates:
+
+- `dist/OnlyCCFA-<version>.zip`
+- `dist/store-listing/`
+
+Optional publishing commands:
+
+```bash
+npm run release:github
+npm run release:chrome
+```
+
+`release:github` requires `GITHUB_TOKEN`. `release:chrome` requires `CWS_PUBLISHER_ID`, `CWS_CLIENT_ID`, `CWS_CLIENT_SECRET` and `CWS_REFRESH_TOKEN`.
+
+For local publishing, copy `.env.example` to `.env.local` and fill in the secrets. `.env.local` is ignored by Git.
+
 ## Credits
 
 OnlyCCFA is currently maintained by [Zhaoyang Li](https://github.com/zay002).

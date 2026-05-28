@@ -10,6 +10,8 @@
 # Node.js
 node_modules/
 dist/
+.env
+.env.local
 
 # Claude Code
 CLAUDE.md
