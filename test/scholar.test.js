@@ -3,7 +3,21 @@ const fs = require("fs");
 const vm = require("vm");
 
 const source = fs.readFileSync("js/scholar.js", "utf8");
-const scholar = vm.runInNewContext(`${source}; scholar;`, { console, URL });
+const scholar = vm.runInNewContext(`${source}; scholar;`, {
+  console,
+  URL,
+  URLSearchParams,
+});
+
+function fakeLink(href, textContent = "") {
+  return {
+    href,
+    textContent,
+    getAttribute(name) {
+      return name === "href" ? href : "";
+    },
+  };
+}
 
 assert.strictEqual(
   scholar.extractVenue(
@@ -109,3 +123,95 @@ assert.strictEqual(
   }),
   "https://scholar.google.com/scholar?q=info%3Aabc123%3Ascholar.google.com%2F&output=cite&scirp=0",
 );
+
+assert.strictEqual(
+  scholar.getDirectBibtexUrl({
+    querySelectorAll(selector) {
+      assert.strictEqual(selector, "a");
+      return [
+        fakeLink("/scholar?q=info:abc&output=cite", "Cite"),
+        fakeLink(
+          "/scholar.bib?q=info:abc&output=citation",
+          "Import into BibTeX",
+        ),
+      ];
+    },
+  }),
+  "https://scholar.google.com/scholar.bib?q=info:abc&output=citation",
+);
+
+assert.strictEqual(
+  scholar.extractDoiFromText("Published as doi:10.1109/TRO.2024.1234567."),
+  "10.1109/TRO.2024.1234567",
+);
+
+assert.strictEqual(
+  scholar.buildCrossrefBibtexUrl("10.1109/TRO.2024.1234567"),
+  "https://api.crossref.org/works/10.1109%2FTRO.2024.1234567/transform/application/x-bibtex",
+);
+
+assert.strictEqual(
+  scholar.extractArxivIdFromText("arXiv preprint arXiv:2103.02690, 2021"),
+  "2103.02690",
+);
+
+assert.strictEqual(
+  scholar.extractArxivIdFromText("https://arxiv.org/abs/2103.02690v2"),
+  "2103.02690v2",
+);
+
+assert.strictEqual(
+  scholar.buildArxivApiUrl("2103.02690"),
+  "https://export.arxiv.org/api/query?id_list=2103.02690",
+);
+
+assert.strictEqual(scholar.isAcceptableYearMatch("2020", "2021"), true);
+assert.strictEqual(scholar.isAcceptableYearMatch("2020", "2024"), false);
+
+assert.strictEqual(
+  scholar.isCrossrefTitleMatch(
+    "Learning force-aware manipulation for contact-rich robotics",
+    "Learning force aware manipulation for contact rich robotics",
+  ),
+  true,
+);
+
+assert.strictEqual(
+  scholar.isCrossrefTitleMatch(
+    "Learning force-aware manipulation for contact-rich robotics",
+    "A survey of wireless communications",
+  ),
+  false,
+);
+
+const scholarSettingsUrl = scholar.buildScholarBibtexSettingsUrl(
+  `
+    <form id="gs_bdy_frm" action="/scholar_setprefs" method="GET">
+      <input type="hidden" name="scisig" value="abc123">
+      <input type="radio" name="scis" value="no" checked>
+      <input type="hidden" name="scisf" value="0">
+      <select name="hl"><option value="zh-CN" selected>中文</option></select>
+    </form>
+  `,
+  "https://scholar.google.com/scholar_settings?hl=zh-CN",
+);
+assert.strictEqual(
+  scholarSettingsUrl,
+  "https://scholar.google.com/scholar_setprefs?scisig=abc123&scis=yes&scisf=4&hl=zh-CN",
+);
+
+const webpageItem = scholar.buildZoteroWebItem(
+  {
+    title: "Learning force-aware manipulation",
+    url: "https://example.org/paper",
+    pdfUrl: "https://example.org/paper.pdf",
+  },
+  "Robotics",
+);
+assert.strictEqual(webpageItem.itemType, "webpage");
+assert.strictEqual(webpageItem.url, "https://example.org/paper");
+assert.strictEqual(
+  webpageItem.attachments[0].url,
+  "https://example.org/paper.pdf",
+);
+assert.ok(webpageItem.tags.some((tag) => tag.tag === "Robotics"));

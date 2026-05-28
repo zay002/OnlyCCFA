@@ -117,6 +117,9 @@ const filter = {
           <button type="button" data-action="export-visible">${t("exportVisible")}</button>
         </div>
         <button type="button" data-action="export-pool">${t("exportPool")}</button>
+        <button type="button" data-action="enable-bibtex-links">${t(
+          "enableScholarBibtex",
+        )}</button>
         <label class="ccf-filter-row">
           <span>${t("zoteroCategory")}</span>
           <input type="text" data-setting="zoteroCategory" value="${this.escapeHtml(
@@ -208,6 +211,8 @@ const filter = {
       deepCount.value = String(this.settings.deepTargetCount);
     }
     document.body.appendChild(filterDiv);
+    this.applyPanelPosition(filterDiv);
+    this.initPanelDrag(filterDiv);
   },
 
   setupDynamicContentHandler() {
@@ -437,6 +442,7 @@ const filter = {
       signalMode: "any",
       deepTargetCount: 60,
       zoteroCategory: "",
+      panelPosition: null,
     };
 
     try {
@@ -474,6 +480,9 @@ const filter = {
           typeof parsed.zoteroCategory === "string"
             ? parsed.zoteroCategory
             : defaults.zoteroCategory,
+        panelPosition: parsed.panelPosition
+          ? this.clampPanelPosition(parsed.panelPosition)
+          : defaults.panelPosition,
       };
     } catch (error) {
       return defaults;
@@ -513,11 +522,111 @@ const filter = {
             typeof settings.zoteroCategory === "string"
               ? settings.zoteroCategory
               : "",
+          panelPosition: settings.panelPosition
+            ? this.clampPanelPosition(settings.panelPosition)
+            : null,
         }),
       );
     } catch (error) {
       // Keep filtering usable even if a site blocks localStorage.
     }
+  },
+
+  clampPanelPosition(
+    position,
+    viewport = {
+      width: typeof window === "undefined" ? 1280 : window.innerWidth,
+      height: typeof window === "undefined" ? 800 : window.innerHeight,
+    },
+    size = { width: 336, height: 420 },
+  ) {
+    const margin = 8;
+    const maxLeft = Math.max(margin, viewport.width - size.width - margin);
+    const maxTop = Math.max(margin, viewport.height - size.height - margin);
+    const left = Math.min(
+      Math.max(Number(position?.left) || margin, margin),
+      maxLeft,
+    );
+    const top = Math.min(
+      Math.max(Number(position?.top) || margin, margin),
+      maxTop,
+    );
+
+    return { left, top };
+  },
+
+  applyPanelPosition(panel) {
+    if (!panel || !this.settings?.panelPosition) {
+      return;
+    }
+
+    const rect = panel.getBoundingClientRect?.() || {
+      width: panel.offsetWidth || 336,
+      height: panel.offsetHeight || 420,
+    };
+    const position = this.clampPanelPosition(
+      this.settings.panelPosition,
+      { width: window.innerWidth, height: window.innerHeight },
+      rect,
+    );
+
+    panel.style.left = `${position.left}px`;
+    panel.style.top = `${position.top}px`;
+    panel.style.right = "auto";
+  },
+
+  initPanelDrag(panel) {
+    const header = panel?.querySelector?.(".ccf-filter-header");
+    if (!header) {
+      return;
+    }
+
+    const interactiveSelector = "button,input,select,textarea,a,label";
+    header.addEventListener("pointerdown", (event) => {
+      if (event.target.closest(interactiveSelector)) {
+        return;
+      }
+
+      const rect = panel.getBoundingClientRect();
+      const start = {
+        x: event.clientX,
+        y: event.clientY,
+        left: rect.left,
+        top: rect.top,
+      };
+
+      const movePanel = (moveEvent) => {
+        const nextPosition = this.clampPanelPosition(
+          {
+            left: start.left + moveEvent.clientX - start.x,
+            top: start.top + moveEvent.clientY - start.y,
+          },
+          { width: window.innerWidth, height: window.innerHeight },
+          { width: rect.width, height: rect.height },
+        );
+        panel.style.left = `${nextPosition.left}px`;
+        panel.style.top = `${nextPosition.top}px`;
+        panel.style.right = "auto";
+      };
+
+      const stopDrag = () => {
+        document.removeEventListener("pointermove", movePanel);
+        document.removeEventListener("pointerup", stopDrag);
+        this.settings.panelPosition = this.clampPanelPosition(
+          {
+            left: Number.parseFloat(panel.style.left),
+            top: Number.parseFloat(panel.style.top),
+          },
+          { width: window.innerWidth, height: window.innerHeight },
+          { width: rect.width, height: rect.height },
+        );
+        this.saveSettings(this.settings);
+      };
+
+      panel.setPointerCapture?.(event.pointerId);
+      document.addEventListener("pointermove", movePanel);
+      document.addEventListener("pointerup", stopDrag, { once: true });
+    });
   },
 
   setStatus(selector, message) {
@@ -615,6 +724,16 @@ const filter = {
       if (e.target.dataset.action === "zotero-import") {
         if (typeof scholar !== "undefined") {
           scholar.importToZotero(this.settings.zoteroCategory);
+        }
+        return;
+      }
+
+      if (e.target.dataset.action === "enable-bibtex-links") {
+        if (
+          typeof scholar !== "undefined" &&
+          scholar.enableScholarBibtexLinks
+        ) {
+          scholar.enableScholarBibtexLinks();
         }
         return;
       }

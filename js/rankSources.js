@@ -53,42 +53,105 @@ rankSources.canReverseMatch = function (text) {
   return tokens.length > 1 && text.length >= 8;
 };
 
-rankSources.matchRecord = function (venueText, record) {
+rankSources.getNameMatchScore = function (venueText, name) {
   const normalizedVenue = rankSources.normalizeText(venueText);
   if (!normalizedVenue) {
-    return false;
+    return 0;
   }
 
-  return rankSources.getRecordNames(record).some(function (name) {
-    const normalizedName = rankSources.normalizeText(name);
-    if (!normalizedName) {
-      return false;
-    }
+  const normalizedName = rankSources.normalizeText(name);
+  if (!normalizedName) {
+    return 0;
+  }
 
-    if (rankSources.isSingleWordTitle(name)) {
-      return normalizedVenue === normalizedName;
-    }
+  if (normalizedVenue === normalizedName) {
+    return 100000 + normalizedName.length;
+  }
 
-    return (
-      normalizedVenue === normalizedName ||
-      (rankSources.containsNormalizedPhrase(normalizedVenue, normalizedName) &&
-        (!rankSources.isShortAcronymName(name) ||
-          rankSources.hasOriginalAcronymToken(venueText, name))) ||
-      (rankSources.canReverseMatch(normalizedVenue) &&
-        rankSources.containsNormalizedPhrase(normalizedName, normalizedVenue))
-    );
-  });
+  if (rankSources.isSingleWordTitle(name)) {
+    return 0;
+  }
+
+  if (
+    rankSources.containsNormalizedPhrase(normalizedVenue, normalizedName) &&
+    (!rankSources.isShortAcronymName(name) ||
+      rankSources.hasOriginalAcronymToken(venueText, name))
+  ) {
+    return 50000 + normalizedName.length;
+  }
+
+  return 0;
 };
 
-rankSources.addTags = function (tags, seen, newTags) {
-  (newTags || []).forEach(function (tag) {
-    const key = `${tag.source}:${tag.value || ""}`;
-    if (seen.has(key)) {
-      return;
-    }
+rankSources.getRecordMatch = function (venueText, record) {
+  return rankSources.getRecordNames(record).reduce(
+    (best, name) => {
+      const score = rankSources.getNameMatchScore(venueText, name);
+      if (score > best.score) {
+        return { score, matchedTitle: record.title, matchedName: name };
+      }
+      return best;
+    },
+    { score: 0, matchedTitle: "", matchedName: "" },
+  );
+};
 
-    seen.add(key);
-    tags.push(tag);
+rankSources.matchRecord = function (venueText, record) {
+  return rankSources.getRecordMatch(venueText, record).score > 0;
+};
+
+rankSources.getExclusiveGroup = function (source) {
+  if (["swjtuJournal", "swjtuScai"].includes(source)) {
+    return "swjtuSchool";
+  }
+
+  return source;
+};
+
+rankSources.getTagPriority = function (tag) {
+  if (tag.source === "swjtuJournal") {
+    return { T类: 400, A类: 300, B类: 200 }[tag.value] || 100;
+  }
+
+  if (tag.source === "swjtuScai") {
+    return 100;
+  }
+
+  return 0;
+};
+
+rankSources.shouldReplaceCandidate = function (existing, candidate) {
+  if (!existing) {
+    return true;
+  }
+
+  if (candidate.matchScore !== existing.matchScore) {
+    return candidate.matchScore > existing.matchScore;
+  }
+
+  const candidatePriority = rankSources.getTagPriority(candidate);
+  const existingPriority = rankSources.getTagPriority(existing);
+  if (candidatePriority !== existingPriority) {
+    return candidatePriority > existingPriority;
+  }
+
+  return false;
+};
+
+rankSources.addTagCandidates = function (candidates, newTags, match) {
+  (newTags || []).forEach(function (tag) {
+    const group = rankSources.getExclusiveGroup(tag.source);
+    const candidate = {
+      ...tag,
+      matchedTitle: match.matchedTitle,
+      matchedName: match.matchedName,
+      matchScore: match.score,
+    };
+    const existing = candidates.get(group);
+
+    if (rankSources.shouldReplaceCandidate(existing, candidate)) {
+      candidates.set(group, candidate);
+    }
   });
 };
 
@@ -106,20 +169,20 @@ rankSources.getSources = function () {
 };
 
 rankSources.resolveVenueText = function (venueText) {
-  const seen = new Set();
-  const tags = [];
+  const candidates = new Map();
 
   rankSources.getDatabases().forEach(function (db) {
     db.records.forEach(function (record) {
-      if (!rankSources.matchRecord(venueText, record)) {
+      const match = rankSources.getRecordMatch(venueText, record);
+      if (match.score === 0) {
         return;
       }
 
-      rankSources.addTags(tags, seen, record.tags);
+      rankSources.addTagCandidates(candidates, record.tags, match);
     });
   });
 
-  return tags;
+  return Array.from(candidates.values());
 };
 
 rankSources.getTagText = function (tag) {
@@ -142,6 +205,8 @@ rankSources.getTagSpan = function (tag) {
     .addClass(source.className || "rank-source-default")
     .attr("data-rank-source", tag.source)
     .attr("data-rank-value", tag.value || "")
+    .attr("data-rank-title", tag.matchedTitle || "")
+    .attr("title", tag.matchedTitle || "")
     .text(rankSources.getTagText(tag));
 };
 
@@ -155,5 +220,10 @@ rankSources.appendVenueTags = function (node, venueText) {
     $(node).after(rankSources.getTagSpan(tag));
   });
 
-  return true;
+  return {
+    matched: true,
+    tags,
+    displayName:
+      tags.find((tag) => tag.matchedTitle)?.matchedTitle || venueText,
+  };
 };

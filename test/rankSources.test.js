@@ -96,6 +96,26 @@ assert.ok(
     (tag) => tag.source === "swjtuScai" && tag.value === "C类",
   ),
 );
+assert.ok(
+  computerJournalTags.some((tag) => tag.matchedTitle === "Computer Journal"),
+);
+
+const duplicatedSchoolTags = rankSources
+  .resolveVenueText("系统工程理论与实践")
+  .filter((tag) => ["swjtuJournal", "swjtuScai"].includes(tag.source));
+assert.strictEqual(
+  JSON.stringify(
+    duplicatedSchoolTags.map((tag) => `${tag.source}:${tag.value}`),
+  ),
+  JSON.stringify(["swjtuJournal:A类"]),
+);
+
+assert.strictEqual(
+  rankSources
+    .resolveVenueText("IEEE Transactions")
+    .some((tag) => tag.source.startsWith("swjtu")),
+  false,
+);
 
 const swjtuJournalValues = new Set();
 swjtuData.records.forEach((record) => {

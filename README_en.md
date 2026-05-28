@@ -27,8 +27,8 @@ The goal is simple: help students and researchers in computer science, robotics,
 - Adds configurable deep filtering: scan `20 / 40 / 60 / 80 / 100` Google Scholar results per batch, continue to the next batch, or clear the local result pool.
 - Adds a redesigned bilingual side panel with local settings for language, default rank, deep-filter count and filter preferences.
 - Combines SCI, JCR Q1/Q2, CAS 1/2/TOP, EI, Chinese core journals, SWJTU / SWJTU CS C-level / transportation lists and field TOP filters with `any` or `all` matching.
-- Exports single papers, selected papers, visible papers or the whole deep-filter pool to BibTeX. BibTeX is fetched from Google Scholar's native citation output; if it cannot be fetched, export stops instead of fabricating citation fields from result snippets.
-- Adds an experimental local Zotero import path based on the fetched Google Scholar BibTeX, not OnlyCCFA-invented metadata.
+- Exports single papers, selected papers, visible papers or the whole deep-filter pool to BibTeX. BibTeX uses Google Scholar's native import links first, then falls back only to DOI, arXiv ID or strict-title Crossref/arXiv matches, never fabricated fields from result snippets.
+- Adds an experimental local Zotero import path that sends webpage/PDF leads to Zotero Connector instead of pretending incomplete search snippets are full citations.
 - Saves the default Google Scholar filter and lets you choose whether unmatched results should stay visible.
 - Shows how many results are visible, hidden and unmatched after filtering.
 - Adds local Google Scholar venue matching before falling back to DBLP lookup, improving matches for venues such as NeurIPS, CVPR, SIGMOD, AAAI and ICLR.
@@ -76,7 +76,7 @@ The tests cover:
 - Google Scholar default CCF-A filtering behavior.
 - Google Scholar deep-filter pagination URLs, start offsets, result de-duplication and batch continuation.
 - Multi-source signal filtering.
-- Google Scholar BibTeX fetching, BibTeX parsing and Zotero item conversion.
+- Google Scholar / Crossref / arXiv BibTeX fetching, Google Scholar BibTeX-link settings, BibTeX parsing and Zotero webpage/PDF item conversion.
 - Saved filter preferences and unmatched-result handling.
 - Filter result statistics.
 - Google Scholar venue extraction.

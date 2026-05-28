@@ -102,3 +102,14 @@ storage["onlyccfa:filter:scholar"] = JSON.stringify({
 const invalidSettings = filter.loadSettings(scholarConfig);
 assert.strictEqual(invalidSettings.defaultFilter, "A");
 assert.strictEqual(invalidSettings.hideUnranked, true);
+
+assert.strictEqual(
+  JSON.stringify(
+    filter.clampPanelPosition(
+      { left: -40, top: 900 },
+      { width: 1280, height: 800 },
+      { width: 336, height: 420 },
+    ),
+  ),
+  JSON.stringify({ left: 8, top: 372 }),
+);

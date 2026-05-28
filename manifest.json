@@ -1,7 +1,7 @@
 {
   "name": "__MSG_extName__",
   "short_name": "OnlyCCFA",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "__MSG_extDesc__",
   "manifest_version": 3,
   "default_locale": "en",
@@ -20,6 +20,9 @@
       "48": "icon/48x48.png",
       "128": "icon/128x128.png"
     }
+  },
+  "background": {
+    "service_worker": "js/background.js"
   },
   "content_scripts": [
     {
@@ -139,6 +142,9 @@
   ],
   "host_permissions": [
     "https://dblp.org/*",
+    "https://api.crossref.org/*",
+    "https://export.arxiv.org/*",
+    "https://scholar.googleusercontent.com/*",
     "http://127.0.0.1:23119/*",
     "http://localhost:23119/*"
   ]
