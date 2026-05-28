@@ -9,6 +9,27 @@ const filter = {
   siteConfig: null,
   settings: null,
   validFilters: ["ALL", "A", "B", "C"],
+  validLanguages: ["zh", "en"],
+  validSignalModes: ["any", "all"],
+  deepCountOptions: [20, 40, 60, 80, 100],
+  signalOptions: [
+    { id: "sci", zh: "SCI", en: "SCI" },
+    { id: "jcrQ1", zh: "JCR Q1", en: "JCR Q1" },
+    { id: "jcrQ2", zh: "JCR Q2", en: "JCR Q2" },
+    { id: "cas1", zh: "中科院 1区", en: "CAS Q1" },
+    { id: "cas2", zh: "中科院 2区", en: "CAS Q2" },
+    { id: "casTop", zh: "中科院 TOP", en: "CAS TOP" },
+    { id: "ei", zh: "EI", en: "EI" },
+    { id: "cnCore", zh: "中文核心", en: "CN Core" },
+    { id: "roboticsTop", zh: "机器人TOP", en: "Robotics TOP" },
+    { id: "commTop", zh: "通信TOP", en: "Comm TOP" },
+    { id: "eeTop", zh: "电气TOP", en: "EE TOP" },
+    { id: "controlTop", zh: "控制TOP", en: "Control TOP" },
+    { id: "mechTop", zh: "机械TOP", en: "Mech TOP" },
+    { id: "swjtuJournal", zh: "西南交大", en: "SWJTU" },
+    { id: "swjtuScai", zh: "交大SCAI", en: "SWJTU SCAI" },
+    { id: "swjtuTransport", zh: "交大交通", en: "SWJTU Transport" },
+  ],
 
   init() {
     this.siteConfig = this.getSiteConfig(
@@ -63,17 +84,62 @@ const filter = {
     const filterDiv = document.createElement("div");
     filterDiv.className = "ccf-filter";
     filterDiv.dataset.site = this.siteConfig.site;
+    const language = this.settings.language;
+    const t = (key, params) => onlyccfaI18n.t(language, key, params);
     const deepSearchControls =
       this.siteConfig.site === "scholar"
         ? `
       <div class="ccf-filter-deep">
-        <button type="button" data-action="deep-search" title="加载约前 55 条 Google 学术结果，合并后应用当前筛选。">深筛 55</button>
+        <div class="ccf-filter-section-title">${t("deepSection")}</div>
+        <label class="ccf-filter-row">
+          <span>${t("batchSize")}</span>
+          <select data-setting="deepTargetCount">
+            ${this.deepCountOptions
+              .map((count) => `<option value="${count}">${count}</option>`)
+              .join("")}
+          </select>
+        </label>
+        <div class="ccf-filter-action-row">
+          <button type="button" data-action="deep-search">${t("deepSearch")}</button>
+          <button type="button" data-action="clear-deep">${t("clearDeep")}</button>
+        </div>
         <div class="ccf-filter-deep-status" aria-live="polite"></div>
+      </div>
+    `
+        : "";
+    const exportControls =
+      this.siteConfig.site === "scholar"
+        ? `
+      <div class="ccf-filter-export">
+        <div class="ccf-filter-section-title">${t("exportSection")}</div>
+        <div class="ccf-filter-action-row">
+          <button type="button" data-action="export-selected">${t("exportSelected")}</button>
+          <button type="button" data-action="export-visible">${t("exportVisible")}</button>
+        </div>
+        <button type="button" data-action="export-pool">${t("exportPool")}</button>
+        <label class="ccf-filter-row">
+          <span>${t("zoteroCategory")}</span>
+          <input type="text" data-setting="zoteroCategory" value="${this.escapeHtml(
+            this.settings.zoteroCategory,
+          )}">
+        </label>
+        <button type="button" data-action="zotero-import">${t("zoteroImport")}</button>
+        <div class="ccf-filter-export-status" aria-live="polite"></div>
       </div>
     `
         : "";
 
     filterDiv.innerHTML = `
+      <div class="ccf-filter-header">
+        <div>
+          <div class="ccf-filter-title">${t("title")}</div>
+          <div class="ccf-filter-subtitle">${t("subtitle")}</div>
+        </div>
+        <button type="button" class="ccf-filter-language" data-action="toggle-language">${t(
+          "language",
+        )}</button>
+      </div>
+      <div class="ccf-filter-section-title">${t("ccfSection")}</div>
       <div class="ccf-filter-ranks">
         <button data-rank="ALL">ALL</button>
         <button data-rank="A">CCF A</button>
@@ -81,8 +147,8 @@ const filter = {
         <button data-rank="C">CCF C</button>
       </div>
       <div class="ccf-filter-settings">
-        <label>
-          <span>Default</span>
+        <label class="ccf-filter-row">
+          <span>${t("defaultFilter")}</span>
           <select data-setting="defaultFilter">
             <option value="ALL">ALL</option>
             <option value="A">CCF A</option>
@@ -90,13 +156,36 @@ const filter = {
             <option value="C">CCF C</option>
           </select>
         </label>
-        <label>
+        <label class="ccf-filter-check">
           <input type="checkbox" data-setting="hideUnranked">
-          <span>Hide unmatched</span>
+          <span>${t("hideUnranked")}</span>
+        </label>
+      </div>
+      <div class="ccf-filter-sources">
+        <div class="ccf-filter-section-title">${t("sourceSection")}</div>
+        <div class="ccf-filter-signal-grid">
+          ${this.signalOptions
+            .map(
+              (option) => `
+            <label class="ccf-filter-chip">
+              <input type="checkbox" data-signal="${option.id}">
+              <span>${this.escapeHtml(option[language] || option.zh)}</span>
+            </label>
+          `,
+            )
+            .join("")}
+        </div>
+        <label class="ccf-filter-row">
+          <span>${t("sourceMode")}</span>
+          <select data-setting="signalMode">
+            <option value="any">${t("any")}</option>
+            <option value="all">${t("all")}</option>
+          </select>
         </label>
       </div>
       <div class="ccf-filter-stats" aria-live="polite"></div>
       ${deepSearchControls}
+      ${exportControls}
     `;
     filterDiv
       .querySelector(`[data-rank="${this.currentFilter}"]`)
@@ -105,6 +194,19 @@ const filter = {
       this.settings.defaultFilter;
     filterDiv.querySelector('[data-setting="hideUnranked"]').checked =
       this.settings.hideUnranked;
+    filterDiv.querySelector('[data-setting="signalMode"]').value =
+      this.settings.signalMode;
+    filterDiv.querySelectorAll("[data-signal]").forEach((input) => {
+      input.checked = this.settings.selectedSignals.includes(
+        input.dataset.signal,
+      );
+    });
+    const deepCount = filterDiv.querySelector(
+      '[data-setting="deepTargetCount"]',
+    );
+    if (deepCount) {
+      deepCount.value = String(this.settings.deepTargetCount);
+    }
     document.body.appendChild(filterDiv);
   },
 
@@ -154,25 +256,53 @@ const filter = {
     entries.forEach((entry) => {
       const shouldShow = this.shouldShowEntry(
         entry,
-        this.currentFilter,
-        this.siteConfig,
+        this.getActiveFilterState(),
       );
       entry.style.display = shouldShow ? "" : "none";
     });
     this.updateStats(this.calculateStats(entries));
   },
 
-  shouldShowEntry(entry, currentFilter, siteConfig) {
+  getActiveFilterState() {
+    return {
+      currentFilter: this.currentFilter,
+      siteConfig: this.siteConfig,
+      selectedSignals: this.settings?.selectedSignals || [],
+      signalMode: this.settings?.signalMode || "any",
+    };
+  },
+
+  shouldShowEntry(entry, stateOrFilter, maybeSiteConfig) {
+    const state =
+      typeof stateOrFilter === "object"
+        ? stateOrFilter
+        : {
+            currentFilter: stateOrFilter,
+            siteConfig: maybeSiteConfig,
+            selectedSignals: [],
+            signalMode: "any",
+          };
+    const currentFilter = state.currentFilter;
+    const siteConfig = state.siteConfig;
+    const selectedSignals = state.selectedSignals || [];
+    const signalMode = state.signalMode || "any";
+
     if (currentFilter === "ALL") {
-      return true;
+      return this.matchesSelectedSignals(entry, selectedSignals, signalMode);
     }
 
     const ranks = this.getEntryRanks(entry);
     if (ranks.length === 0) {
-      return !siteConfig.hideUnranked;
+      return (
+        !siteConfig.hideUnranked &&
+        this.matchesSelectedSignals(entry, selectedSignals, signalMode)
+      );
     }
 
-    return ranks.includes(currentFilter);
+    return (
+      ranks.includes(currentFilter) &&
+      this.matchesSelectedSignals(entry, selectedSignals, signalMode)
+    );
   },
 
   getEntryRanks(entry) {
@@ -192,6 +322,74 @@ const filter = {
       },
       [],
     );
+  },
+
+  getEntrySignalIds(entry) {
+    const signals = new Set();
+
+    this.getEntryRanks(entry).forEach((rank) => {
+      signals.add(`ccf${rank}`);
+    });
+
+    Array.from(entry.querySelectorAll(".rank-source")).forEach((node) => {
+      const source = node.dataset?.rankSource || "";
+      const value = node.dataset?.rankValue || "";
+      const text = node.textContent || "";
+
+      if (source === "sci" || text === "SCI") {
+        signals.add("sci");
+      }
+      if (source === "jcr" && value === "Q1") {
+        signals.add("jcrQ1");
+      }
+      if (source === "jcr" && value === "Q2") {
+        signals.add("jcrQ2");
+      }
+      if (source === "casTop" || text.includes("中科院TOP")) {
+        signals.add("casTop");
+      }
+      if (text.includes("中科院") && text.includes("1区")) {
+        signals.add("cas1");
+      }
+      if (text.includes("中科院") && text.includes("2区")) {
+        signals.add("cas2");
+      }
+      if (source === "ei" || text === "EI") {
+        signals.add("ei");
+      }
+      if (["pkuCore", "cscd", "cssci"].includes(source)) {
+        signals.add("cnCore");
+      }
+      [
+        "roboticsTop",
+        "commTop",
+        "eeTop",
+        "controlTop",
+        "mechTop",
+        "swjtuJournal",
+        "swjtuScai",
+        "swjtuTransport",
+      ].forEach((id) => {
+        if (source === id) {
+          signals.add(id);
+        }
+      });
+    });
+
+    return Array.from(signals);
+  },
+
+  matchesSelectedSignals(entry, selectedSignals, signalMode) {
+    if (!selectedSignals || selectedSignals.length === 0) {
+      return true;
+    }
+
+    const signals = new Set(this.getEntrySignalIds(entry));
+    if (signalMode === "all") {
+      return selectedSignals.every((signal) => signals.has(signal));
+    }
+
+    return selectedSignals.some((signal) => signals.has(signal));
   },
 
   calculateStats(entries) {
@@ -222,7 +420,8 @@ const filter = {
       return;
     }
 
-    statsElement.textContent = `${stats.shown}/${stats.total} shown | ${stats.hidden} hidden | ${stats.unmatched} unmatched`;
+    const language = this.settings?.language || "zh";
+    statsElement.textContent = onlyccfaI18n.t(language, "stats", stats);
   },
 
   getStorageKey(siteConfig) {
@@ -233,6 +432,11 @@ const filter = {
     const defaults = {
       defaultFilter: siteConfig.defaultFilter,
       hideUnranked: siteConfig.hideUnranked,
+      language: "zh",
+      selectedSignals: [],
+      signalMode: "any",
+      deepTargetCount: 60,
+      zoteroCategory: "",
     };
 
     try {
@@ -250,6 +454,26 @@ const filter = {
           typeof parsed.hideUnranked === "boolean"
             ? parsed.hideUnranked
             : defaults.hideUnranked,
+        language: this.validLanguages.includes(parsed.language)
+          ? parsed.language
+          : defaults.language,
+        selectedSignals: Array.isArray(parsed.selectedSignals)
+          ? parsed.selectedSignals.filter((signal) =>
+              this.signalOptions.some((option) => option.id === signal),
+            )
+          : defaults.selectedSignals,
+        signalMode: this.validSignalModes.includes(parsed.signalMode)
+          ? parsed.signalMode
+          : defaults.signalMode,
+        deepTargetCount: this.deepCountOptions.includes(
+          Number(parsed.deepTargetCount),
+        )
+          ? Number(parsed.deepTargetCount)
+          : defaults.deepTargetCount,
+        zoteroCategory:
+          typeof parsed.zoteroCategory === "string"
+            ? parsed.zoteroCategory
+            : defaults.zoteroCategory,
       };
     } catch (error) {
       return defaults;
@@ -269,11 +493,56 @@ const filter = {
             ? settings.defaultFilter
             : this.siteConfig.defaultFilter,
           hideUnranked: Boolean(settings.hideUnranked),
+          language: this.validLanguages.includes(settings.language)
+            ? settings.language
+            : "zh",
+          selectedSignals: Array.isArray(settings.selectedSignals)
+            ? settings.selectedSignals.filter((signal) =>
+                this.signalOptions.some((option) => option.id === signal),
+              )
+            : [],
+          signalMode: this.validSignalModes.includes(settings.signalMode)
+            ? settings.signalMode
+            : "any",
+          deepTargetCount: this.deepCountOptions.includes(
+            Number(settings.deepTargetCount),
+          )
+            ? Number(settings.deepTargetCount)
+            : 60,
+          zoteroCategory:
+            typeof settings.zoteroCategory === "string"
+              ? settings.zoteroCategory
+              : "",
         }),
       );
     } catch (error) {
       // Keep filtering usable even if a site blocks localStorage.
     }
+  },
+
+  setStatus(selector, message) {
+    const node = document.querySelector(selector);
+    if (node) {
+      node.textContent = message || "";
+    }
+  },
+
+  rerenderPanel() {
+    const oldPanel = document.querySelector(".ccf-filter");
+    if (oldPanel) {
+      oldPanel.remove();
+    }
+    this.createFilterButtons();
+    this.bindEvents();
+    this.applyFilter();
+  },
+
+  escapeHtml(value) {
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
   },
 
   refreshActiveButton() {
@@ -301,9 +570,51 @@ const filter = {
     }
 
     filterElement.addEventListener("click", (e) => {
+      if (e.target.dataset.action === "toggle-language") {
+        this.settings.language = this.settings.language === "zh" ? "en" : "zh";
+        this.saveSettings(this.settings);
+        this.rerenderPanel();
+        return;
+      }
+
       if (e.target.dataset.action === "deep-search") {
         if (typeof scholar !== "undefined" && scholar.loadDeepResults) {
-          scholar.loadDeepResults();
+          scholar.loadDeepResults(this.settings.deepTargetCount);
+        }
+        return;
+      }
+
+      if (e.target.dataset.action === "clear-deep") {
+        if (typeof scholar !== "undefined" && scholar.clearDeepResults) {
+          scholar.clearDeepResults();
+        }
+        return;
+      }
+
+      if (e.target.dataset.action === "export-selected") {
+        if (typeof scholar !== "undefined") {
+          scholar.exportBibtex("selected");
+        }
+        return;
+      }
+
+      if (e.target.dataset.action === "export-visible") {
+        if (typeof scholar !== "undefined") {
+          scholar.exportBibtex("visible");
+        }
+        return;
+      }
+
+      if (e.target.dataset.action === "export-pool") {
+        if (typeof scholar !== "undefined") {
+          scholar.exportBibtex("pool");
+        }
+        return;
+      }
+
+      if (e.target.dataset.action === "zotero-import") {
+        if (typeof scholar !== "undefined") {
+          scholar.importToZotero(this.settings.zoteroCategory);
         }
         return;
       }
@@ -316,6 +627,21 @@ const filter = {
     });
 
     filterElement.addEventListener("change", (e) => {
+      if (e.target.dataset.signal) {
+        const signal = e.target.dataset.signal;
+        if (e.target.checked) {
+          this.settings.selectedSignals = Array.from(
+            new Set(this.settings.selectedSignals.concat(signal)),
+          );
+        } else {
+          this.settings.selectedSignals = this.settings.selectedSignals.filter(
+            (item) => item !== signal,
+          );
+        }
+        this.saveSettings(this.settings);
+        this.applyFilter();
+      }
+
       if (e.target.dataset.setting === "defaultFilter") {
         this.settings.defaultFilter = e.target.value;
         this.currentFilter = this.settings.defaultFilter;
@@ -329,6 +655,22 @@ const filter = {
         this.siteConfig.hideUnranked = this.settings.hideUnranked;
         this.saveSettings(this.settings);
         this.applyFilter();
+      }
+
+      if (e.target.dataset.setting === "signalMode") {
+        this.settings.signalMode = e.target.value;
+        this.saveSettings(this.settings);
+        this.applyFilter();
+      }
+
+      if (e.target.dataset.setting === "deepTargetCount") {
+        this.settings.deepTargetCount = Number(e.target.value);
+        this.saveSettings(this.settings);
+      }
+
+      if (e.target.dataset.setting === "zoteroCategory") {
+        this.settings.zoteroCategory = e.target.value;
+        this.saveSettings(this.settings);
       }
     });
   },

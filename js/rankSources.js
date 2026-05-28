@@ -24,6 +24,13 @@ rankSources.isShortAcronymName = function (name) {
   return /^[A-Z0-9]{2,4}$/.test(normalizedName);
 };
 
+rankSources.isSingleWordTitle = function (name) {
+  const normalizedName = rankSources.normalizeText(name);
+  return (
+    /^[A-Z0-9]+$/.test(normalizedName) && !rankSources.isShortAcronymName(name)
+  );
+};
+
 rankSources.escapeRegExp = function (text) {
   return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 };
@@ -58,6 +65,10 @@ rankSources.matchRecord = function (venueText, record) {
       return false;
     }
 
+    if (rankSources.isSingleWordTitle(name)) {
+      return normalizedVenue === normalizedName;
+    }
+
     return (
       normalizedVenue === normalizedName ||
       (rankSources.containsNormalizedPhrase(normalizedVenue, normalizedName) &&
@@ -81,28 +92,38 @@ rankSources.addTags = function (tags, seen, newTags) {
   });
 };
 
-rankSources.resolveVenueText = function (venueText) {
-  const db = typeof openRankSources === "undefined" ? null : openRankSources;
-  if (!db || !Array.isArray(db.records)) {
-    return [];
-  }
+rankSources.getDatabases = function () {
+  return [
+    typeof openRankSources === "undefined" ? null : openRankSources,
+    typeof swjtuRankSources === "undefined" ? null : swjtuRankSources,
+  ].filter((db) => db && Array.isArray(db.records));
+};
 
+rankSources.getSources = function () {
+  return rankSources.getDatabases().reduce((sources, db) => {
+    return Object.assign(sources, db.sources || {});
+  }, {});
+};
+
+rankSources.resolveVenueText = function (venueText) {
   const seen = new Set();
   const tags = [];
 
-  db.records.forEach(function (record) {
-    if (!rankSources.matchRecord(venueText, record)) {
-      return;
-    }
+  rankSources.getDatabases().forEach(function (db) {
+    db.records.forEach(function (record) {
+      if (!rankSources.matchRecord(venueText, record)) {
+        return;
+      }
 
-    rankSources.addTags(tags, seen, record.tags);
+      rankSources.addTags(tags, seen, record.tags);
+    });
   });
 
   return tags;
 };
 
 rankSources.getTagText = function (tag) {
-  const source = openRankSources.sources[tag.source];
+  const source = rankSources.getSources()[tag.source];
   if (!source) {
     return tag.value || tag.source;
   }
@@ -115,10 +136,12 @@ rankSources.getTagText = function (tag) {
 };
 
 rankSources.getTagSpan = function (tag) {
-  const source = openRankSources.sources[tag.source] || {};
+  const source = rankSources.getSources()[tag.source] || {};
   return $("<span>")
     .addClass("rank-source")
     .addClass(source.className || "rank-source-default")
+    .attr("data-rank-source", tag.source)
+    .attr("data-rank-value", tag.value || "")
     .text(rankSources.getTagText(tag));
 };
 

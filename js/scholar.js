@@ -8,9 +8,10 @@ const scholar = {};
 
 scholar.rankSpanList = [];
 scholar.deepTargetCount = 55;
-scholar.deepPageSize = 10;
+scholar.deepPageSize = 20;
 scholar.deepRequestDelay = 800;
 scholar.deepLoading = false;
+scholar.deepState = null;
 
 scholar.run = function () {
   let url = window.location.pathname;
@@ -62,9 +63,23 @@ scholar.getDeepPageStarts = function (currentStart, pageSize, targetCount) {
 };
 
 scholar.withStartParam = function (url, start) {
+  return scholar.withPageParams(url, start, null);
+};
+
+scholar.withPageParams = function (url, start, num) {
   const nextUrl = new URL(url, scholar.getBaseUrl());
   nextUrl.searchParams.set("start", String(start));
+  if (num) {
+    nextUrl.searchParams.set("num", String(Math.min(Number(num), 20)));
+  }
   return nextUrl.toString();
+};
+
+scholar.getSearchKey = function (url) {
+  const searchUrl = new URL(url, scholar.getBaseUrl());
+  searchUrl.searchParams.delete("start");
+  searchUrl.searchParams.delete("num");
+  return `${searchUrl.origin}${searchUrl.pathname}?${searchUrl.searchParams.toString()}`;
 };
 
 scholar.wait = function (ms) {
@@ -101,6 +116,17 @@ scholar.getExistingResultKeys = function () {
   );
 };
 
+scholar.t = function (key, params) {
+  const language =
+    typeof filter !== "undefined" && filter.settings?.language
+      ? filter.settings.language
+      : "zh";
+  if (typeof onlyccfaI18n !== "undefined") {
+    return onlyccfaI18n.t(language, key, params);
+  }
+  return key;
+};
+
 scholar.setDeepSearchState = function (status, isLoading) {
   const statusNode = document.querySelector(".ccf-filter-deep-status");
   if (statusNode) {
@@ -120,41 +146,68 @@ scholar.importDeepEntry = function (entry) {
   return imported;
 };
 
-scholar.loadDeepResults = async function () {
+scholar.createDeepState = function () {
+  return {
+    queryKey: scholar.getSearchKey(window.location.href),
+    nextStart:
+      scholar.getCurrentStart(window.location.href) +
+      scholar.collectResultEntries(document).length,
+    seen: scholar.getExistingResultKeys(),
+    scanned: scholar.collectResultEntries(document).length,
+    appended: 0,
+  };
+};
+
+scholar.getDeepState = function () {
+  const queryKey = scholar.getSearchKey(window.location.href);
+  if (!scholar.deepState || scholar.deepState.queryKey !== queryKey) {
+    scholar.deepState = scholar.createDeepState();
+  }
+  return scholar.deepState;
+};
+
+scholar.clearDeepResults = function () {
+  document.querySelectorAll(".onlyccfa-deep-result").forEach((entry) => {
+    entry.remove();
+  });
+  scholar.deepState = null;
+  scholar.setDeepSearchState(scholar.t("deepCleared"), false);
+  if (typeof filter !== "undefined") {
+    filter.applyFilter();
+  }
+};
+
+scholar.loadDeepResults = async function (targetCount) {
   if (scholar.deepLoading) {
     return;
   }
 
   const container = document.querySelector("#gs_res_ccl_mid");
   if (!container) {
-    scholar.setDeepSearchState("未找到 Google 学术结果。", false);
+    scholar.setDeepSearchState(scholar.t("noScholarResults"), false);
     return;
   }
 
   scholar.deepLoading = true;
-  let appended = 0;
-  let scanned = scholar.collectResultEntries(document).length;
-  const seen = scholar.getExistingResultKeys();
-  const currentStart = scholar.getCurrentStart(window.location.href);
-  const starts = scholar.getDeepPageStarts(
-    currentStart,
-    scholar.deepPageSize,
-    scholar.deepTargetCount,
-  );
+  const state = scholar.getDeepState();
+  const batchTarget = Number(targetCount) || scholar.deepTargetCount;
+  const targetScanned = state.scanned + batchTarget;
+  const batchStartScanned = state.scanned;
+  const batchStartAppended = state.appended;
 
-  scholar.setDeepSearchState("正在加载更多 Google 学术结果...", true);
+  scholar.setDeepSearchState(scholar.t("loading"), true);
 
   try {
-    for (
-      let index = 0;
-      index < starts.length && scanned < scholar.deepTargetCount;
-      index += 1
-    ) {
-      if (index > 0) {
+    for (let index = 0; state.scanned < targetScanned; index += 1) {
+      if (index > 0 || state.scanned > batchStartScanned) {
         await scholar.wait(scholar.deepRequestDelay);
       }
 
-      const url = scholar.withStartParam(window.location.href, starts[index]);
+      const url = scholar.withPageParams(
+        window.location.href,
+        state.nextStart,
+        scholar.deepPageSize,
+      );
       const response = await fetch(url, { credentials: "include" });
       if (!response.ok) {
         throw new Error(`Google Scholar returned ${response.status}`);
@@ -168,26 +221,28 @@ scholar.loadDeepResults = async function () {
       }
 
       for (const entry of entries) {
-        if (scanned >= scholar.deepTargetCount) {
+        if (state.scanned >= targetScanned) {
           break;
         }
 
-        scanned += 1;
+        state.scanned += 1;
         const key = scholar.getResultKey(entry);
-        if (!key || seen.has(key)) {
+        if (!key || state.seen.has(key)) {
           continue;
         }
 
-        seen.add(key);
+        state.seen.add(key);
         container.appendChild(scholar.importDeepEntry(entry));
-        appended += 1;
+        state.appended += 1;
       }
 
+      state.nextStart += entries.length || scholar.deepPageSize;
       scholar.setDeepSearchState(
-        `已新增 ${appended} 条，已扫描 ${Math.min(
-          scanned,
-          scholar.deepTargetCount,
-        )}/${scholar.deepTargetCount}.`,
+        scholar.t("deepProgress", {
+          appended: state.appended - batchStartAppended,
+          scanned: state.scanned - batchStartScanned,
+          target: batchTarget,
+        }),
         true,
       );
 
@@ -196,7 +251,7 @@ scholar.loadDeepResults = async function () {
         filter.applyFilter();
       }
 
-      if (entries.length < scholar.deepPageSize) {
+      if (entries.length < Math.min(scholar.deepPageSize, 20)) {
         break;
       }
     }
@@ -206,20 +261,199 @@ scholar.loadDeepResults = async function () {
       filter.applyFilter();
     }
     scholar.setDeepSearchState(
-      `深度筛选已扫描 ${Math.min(
-        scanned,
-        scholar.deepTargetCount,
-      )} 条，新增 ${appended} 条。`,
+      scholar.t("deepDone", {
+        scanned: state.scanned - batchStartScanned,
+        appended: state.appended - batchStartAppended,
+      }),
       false,
     );
   } catch (error) {
     scholar.setDeepSearchState(
-      `深度筛选停止：${error.message || "请求失败"}。`,
+      scholar.t("deepStopped", { message: error.message || "request failed" }),
       false,
     );
   } finally {
     scholar.deepLoading = false;
   }
+};
+
+scholar.extractAuthors = function (metadata) {
+  const authorText = (metadata || "").split(/\s[-–—]\s/)[0] || "";
+  return authorText
+    .split(",")
+    .map((author) => author.trim())
+    .filter(Boolean);
+};
+
+scholar.extractYear = function (metadata) {
+  const match = (metadata || "").match(/\b(19|20)\d{2}\b/);
+  return match ? match[0] : "";
+};
+
+scholar.getResultTags = function (entry) {
+  return Array.from(entry.querySelectorAll(".ccf-rank, .rank-source"))
+    .map((node) => node.textContent.trim())
+    .filter(Boolean);
+};
+
+scholar.getResultData = function (entry) {
+  const titleLink = entry.querySelector("h3 a");
+  const metadata = entry.querySelector(".gs_a")?.textContent || "";
+  return {
+    title: titleLink?.textContent?.replace(/\s+/g, " ").trim() || "Untitled",
+    url: titleLink?.href || "",
+    authors: scholar.extractAuthors(metadata),
+    year: scholar.extractYear(metadata),
+    venue: scholar.extractVenue(metadata),
+    tags: scholar.getResultTags(entry),
+  };
+};
+
+scholar.getSelectedEntries = function () {
+  return Array.from(
+    document.querySelectorAll(".onlyccfa-select-result:checked"),
+  )
+    .map((input) => input.closest("#gs_res_ccl_mid > div"))
+    .filter(Boolean);
+};
+
+scholar.getVisibleEntries = function () {
+  return scholar
+    .collectResultEntries(document)
+    .filter((entry) => entry.style.display !== "none");
+};
+
+scholar.getPoolEntries = function () {
+  return scholar.collectResultEntries(document).filter((entry) => {
+    return entry.dataset.onlyccfaDeepResult === "true";
+  });
+};
+
+scholar.getEntriesForExport = function (scope) {
+  if (scope === "selected") {
+    return scholar.getSelectedEntries();
+  }
+  if (scope === "pool") {
+    return scholar.getPoolEntries();
+  }
+  return scholar.getVisibleEntries();
+};
+
+scholar.buildBibtexForEntries = function (entries) {
+  return entries
+    .map((entry) => onlyccfaBibtex.buildEntry(scholar.getResultData(entry)))
+    .join("\n\n");
+};
+
+scholar.downloadText = function (filename, content) {
+  const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+};
+
+scholar.copyText = function (content) {
+  if (navigator.clipboard?.writeText) {
+    return navigator.clipboard.writeText(content);
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = content;
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  textarea.remove();
+  return Promise.resolve();
+};
+
+scholar.setExportStatus = function (message) {
+  const node = document.querySelector(".ccf-filter-export-status");
+  if (node) {
+    node.textContent = message || "";
+  }
+};
+
+scholar.exportBibtex = function (scope) {
+  const entries = scholar.getEntriesForExport(scope);
+  if (entries.length === 0) {
+    scholar.setExportStatus(scholar.t("noResults"));
+    return "";
+  }
+
+  const bibtex = scholar.buildBibtexForEntries(entries);
+  scholar.downloadText(`onlyccfa-${scope}.bib`, bibtex);
+  scholar.setExportStatus(`${entries.length} BibTeX`);
+  return bibtex;
+};
+
+scholar.importToZotero = async function (category) {
+  const entries = scholar.getSelectedEntries();
+  const targetEntries = entries.length ? entries : scholar.getVisibleEntries();
+  if (targetEntries.length === 0) {
+    scholar.setExportStatus(scholar.t("noResults"));
+    return false;
+  }
+
+  const items = targetEntries.map((entry) =>
+    onlyccfaBibtex.toZoteroItem(scholar.getResultData(entry), category),
+  );
+  const endpoints = [
+    "http://127.0.0.1:23119/connector/saveItems",
+    "http://localhost:23119/connector/saveItems",
+  ];
+
+  try {
+    for (const endpoint of endpoints) {
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ items }),
+        });
+        if (response.ok) {
+          scholar.setExportStatus(scholar.t("zoteroDone"));
+          return true;
+        }
+      } catch (error) {
+        // Try the next local Connector host before falling back to BibTeX.
+      }
+    }
+    throw new Error("Zotero Connector unavailable");
+  } catch (error) {
+    const bibtex = scholar.buildBibtexForEntries(targetEntries);
+    scholar.downloadText("onlyccfa-zotero-fallback.bib", bibtex);
+    scholar.setExportStatus(scholar.t("zoteroFailed"));
+    return false;
+  }
+};
+
+scholar.appendResultActions = function (entry) {
+  if (entry.querySelector(".onlyccfa-result-actions")) {
+    return;
+  }
+
+  const title = entry.querySelector("h3");
+  if (!title) {
+    return;
+  }
+
+  const actions = document.createElement("div");
+  actions.className = "onlyccfa-result-actions";
+  actions.innerHTML = `
+    <label>
+      <input class="onlyccfa-select-result" type="checkbox">
+      <span>${scholar.t("selectResult")}</span>
+    </label>
+    <button type="button" data-action="copy-entry-bibtex">${scholar.t(
+      "copyBibtex",
+    )}</button>
+  `;
+  title.insertAdjacentElement("afterend", actions);
 };
 
 scholar.appendVenueRank = function (node, venue) {
@@ -249,6 +483,8 @@ scholar.appendVenueRank = function (node, venue) {
 scholar.appendRank = function () {
   let elements = $("#gs_res_ccl_mid > div > div.gs_ri");
   elements.each(function (index) {
+    scholar.appendResultActions(this);
+
     if ($(this).hasClass("ccf-ranked")) {
       return;
     }
@@ -278,6 +514,24 @@ scholar.appendRank = function () {
     }
   });
 };
+
+if (typeof document !== "undefined") {
+  document.addEventListener("click", function (event) {
+    if (event.target?.dataset?.action !== "copy-entry-bibtex") {
+      return;
+    }
+
+    const entry = event.target.closest("#gs_res_ccl_mid > div");
+    if (!entry) {
+      return;
+    }
+
+    const bibtex = onlyccfaBibtex.buildEntry(scholar.getResultData(entry));
+    scholar.copyText(bibtex).then(() => {
+      scholar.setExportStatus(scholar.t("copied"));
+    });
+  });
+}
 
 scholar.observeCitations = function () {
   console.debug("Start citations ...");

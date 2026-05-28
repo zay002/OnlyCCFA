@@ -4,7 +4,7 @@
     "description": "Extension name."
   },
   "extDesc": {
-    "message": "Filters Google Scholar to CCF-A by default, deep-filters about 55 results, and shows CCF, SCI/JCR, CAS and field TOP badges.",
+    "message": "Deep-filters Google Scholar results, supports BibTeX/Zotero export, and shows CCF, SCI/JCR, CAS and field TOP badges.",
     "description": "Extension description."
   }
 }

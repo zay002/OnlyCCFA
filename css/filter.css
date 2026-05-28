@@ -1,30 +1,93 @@
 .ccf-filter {
   position: fixed;
-  top: 120px;
-  right: 30px;
+  top: 84px;
+  right: 24px;
   z-index: 9999;
-  background: #fff;
-  border: 1px solid #ddd;
+  width: 336px;
+  max-height: calc(100vh - 104px);
+  overflow-y: auto;
+  background: #ffffff;
+  border: 1px solid #d8dee8;
   border-radius: 8px;
-  padding: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 32px rgba(17, 24, 39, 0.16);
+  color: #111827;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Microsoft YaHei", sans-serif;
+  font-size: 12px;
+}
+
+.ccf-filter * {
+  box-sizing: border-box;
+}
+
+.ccf-filter-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #edf0f5;
+}
+
+.ccf-filter-title {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.ccf-filter-subtitle {
+  margin-top: 2px;
+  color: #64748b;
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.ccf-filter-language {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 44px;
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 5px;
+  background: #f8fafc;
+  color: #334155;
+  font-size: 11px;
+}
+
+.ccf-filter-section-title {
+  margin: 9px 12px 5px;
+  color: #475569;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.ccf-filter-ranks,
+.ccf-filter-action-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  padding: 0 12px;
 }
 
 .ccf-filter button {
-  display: block;
-  width: 100%;
-  margin: 4px 0;
-  padding: 8px 16px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background: #fff;
+  min-height: 28px;
+  border: 1px solid #cbd5e1;
+  border-radius: 5px;
+  background: #ffffff;
+  color: #1f2937;
   cursor: pointer;
-  font-size: 14px;
-  transition: all 0.2s ease;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .ccf-filter button:hover {
-  background: #f5f5f5;
+  background: #f1f5f9;
 }
 
 .ccf-filter button:disabled {
@@ -33,70 +96,123 @@
 }
 
 .ccf-filter button.active {
-  background: #4285f4;
-  color: #fff;
-  border-color: #4285f4;
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
 }
 
-.ccf-filter-settings {
-  margin-top: 10px;
-  padding-top: 8px;
-  border-top: 1px solid #eee;
+.ccf-filter-settings,
+.ccf-filter-sources,
+.ccf-filter-deep,
+.ccf-filter-export {
+  padding-bottom: 8px;
+  border-bottom: 1px solid #edf0f5;
 }
 
-.ccf-filter-settings label {
+.ccf-filter-row,
+.ccf-filter-check {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin: 8px 0;
-  color: #555;
+  margin: 6px 12px;
+  color: #475569;
   font-size: 12px;
 }
 
-.ccf-filter-settings select {
-  width: 78px;
-  padding: 4px 6px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background: #fff;
-  color: #333;
+.ccf-filter-check {
+  justify-content: flex-start;
+}
+
+.ccf-filter select,
+.ccf-filter input[type="text"] {
+  min-width: 92px;
+  height: 28px;
+  padding: 4px 7px;
+  border: 1px solid #cbd5e1;
+  border-radius: 5px;
+  background: #ffffff;
+  color: #111827;
   font-size: 12px;
 }
 
-.ccf-filter-settings input {
+.ccf-filter input[type="checkbox"] {
   margin: 0;
 }
 
-.ccf-filter-stats {
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px solid #eee;
-  color: #777;
+.ccf-filter-signal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  padding: 0 12px;
+}
+
+.ccf-filter-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 25px;
+  padding: 4px 6px;
+  border: 1px solid #dbe2ea;
+  border-radius: 5px;
+  background: #f8fafc;
+  color: #334155;
   font-size: 11px;
-  line-height: 1.4;
+  line-height: 1.2;
 }
 
-.ccf-filter-deep {
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px solid #eee;
-}
-
-.ccf-filter-deep button {
-  background: #111827;
-  border-color: #111827;
-  color: #fff;
-}
-
-.ccf-filter-deep button:hover:not(:disabled) {
-  background: #374151;
-}
-
-.ccf-filter-deep-status {
-  min-height: 15px;
-  margin-top: 6px;
-  color: #666;
+.ccf-filter-stats,
+.ccf-filter-deep-status,
+.ccf-filter-export-status {
+  min-height: 16px;
+  margin: 6px 12px 0;
+  color: #64748b;
   font-size: 11px;
   line-height: 1.35;
+}
+
+.ccf-filter-deep .ccf-filter-action-row,
+.ccf-filter-export .ccf-filter-action-row {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 6px;
+}
+
+.ccf-filter-deep button[data-action="deep-search"],
+.ccf-filter-export button[data-action="export-selected"],
+.ccf-filter-export button[data-action="zotero-import"] {
+  background: #111827;
+  border-color: #111827;
+  color: #ffffff;
+}
+
+.ccf-filter-export > button {
+  display: block;
+  width: calc(100% - 24px);
+  margin: 6px 12px 0;
+}
+
+.onlyccfa-result-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 6px;
+  color: #64748b;
+  font-size: 11px;
+}
+
+.onlyccfa-result-actions label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.onlyccfa-result-actions button {
+  min-height: 22px;
+  padding: 2px 7px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #374151;
+  cursor: pointer;
+  font-size: 11px;
 }

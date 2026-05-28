@@ -2,9 +2,10 @@ const assert = require("assert");
 const fs = require("fs");
 const vm = require("vm");
 
+const i18nSource = fs.readFileSync("js/i18n.js", "utf8");
 const source = fs.readFileSync("js/filter.js", "utf8");
 const storage = {};
-const filter = vm.runInNewContext(`${source}; filter;`, {
+const filter = vm.runInNewContext(`${i18nSource}; ${source}; filter;`, {
   console,
   document: {},
   localStorage: {

@@ -3,15 +3,19 @@ const fs = require("fs");
 const vm = require("vm");
 
 const dataSource = fs.readFileSync("data/openRankSources.js", "utf8");
+const swjtuSource = fs.readFileSync("data/swjtuRankSources.js", "utf8");
 const source = fs.readFileSync("js/rankSources.js", "utf8");
 
 const rankSources = vm.runInNewContext(
-  `${dataSource}; ${source}; rankSources;`,
+  `${dataSource}; ${swjtuSource}; ${source}; rankSources;`,
   {
     console,
     $() {
       return {
         addClass() {
+          return this;
+        },
+        attr() {
           return this;
         },
         text(value) {
@@ -68,6 +72,34 @@ assert.ok(tacTags.some((tag) => tag.source === "controlTop"));
 const cnTags = rankSources.resolveVenueText("计算机学报");
 assert.ok(cnTags.some((tag) => tag.source === "pkuCore"));
 assert.ok(cnTags.some((tag) => tag.source === "cscd"));
+
+const natureTags = rankSources.resolveVenueText("Nature");
+assert.ok(
+  natureTags.some(
+    (tag) => tag.source === "swjtuJournal" && tag.value === "T类",
+  ),
+);
+assert.ok(
+  !rankSources
+    .resolveVenueText("Nature Methods")
+    .some((tag) => tag.source === "swjtuJournal" && tag.value === "T类"),
+);
+
+const computerJournalTags = rankSources.resolveVenueText("Computer Journal");
+assert.ok(
+  computerJournalTags.some(
+    (tag) => tag.source === "swjtuScai" && tag.value === "C类",
+  ),
+);
+
+const transportTags = rankSources.resolveVenueText(
+  "IEEE Transactions on Intelligent Transportation Systems",
+);
+assert.ok(
+  transportTags.some(
+    (tag) => tag.source === "swjtuTransport" && tag.value === "重点",
+  ),
+);
 
 assert.strictEqual(rankSources.resolveVenueText("Unknown Venue").length, 0);
 assert.strictEqual(

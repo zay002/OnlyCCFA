@@ -1,7 +1,7 @@
 {
   "name": "__MSG_extName__",
   "short_name": "OnlyCCFA",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "__MSG_extDesc__",
   "manifest_version": 3,
   "default_locale": "en",
@@ -113,9 +113,12 @@
       "css": ["css/style.css", "css/filter.css"],
       "js": [
         "lib/jquery-3.5.1.min.js",
+        "js/i18n.js",
+        "js/bibtex.js",
         "js/dblp.js",
         "js/connectedpapers.js",
         "data/openRankSources.js",
+        "data/swjtuRankSources.js",
         "js/rankSources.js",
         "js/scholar.js",
         "js/semanticscholar.js",
@@ -134,5 +137,9 @@
       ]
     }
   ],
-  "host_permissions": ["https://dblp.org/*"]
+  "host_permissions": [
+    "https://dblp.org/*",
+    "http://127.0.0.1:23119/*",
+    "http://localhost:23119/*"
+  ]
 }

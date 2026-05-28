@@ -20,5 +20,6 @@ scripts/prepare-store-listing.js
 scripts/publish-chrome-webstore.js
 scripts/publish-github-release.js
 onlyccfa_logo_origin.png
+swjtu.scai/
 # Claude Code
 CLAUDE.md

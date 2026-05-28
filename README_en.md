@@ -16,7 +16,7 @@
   <a href="./README.md">中文</a> | English
 </p>
 
-OnlyCCFA is an independent Chrome extension based on [CCFrank](https://github.com/WenyanLiu/CCFrank4dblp). It keeps the original CCF rank labels and turns Google Scholar into a stricter paper-search workflow: Google Scholar is filtered to CCF-A papers by default, while SCI, JCR, CAS partition, EI, Chinese core journal and field TOP venue badges are added as open metadata.
+OnlyCCFA is an independent Chrome extension based on [CCFrank](https://github.com/WenyanLiu/CCFrank4dblp). It keeps the original CCF rank labels and turns Google Scholar into a stricter paper-search workflow: load multiple Google Scholar pages, filter the local result pool by CCF, SCI/JCR, CAS partition, EI, Chinese core journal and field TOP venue badges, then export clean candidates to BibTeX or Zotero.
 
 The goal is simple: help students and researchers in computer science, robotics, mechanical engineering, electrical engineering and communications see venue-quality signals directly in their daily paper search results, with data that is transparent, extensible and free.
 
@@ -24,24 +24,27 @@ The goal is simple: help students and researchers in computer science, robotics,
 
 - Shows CCF recommended ranks for papers on Google Scholar, dblp, Connected Papers, Semantic Scholar and Web of Science.
 - Filters Google Scholar search results to `CCF A` by default, with an on-page switcher for `ALL`, `CCF A`, `CCF B` and `CCF C`.
-- Adds `深筛 55`: on demand, OnlyCCFA sequentially loads later Google Scholar pages, merges about the first 55 results locally, then applies the current filter so strong papers are less likely to be buried on later pages.
+- Adds configurable deep filtering: scan `20 / 40 / 60 / 80 / 100` Google Scholar results per batch, continue to the next batch, or clear the local result pool.
+- Adds a redesigned bilingual side panel with local settings for language, default rank, deep-filter count and filter preferences.
+- Combines SCI, JCR Q1/Q2, CAS 1/2/TOP, EI, Chinese core journals, SWJTU / SCAI / transportation lists and field TOP filters with `any` or `all` matching.
+- Exports single papers, selected papers, visible papers or the whole deep-filter pool to BibTeX, with an experimental local Zotero import path.
 - Saves the default Google Scholar filter and lets you choose whether unmatched results should stay visible.
 - Shows how many results are visible, hidden and unmatched after filtering.
 - Adds local Google Scholar venue matching before falling back to DBLP lookup, improving matches for venues such as NeurIPS, CVPR, SIGMOD, AAAI and ICLR.
-- Adds an open multi-source rank badge framework for SCI, JCR quartile, CAS partition, SCI TOP, EI, PKU Core, CSCD, CSSCI, school-specific lists and field TOP venues.
+- Adds an open multi-source rank badge framework for SCI, JCR quartile, CAS partition, SCI TOP, EI, PKU Core, CSCD, CSSCI, SWJTU university / school / transportation lists and field TOP venues.
 - Marks high-reputation venues that are not well covered by CCF/JCR/CAS with explicit hand-curated field TOP badges such as `机器人方向TOP`, `通信方向TOP` and `电气方向TOP`.
 
 ## Screenshots
 
-OnlyCCFA screenshots are organized around real research workflows, not button states. The examples below show CCF-A filtering, robotics venues outside CCF, SCI/JCR/CAS badges, and engineering venues for communications, control, electrical and mechanical research.
+OnlyCCFA screenshots are organized around the core workflow: deep-scan multiple Google Scholar pages, combine filters, then export the cleaner candidate set. Rank badges are still there, but the product is now a search-noise reducer.
 
-| Embodied AI: CCF-A first                                                                                        | Robotics: field TOP beyond CCF                                                                                               |
-| --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| <img src="./img/demo-embodied-ai.png" alt="OnlyCCFA filtering embodied AI results to CCF-A papers" width="420"> | <img src="./img/demo-robotics-field-top.png" alt="OnlyCCFA showing CoRL RSS TRO and RA-L robotics venue badges" width="420"> |
+| Deep result pool                                                                                                 | Advanced multi-source filters                                                                                            |
+| ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| <img src="./img/demo-deep-filter-workflow.png" alt="OnlyCCFA deep filtering Google Scholar results" width="420"> | <img src="./img/demo-advanced-source-filters.png" alt="OnlyCCFA advanced source filters for Google Scholar" width="420"> |
 
-| 6G communication: SCI/JCR/CAS badges                                                                           | Engineering control: EE, control and mechanical venues                                                                                 |
-| -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| <img src="./img/demo-6g-communications.png" alt="OnlyCCFA showing 6G communication source badges" width="420"> | <img src="./img/demo-engineering-venues.png" alt="OnlyCCFA showing power electronics control and mechanical venue badges" width="420"> |
+| BibTeX / Zotero export                                                                                                    | Continue the next batch                                                                                         |
+| ------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| <img src="./img/demo-bibtex-zotero-export.png" alt="OnlyCCFA exporting filtered papers to BibTeX and Zotero" width="420"> | <img src="./img/demo-continue-next-batch.png" alt="OnlyCCFA continuing the next deep-filter batch" width="420"> |
 
 ## Install
 
@@ -70,7 +73,9 @@ npm test
 The tests cover:
 
 - Google Scholar default CCF-A filtering behavior.
-- Google Scholar deep-filter pagination URLs, start offsets and result de-duplication.
+- Google Scholar deep-filter pagination URLs, start offsets, result de-duplication and batch continuation.
+- Multi-source signal filtering.
+- BibTeX generation and Zotero item conversion.
 - Saved filter preferences and unmatched-result handling.
 - Filter result statistics.
 - Google Scholar venue extraction.
@@ -79,9 +84,9 @@ The tests cover:
 
 ## Data Sources
 
-OnlyCCFA uses a transparent data-source structure in `data/openRankSources.js`.
+OnlyCCFA uses transparent data-source structures: general open seed data lives in `data/openRankSources.js`, while SWJTU-related derived public-list data lives in `data/swjtuRankSources.js`.
 
-The built-in list is an open seed dataset for common venues, Chinese core journals and field TOP venues such as CoRL, RSS, ICRA, IROS, TRO, IJRR, RA-L, Automatica, IEEE TAC, IEEE TPEL, IEEE TWC and IEEE JSAC.
+The built-in list is an open seed dataset for common venues, Chinese core journals, field TOP venues, and derived badges from SWJTU's academic journal list, SCAI C-level high-quality journal list and transportation engineering special journal list. Examples include CoRL, RSS, ICRA, IROS, TRO, IJRR, RA-L, Automatica, IEEE TAC, IEEE TPEL, IEEE TWC and IEEE JSAC.
 
 It is designed to be expanded from official public lists, clearly licensed open datasets or verifiable public sources. JCR, CAS and field TOP tags are kept explicit instead of being merged into one vague badge. OnlyCCFA does not copy EasyScholar's packaged data.
 
