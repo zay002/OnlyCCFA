@@ -30,6 +30,8 @@ When local page text is not enough to identify a paper source, OnlyCCFA may requ
 
 ## 存储 / Storage
 
+OnlyCCFA may store your filter preferences, such as the default CCF rank and whether unmatched results should be hidden, in the browser's local site storage. These preferences remain on your device.
+
 OnlyCCFA may cache dblp lookup results in the browser's local storage to reduce repeated requests. Cached entries are stored locally in your browser and expire automatically.
 
 ## Contact

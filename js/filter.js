@@ -7,6 +7,8 @@
 const filter = {
   currentFilter: "ALL",
   siteConfig: null,
+  settings: null,
+  validFilters: ["ALL", "A", "B", "C"],
 
   init() {
     this.siteConfig = this.getSiteConfig(
@@ -18,7 +20,9 @@ const filter = {
       return;
     }
 
-    this.currentFilter = this.siteConfig.defaultFilter;
+    this.settings = this.loadSettings(this.siteConfig);
+    this.currentFilter = this.settings.defaultFilter;
+    this.siteConfig.hideUnranked = this.settings.hideUnranked;
     this.createFilterButtons();
     this.bindEvents();
     this.applyFilter();
@@ -60,14 +64,36 @@ const filter = {
     filterDiv.className = "ccf-filter";
     filterDiv.dataset.site = this.siteConfig.site;
     filterDiv.innerHTML = `
-      <button data-rank="ALL">ALL</button>
-      <button data-rank="A">CCF A</button>
-      <button data-rank="B">CCF B</button>
-      <button data-rank="C">CCF C</button>
+      <div class="ccf-filter-ranks">
+        <button data-rank="ALL">ALL</button>
+        <button data-rank="A">CCF A</button>
+        <button data-rank="B">CCF B</button>
+        <button data-rank="C">CCF C</button>
+      </div>
+      <div class="ccf-filter-settings">
+        <label>
+          <span>Default</span>
+          <select data-setting="defaultFilter">
+            <option value="ALL">ALL</option>
+            <option value="A">CCF A</option>
+            <option value="B">CCF B</option>
+            <option value="C">CCF C</option>
+          </select>
+        </label>
+        <label>
+          <input type="checkbox" data-setting="hideUnranked">
+          <span>Hide unmatched</span>
+        </label>
+      </div>
+      <div class="ccf-filter-stats" aria-live="polite"></div>
     `;
     filterDiv
       .querySelector(`[data-rank="${this.currentFilter}"]`)
       ?.classList.add("active");
+    filterDiv.querySelector('[data-setting="defaultFilter"]').value =
+      this.settings.defaultFilter;
+    filterDiv.querySelector('[data-setting="hideUnranked"]').checked =
+      this.settings.hideUnranked;
     document.body.appendChild(filterDiv);
   },
 
@@ -111,7 +137,9 @@ const filter = {
       return;
     }
 
-    const entries = document.querySelectorAll(this.siteConfig.entrySelector);
+    const entries = Array.from(
+      document.querySelectorAll(this.siteConfig.entrySelector),
+    );
     entries.forEach((entry) => {
       const shouldShow = this.shouldShowEntry(
         entry,
@@ -120,6 +148,7 @@ const filter = {
       );
       entry.style.display = shouldShow ? "" : "none";
     });
+    this.updateStats(this.calculateStats(entries));
   },
 
   shouldShowEntry(entry, currentFilter, siteConfig) {
@@ -129,7 +158,7 @@ const filter = {
 
     const ranks = this.getEntryRanks(entry);
     if (ranks.length === 0) {
-      return !siteConfig.hideUnranked && currentFilter === "ALL";
+      return !siteConfig.hideUnranked;
     }
 
     return ranks.includes(currentFilter);
@@ -154,6 +183,94 @@ const filter = {
     );
   },
 
+  calculateStats(entries) {
+    return entries.reduce(
+      (stats, entry) => {
+        stats.total += 1;
+        if (entry.style.display === "none") {
+          stats.hidden += 1;
+        } else {
+          stats.shown += 1;
+        }
+
+        if (this.getEntryRanks(entry).length === 0) {
+          stats.unmatched += 1;
+        } else {
+          stats.ranked += 1;
+        }
+
+        return stats;
+      },
+      { total: 0, shown: 0, hidden: 0, ranked: 0, unmatched: 0 },
+    );
+  },
+
+  updateStats(stats) {
+    const statsElement = document.querySelector(".ccf-filter-stats");
+    if (!statsElement) {
+      return;
+    }
+
+    statsElement.textContent = `${stats.shown}/${stats.total} shown | ${stats.hidden} hidden | ${stats.unmatched} unmatched`;
+  },
+
+  getStorageKey(siteConfig) {
+    return `onlyccfa:filter:${siteConfig.site}`;
+  },
+
+  loadSettings(siteConfig) {
+    const defaults = {
+      defaultFilter: siteConfig.defaultFilter,
+      hideUnranked: siteConfig.hideUnranked,
+    };
+
+    try {
+      const stored = localStorage.getItem(this.getStorageKey(siteConfig));
+      if (!stored) {
+        return defaults;
+      }
+
+      const parsed = JSON.parse(stored);
+      return {
+        defaultFilter: this.validFilters.includes(parsed.defaultFilter)
+          ? parsed.defaultFilter
+          : defaults.defaultFilter,
+        hideUnranked:
+          typeof parsed.hideUnranked === "boolean"
+            ? parsed.hideUnranked
+            : defaults.hideUnranked,
+      };
+    } catch (error) {
+      return defaults;
+    }
+  },
+
+  saveSettings(settings) {
+    if (!this.siteConfig) {
+      return;
+    }
+
+    try {
+      localStorage.setItem(
+        this.getStorageKey(this.siteConfig),
+        JSON.stringify({
+          defaultFilter: this.validFilters.includes(settings.defaultFilter)
+            ? settings.defaultFilter
+            : this.siteConfig.defaultFilter,
+          hideUnranked: Boolean(settings.hideUnranked),
+        }),
+      );
+    } catch (error) {
+      // Keep filtering usable even if a site blocks localStorage.
+    }
+  },
+
+  refreshActiveButton() {
+    document.querySelectorAll(".ccf-filter button").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.rank === this.currentFilter);
+    });
+  },
+
   debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -174,13 +291,26 @@ const filter = {
 
     filterElement.addEventListener("click", (e) => {
       if (e.target.tagName === "BUTTON") {
-        document.querySelectorAll(".ccf-filter button").forEach((btn) => {
-          btn.classList.remove("active");
-        });
-        e.target.classList.add("active");
-
         this.currentFilter = e.target.dataset.rank;
-        this.applyFilter(false);
+        this.refreshActiveButton();
+        this.applyFilter();
+      }
+    });
+
+    filterElement.addEventListener("change", (e) => {
+      if (e.target.dataset.setting === "defaultFilter") {
+        this.settings.defaultFilter = e.target.value;
+        this.currentFilter = this.settings.defaultFilter;
+        this.refreshActiveButton();
+        this.saveSettings(this.settings);
+        this.applyFilter();
+      }
+
+      if (e.target.dataset.setting === "hideUnranked") {
+        this.settings.hideUnranked = e.target.checked;
+        this.siteConfig.hideUnranked = this.settings.hideUnranked;
+        this.saveSettings(this.settings);
+        this.applyFilter();
       }
     });
   },

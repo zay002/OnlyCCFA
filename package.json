@@ -1,6 +1,6 @@
 {
   "name": "onlyccfa",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "description": "Chrome extension that displays CCF ranks and filters Google Scholar to CCF-A papers by default.",
   "license": "MIT",

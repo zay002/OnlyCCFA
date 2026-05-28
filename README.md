@@ -21,6 +21,8 @@ OnlyCCFA 是基于 [CCFrank](https://github.com/WenyanLiu/CCFrank4dblp) 的独�
 - Shows CCF recommended ranks for papers on Google Scholar, dblp, Connected Papers, Semantic Scholar and Web of Science.
 - Filters Google Scholar search results to CCF-A papers by default.
 - Keeps an on-page rank switcher so you can change between `ALL`, `CCF A`, `CCF B` and `CCF C`.
+- Lets you save the default Google Scholar filter and choose whether unmatched results should stay visible.
+- Shows how many results are visible, hidden and unmatched after filtering.
 - Adds local Google Scholar venue matching before falling back to DBLP lookup, improving matches for venues such as NeurIPS, CVPR, SIGMOD, AAAI and ICLR.
 
 ## Screenshots
@@ -60,6 +62,8 @@ npm test
 The tests cover:
 
 - Google Scholar default CCF-A filtering behavior.
+- Saved filter preferences and unmatched-result handling.
+- Filter result statistics.
 - Google Scholar venue extraction.
 - Local venue-to-CCF matching for common CCF-A venues.
 

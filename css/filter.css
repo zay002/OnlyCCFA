@@ -32,3 +32,42 @@
   color: #fff;
   border-color: #4285f4;
 }
+
+.ccf-filter-settings {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #eee;
+}
+
+.ccf-filter-settings label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 8px 0;
+  color: #555;
+  font-size: 12px;
+}
+
+.ccf-filter-settings select {
+  width: 78px;
+  padding: 4px 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  color: #333;
+  font-size: 12px;
+}
+
+.ccf-filter-settings input {
+  margin: 0;
+}
+
+.ccf-filter-stats {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #eee;
+  color: #777;
+  font-size: 11px;
+  line-height: 1.4;
+}
