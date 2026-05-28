@@ -56,3 +56,49 @@
 .ccf-tooltip:hover .ccf-tooltiptext {
   visibility: visible;
 }
+
+.rank-source {
+  display: inline-block;
+  height: 18.35px;
+  margin-left: 5px;
+  margin-right: 5px;
+  padding: 1px 8px;
+  border-radius: 4px;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 18.35px;
+  white-space: nowrap;
+}
+
+.rank-source-ei {
+  background-color: #e9a1a1;
+}
+
+.rank-source-sci {
+  background-color: #58b7f6;
+}
+
+.rank-source-cas {
+  background-color: #35a7d6;
+}
+
+.rank-source-top {
+  background-color: #2774c7;
+}
+
+.rank-source-warning {
+  background-color: #d9534f;
+}
+
+.rank-source-cn {
+  background-color: #d8c878;
+}
+
+.rank-source-school {
+  background-color: #3d95d8;
+}
+
+.rank-source-default {
+  background-color: #6c757d;
+}

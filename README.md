@@ -19,6 +19,7 @@ OnlyCCFA 是基于 [CCFrank](https://github.com/WenyanLiu/CCFrank4dblp) 的独�
 ## Features
 
 - Shows CCF recommended ranks for papers on Google Scholar, dblp, Connected Papers, Semantic Scholar and Web of Science.
+- Adds an open multi-source rank badge framework for SCI, CAS partition, SCI TOP, EI, PKU Core, CSCD, CSSCI and school-specific lists.
 - Filters Google Scholar search results to CCF-A papers by default.
 - Keeps an on-page rank switcher so you can change between `ALL`, `CCF A`, `CCF B` and `CCF C`.
 - Lets you save the default Google Scholar filter and choose whether unmatched results should stay visible.
@@ -66,6 +67,13 @@ The tests cover:
 - Filter result statistics.
 - Google Scholar venue extraction.
 - Local venue-to-CCF matching for common CCF-A venues.
+- Open multi-source rank matching for common journals, conferences and Chinese core journals.
+
+## Data Sources
+
+OnlyCCFA uses a transparent data-source structure in `data/openRankSources.js`.
+
+The built-in list is an open seed dataset for common venues and Chinese core journals. It is designed to be expanded from official public lists or clearly licensed open datasets. OnlyCCFA does not copy EasyScholar's packaged data.
 
 ## Release
 

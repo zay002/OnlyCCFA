@@ -34,19 +34,27 @@ scholar.extractVenue = function (metadata) {
 };
 
 scholar.appendVenueRank = function (node, venue) {
-  if (!venue || !ccf.resolveVenueText) {
+  if (!venue) {
     return false;
   }
 
-  let venueMatch = ccf.resolveVenueText(venue);
-  if (!venueMatch) {
-    return false;
+  let matched = false;
+
+  if (ccf.resolveVenueText) {
+    let venueMatch = ccf.resolveVenueText(venue);
+    if (venueMatch) {
+      for (let getRankSpan of scholar.rankSpanList) {
+        $(node).after(getRankSpan(venueMatch.refine, venueMatch.type));
+      }
+      matched = true;
+    }
   }
 
-  for (let getRankSpan of scholar.rankSpanList) {
-    $(node).after(getRankSpan(venueMatch.refine, venueMatch.type));
+  if (typeof rankSources != "undefined" && rankSources.appendVenueTags) {
+    matched = rankSources.appendVenueTags(node, venue) || matched;
   }
-  return true;
+
+  return matched;
 };
 
 scholar.appendRank = function () {
