@@ -79,6 +79,10 @@
   background-color: #58b7f6;
 }
 
+.rank-source-jcr {
+  background-color: #2563eb;
+}
+
 .rank-source-cas {
   background-color: #35a7d6;
 }
@@ -117,10 +121,6 @@
 
 .rank-source-comm {
   background-color: #355070;
-}
-
-.rank-source-hot {
-  background-color: #f97316;
 }
 
 .rank-source-default {

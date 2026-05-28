@@ -30,8 +30,17 @@ assert.strictEqual(
 
 const ieeeTags = rankSources.resolveVenueText("Proceedings of the IEEE, 2023");
 assert.ok(ieeeTags.some((tag) => tag.source === "sci"));
+assert.ok(ieeeTags.some((tag) => tag.source === "jcr" && tag.value === "Q1"));
 assert.ok(ieeeTags.some((tag) => tag.source === "casUpgraded"));
 assert.ok(ieeeTags.some((tag) => tag.source === "casTop"));
+assert.strictEqual(
+  rankSources.getTagText({ source: "casTop", value: "TOP" }),
+  "中科院TOP",
+);
+assert.strictEqual(
+  rankSources.getTagText({ source: "jcr", value: "Q1" }),
+  "JCRQ1",
+);
 
 const cvprTags = rankSources.resolveVenueText(
   "IEEE/CVF Conference on Computer Vision and Pattern Recognition",
@@ -40,13 +49,13 @@ assert.ok(cvprTags.some((tag) => tag.source === "ei"));
 
 const corlTags = rankSources.resolveVenueText("Conference on Robot Learning");
 assert.ok(corlTags.some((tag) => tag.source === "roboticsTop"));
-assert.ok(corlTags.some((tag) => tag.source === "hotTopic"));
+assert.ok(!corlTags.some((tag) => tag.source === "jcr"));
 
 const twcTags = rankSources.resolveVenueText(
   "IEEE Transactions on Wireless Communications",
 );
 assert.ok(twcTags.some((tag) => tag.source === "commTop"));
-assert.ok(twcTags.some((tag) => tag.source === "hotTopic"));
+assert.ok(twcTags.some((tag) => tag.source === "jcr" && tag.value === "Q1"));
 
 const tpelTags = rankSources.resolveVenueText(
   "IEEE Transactions on Power Electronics",

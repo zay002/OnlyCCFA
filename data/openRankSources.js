@@ -2,6 +2,7 @@ const openRankSources = {
   sources: {
     ei: { label: "EI", className: "rank-source-ei" },
     sci: { label: "SCI", className: "rank-source-sci" },
+    jcr: { label: "JCR", className: "rank-source-jcr" },
     casBase: { label: "中科院基础", className: "rank-source-cas" },
     casUpgraded: { label: "中科院升级", className: "rank-source-cas" },
     casTop: { label: "中科院TOP", className: "rank-source-top" },
@@ -11,12 +12,11 @@ const openRankSources = {
     cssci: { label: "CSSCI", className: "rank-source-cn" },
     swufe: { label: "西南财大", className: "rank-source-school" },
     swjtu: { label: "西南交大", className: "rank-source-school" },
-    roboticsTop: { label: "机器人顶会/刊", className: "rank-source-robotics" },
-    controlTop: { label: "控制顶刊", className: "rank-source-control" },
-    mechTop: { label: "机械顶刊", className: "rank-source-mech" },
-    eeTop: { label: "电气顶刊", className: "rank-source-ee" },
-    commTop: { label: "通信顶刊", className: "rank-source-comm" },
-    hotTopic: { label: "热门方向", className: "rank-source-hot" },
+    roboticsTop: { label: "机器人方向TOP", className: "rank-source-robotics" },
+    controlTop: { label: "控制方向TOP", className: "rank-source-control" },
+    mechTop: { label: "机械方向TOP", className: "rank-source-mech" },
+    eeTop: { label: "电气方向TOP", className: "rank-source-ee" },
+    commTop: { label: "通信方向TOP", className: "rank-source-comm" },
   },
   records: [
     {
@@ -24,6 +24,7 @@ const openRankSources = {
       aliases: ["PROC IEEE", "PROCEEDINGS IEEE"],
       tags: [
         { source: "sci" },
+        { source: "jcr", value: "Q1" },
         { source: "casUpgraded", value: "1区" },
         { source: "casTop", value: "TOP" },
       ],
@@ -33,6 +34,7 @@ const openRankSources = {
       aliases: ["TPAMI", "IEEE TPAMI"],
       tags: [
         { source: "sci" },
+        { source: "jcr", value: "Q1" },
         { source: "casUpgraded", value: "1区" },
         { source: "casTop", value: "TOP" },
         { source: "ei" },
@@ -43,6 +45,7 @@ const openRankSources = {
       aliases: ["IJCV"],
       tags: [
         { source: "sci" },
+        { source: "jcr", value: "Q1" },
         { source: "casUpgraded", value: "1区" },
         { source: "casTop", value: "TOP" },
       ],
@@ -52,6 +55,7 @@ const openRankSources = {
       aliases: ["PATTERN RECOGN"],
       tags: [
         { source: "sci" },
+        { source: "jcr", value: "Q1" },
         { source: "casUpgraded", value: "2区" },
         { source: "ei" },
       ],
@@ -61,6 +65,7 @@ const openRankSources = {
       aliases: ["INFORMATION SCIENCES"],
       tags: [
         { source: "sci" },
+        { source: "jcr", value: "Q1" },
         { source: "casUpgraded", value: "1区" },
         { source: "ei" },
       ],
@@ -70,6 +75,7 @@ const openRankSources = {
       aliases: ["KNOWLEDGE BASED SYSTEMS"],
       tags: [
         { source: "sci" },
+        { source: "jcr", value: "Q1" },
         { source: "casUpgraded", value: "1区" },
         { source: "ei" },
       ],
@@ -92,23 +98,17 @@ const openRankSources = {
     {
       title: "Neural Information Processing Systems",
       aliases: ["NeurIPS", "NIPS"],
-      tags: [{ source: "ei" }, { source: "hotTopic", value: "AI" }],
+      tags: [{ source: "ei" }],
     },
     {
       title: "Conference on Robot Learning",
       aliases: ["CoRL"],
-      tags: [
-        { source: "roboticsTop" },
-        { source: "hotTopic", value: "Robot Learning" },
-      ],
+      tags: [{ source: "roboticsTop" }],
     },
     {
       title: "Robotics: Science and Systems",
       aliases: ["RSS"],
-      tags: [
-        { source: "roboticsTop" },
-        { source: "hotTopic", value: "Robotics" },
-      ],
+      tags: [{ source: "roboticsTop" }],
     },
     {
       title: "IEEE International Conference on Robotics and Automation",
@@ -127,6 +127,7 @@ const openRankSources = {
       tags: [
         { source: "roboticsTop" },
         { source: "sci" },
+        { source: "jcr", value: "Q1" },
         { source: "casTop", value: "TOP" },
       ],
     },
@@ -136,19 +137,25 @@ const openRankSources = {
       tags: [
         { source: "roboticsTop" },
         { source: "sci" },
+        { source: "jcr", value: "Q1" },
         { source: "casTop", value: "TOP" },
       ],
     },
     {
       title: "IEEE Robotics and Automation Letters",
       aliases: ["RA-L", "RAL", "IEEE RA L"],
-      tags: [{ source: "roboticsTop" }, { source: "sci" }],
+      tags: [
+        { source: "roboticsTop" },
+        { source: "sci" },
+        { source: "jcr", value: "Q2" },
+      ],
     },
     {
       title: "Science Robotics",
       tags: [
         { source: "roboticsTop" },
         { source: "sci" },
+        { source: "jcr", value: "Q1" },
         { source: "casTop", value: "TOP" },
       ],
     },
@@ -157,6 +164,7 @@ const openRankSources = {
       tags: [
         { source: "controlTop" },
         { source: "sci" },
+        { source: "jcr", value: "Q1" },
         { source: "casTop", value: "TOP" },
       ],
     },
@@ -166,6 +174,7 @@ const openRankSources = {
       tags: [
         { source: "controlTop" },
         { source: "sci" },
+        { source: "jcr", value: "Q1" },
         { source: "casTop", value: "TOP" },
       ],
     },
@@ -175,6 +184,7 @@ const openRankSources = {
       tags: [
         { source: "eeTop" },
         { source: "sci" },
+        { source: "jcr", value: "Q1" },
         { source: "casTop", value: "TOP" },
       ],
     },
@@ -184,6 +194,7 @@ const openRankSources = {
       tags: [
         { source: "eeTop" },
         { source: "sci" },
+        { source: "jcr", value: "Q1" },
         { source: "casTop", value: "TOP" },
       ],
     },
@@ -193,14 +204,18 @@ const openRankSources = {
       tags: [
         { source: "eeTop" },
         { source: "sci" },
+        { source: "jcr", value: "Q1" },
         { source: "casTop", value: "TOP" },
-        { source: "hotTopic", value: "Energy AI" },
       ],
     },
     {
       title: "Journal of Mechanical Design",
       aliases: ["ASME Journal of Mechanical Design"],
-      tags: [{ source: "mechTop" }, { source: "sci" }],
+      tags: [
+        { source: "mechTop" },
+        { source: "sci" },
+        { source: "jcr", value: "Q2" },
+      ],
     },
     {
       title: "Mechanical Systems and Signal Processing",
@@ -208,6 +223,7 @@ const openRankSources = {
       tags: [
         { source: "mechTop" },
         { source: "sci" },
+        { source: "jcr", value: "Q1" },
         { source: "casTop", value: "TOP" },
       ],
     },
@@ -217,6 +233,7 @@ const openRankSources = {
       tags: [
         { source: "commTop" },
         { source: "sci" },
+        { source: "jcr", value: "Q1" },
         { source: "casTop", value: "TOP" },
       ],
     },
@@ -226,8 +243,8 @@ const openRankSources = {
       tags: [
         { source: "commTop" },
         { source: "sci" },
+        { source: "jcr", value: "Q1" },
         { source: "casTop", value: "TOP" },
-        { source: "hotTopic", value: "6G" },
       ],
     },
     {
@@ -236,6 +253,7 @@ const openRankSources = {
       tags: [
         { source: "commTop" },
         { source: "sci" },
+        { source: "jcr", value: "Q1" },
         { source: "casTop", value: "TOP" },
       ],
     },

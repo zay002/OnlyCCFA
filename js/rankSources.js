@@ -69,6 +69,18 @@ rankSources.matchRecord = function (venueText, record) {
   });
 };
 
+rankSources.addTags = function (tags, seen, newTags) {
+  (newTags || []).forEach(function (tag) {
+    const key = `${tag.source}:${tag.value || ""}`;
+    if (seen.has(key)) {
+      return;
+    }
+
+    seen.add(key);
+    tags.push(tag);
+  });
+};
+
 rankSources.resolveVenueText = function (venueText) {
   const db = typeof openRankSources === "undefined" ? null : openRankSources;
   if (!db || !Array.isArray(db.records)) {
@@ -83,15 +95,7 @@ rankSources.resolveVenueText = function (venueText) {
       return;
     }
 
-    (record.tags || []).forEach(function (tag) {
-      const key = `${tag.source}:${tag.value || ""}`;
-      if (seen.has(key)) {
-        return;
-      }
-
-      seen.add(key);
-      tags.push(tag);
-    });
+    rankSources.addTags(tags, seen, record.tags);
   });
 
   return tags;
@@ -103,7 +107,11 @@ rankSources.getTagText = function (tag) {
     return tag.value || tag.source;
   }
 
-  return tag.value ? `${source.label}${tag.value}` : source.label;
+  if (!tag.value || source.label.endsWith(tag.value)) {
+    return source.label;
+  }
+
+  return `${source.label}${tag.value}`;
 };
 
 rankSources.getTagSpan = function (tag) {
