@@ -11,6 +11,12 @@ const openRankSources = {
     cssci: { label: "CSSCI", className: "rank-source-cn" },
     swufe: { label: "西南财大", className: "rank-source-school" },
     swjtu: { label: "西南交大", className: "rank-source-school" },
+    roboticsTop: { label: "机器人顶会/刊", className: "rank-source-robotics" },
+    controlTop: { label: "控制顶刊", className: "rank-source-control" },
+    mechTop: { label: "机械顶刊", className: "rank-source-mech" },
+    eeTop: { label: "电气顶刊", className: "rank-source-ee" },
+    commTop: { label: "通信顶刊", className: "rank-source-comm" },
+    hotTopic: { label: "热门方向", className: "rank-source-hot" },
   },
   records: [
     {
@@ -86,7 +92,157 @@ const openRankSources = {
     {
       title: "Neural Information Processing Systems",
       aliases: ["NeurIPS", "NIPS"],
-      tags: [{ source: "ei" }],
+      tags: [{ source: "ei" }, { source: "hotTopic", value: "AI" }],
+    },
+    {
+      title: "Conference on Robot Learning",
+      aliases: ["CoRL"],
+      tags: [
+        { source: "roboticsTop" },
+        { source: "hotTopic", value: "Robot Learning" },
+      ],
+    },
+    {
+      title: "Robotics: Science and Systems",
+      aliases: ["RSS"],
+      tags: [
+        { source: "roboticsTop" },
+        { source: "hotTopic", value: "Robotics" },
+      ],
+    },
+    {
+      title: "IEEE International Conference on Robotics and Automation",
+      aliases: ["ICRA"],
+      tags: [{ source: "roboticsTop" }, { source: "ei" }],
+    },
+    {
+      title:
+        "IEEE/RSJ International Conference on Intelligent Robots and Systems",
+      aliases: ["IROS"],
+      tags: [{ source: "roboticsTop" }, { source: "ei" }],
+    },
+    {
+      title: "IEEE Transactions on Robotics",
+      aliases: ["TRO", "IEEE T-RO", "IEEE T ROBOT"],
+      tags: [
+        { source: "roboticsTop" },
+        { source: "sci" },
+        { source: "casTop", value: "TOP" },
+      ],
+    },
+    {
+      title: "The International Journal of Robotics Research",
+      aliases: ["IJRR", "INTERNATIONAL JOURNAL OF ROBOTICS RESEARCH"],
+      tags: [
+        { source: "roboticsTop" },
+        { source: "sci" },
+        { source: "casTop", value: "TOP" },
+      ],
+    },
+    {
+      title: "IEEE Robotics and Automation Letters",
+      aliases: ["RA-L", "RAL", "IEEE RA L"],
+      tags: [{ source: "roboticsTop" }, { source: "sci" }],
+    },
+    {
+      title: "Science Robotics",
+      tags: [
+        { source: "roboticsTop" },
+        { source: "sci" },
+        { source: "casTop", value: "TOP" },
+      ],
+    },
+    {
+      title: "Automatica",
+      tags: [
+        { source: "controlTop" },
+        { source: "sci" },
+        { source: "casTop", value: "TOP" },
+      ],
+    },
+    {
+      title: "IEEE Transactions on Automatic Control",
+      aliases: ["TAC", "IEEE TAC"],
+      tags: [
+        { source: "controlTop" },
+        { source: "sci" },
+        { source: "casTop", value: "TOP" },
+      ],
+    },
+    {
+      title: "IEEE Transactions on Industrial Electronics",
+      aliases: ["TIE", "IEEE TIE"],
+      tags: [
+        { source: "eeTop" },
+        { source: "sci" },
+        { source: "casTop", value: "TOP" },
+      ],
+    },
+    {
+      title: "IEEE Transactions on Power Electronics",
+      aliases: ["TPEL", "IEEE TPEL"],
+      tags: [
+        { source: "eeTop" },
+        { source: "sci" },
+        { source: "casTop", value: "TOP" },
+      ],
+    },
+    {
+      title: "IEEE Transactions on Smart Grid",
+      aliases: ["TSG", "IEEE TSG"],
+      tags: [
+        { source: "eeTop" },
+        { source: "sci" },
+        { source: "casTop", value: "TOP" },
+        { source: "hotTopic", value: "Energy AI" },
+      ],
+    },
+    {
+      title: "Journal of Mechanical Design",
+      aliases: ["ASME Journal of Mechanical Design"],
+      tags: [{ source: "mechTop" }, { source: "sci" }],
+    },
+    {
+      title: "Mechanical Systems and Signal Processing",
+      aliases: ["MSSP"],
+      tags: [
+        { source: "mechTop" },
+        { source: "sci" },
+        { source: "casTop", value: "TOP" },
+      ],
+    },
+    {
+      title: "IEEE Journal on Selected Areas in Communications",
+      aliases: ["JSAC", "IEEE JSAC"],
+      tags: [
+        { source: "commTop" },
+        { source: "sci" },
+        { source: "casTop", value: "TOP" },
+      ],
+    },
+    {
+      title: "IEEE Transactions on Wireless Communications",
+      aliases: ["TWC", "IEEE TWC"],
+      tags: [
+        { source: "commTop" },
+        { source: "sci" },
+        { source: "casTop", value: "TOP" },
+        { source: "hotTopic", value: "6G" },
+      ],
+    },
+    {
+      title: "IEEE Transactions on Signal Processing",
+      aliases: ["TSP", "IEEE TSP"],
+      tags: [
+        { source: "commTop" },
+        { source: "sci" },
+        { source: "casTop", value: "TOP" },
+      ],
+    },
+    {
+      title: "IEEE INFOCOM",
+      aliases: ["INFOCOM", "IEEE Conference on Computer Communications"],
+      tags: [{ source: "commTop" }, { source: "ei" }],
     },
     {
       title: "计算机学报",

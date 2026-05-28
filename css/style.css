@@ -99,6 +99,30 @@
   background-color: #3d95d8;
 }
 
+.rank-source-robotics {
+  background-color: #7c5cff;
+}
+
+.rank-source-control {
+  background-color: #0f8b8d;
+}
+
+.rank-source-mech {
+  background-color: #7b6d5f;
+}
+
+.rank-source-ee {
+  background-color: #006d77;
+}
+
+.rank-source-comm {
+  background-color: #355070;
+}
+
+.rank-source-hot {
+  background-color: #f97316;
+}
+
 .rank-source-default {
   background-color: #6c757d;
 }

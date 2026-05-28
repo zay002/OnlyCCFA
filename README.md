@@ -19,7 +19,7 @@ OnlyCCFA 是基于 [CCFrank](https://github.com/WenyanLiu/CCFrank4dblp) 的独�
 ## Features
 
 - Shows CCF recommended ranks for papers on Google Scholar, dblp, Connected Papers, Semantic Scholar and Web of Science.
-- Adds an open multi-source rank badge framework for SCI, CAS partition, SCI TOP, EI, PKU Core, CSCD, CSSCI and school-specific lists.
+- Adds an open multi-source rank badge framework for SCI, CAS partition, SCI TOP, EI, PKU Core, CSCD, CSSCI, school-specific lists and domain-prestige venues in robotics, control, electrical engineering, communications and mechanical engineering.
 - Filters Google Scholar search results to CCF-A papers by default.
 - Keeps an on-page rank switcher so you can change between `ALL`, `CCF A`, `CCF B` and `CCF C`.
 - Lets you save the default Google Scholar filter and choose whether unmatched results should stay visible.
@@ -28,13 +28,15 @@ OnlyCCFA 是基于 [CCFrank](https://github.com/WenyanLiu/CCFrank4dblp) 的独�
 
 ## Screenshots
 
-| ALL                                                                                     | CCF A                                                                                           |
-| --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| <img src="./img/all.png" alt="OnlyCCFA showing all Google Scholar results" width="420"> | <img src="./img/ccfa.png" alt="OnlyCCFA filtering Google Scholar results to CCF A" width="420"> |
+OnlyCCFA screenshots are organized around research workflows, not button states. The examples below use current high-interest directions such as embodied AI, robot learning, 6G communication and AI-assisted engineering control.
 
-| CCF B                                                                                           | CCF C                                                                                           |
-| ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| <img src="./img/ccfb.png" alt="OnlyCCFA filtering Google Scholar results to CCF B" width="420"> | <img src="./img/ccfc.png" alt="OnlyCCFA filtering Google Scholar results to CCF C" width="420"> |
+| Embodied AI: CCF-A first                                                                                | Robot learning: prestige beyond CCF                                                                           |
+| ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| <img src="./img/newccfa1.png" alt="OnlyCCFA filtering embodied AI results to CCF-A papers" width="420"> | <img src="./img/newccfa2.png" alt="OnlyCCFA showing CoRL RSS TRO and RA-L robot learning badges" width="420"> |
+
+| 6G communication: open source-rank badges                                                                | Engineering control: EE, control and mechanical venues                                                                 |
+| -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| <img src="./img/newccfb.png" alt="OnlyCCFA showing 6G semantic communication source badges" width="420"> | <img src="./img/newccfc.png" alt="OnlyCCFA showing power electronics control and mechanical venue badges" width="420"> |
 
 ## Install
 
@@ -73,7 +75,9 @@ The tests cover:
 
 OnlyCCFA uses a transparent data-source structure in `data/openRankSources.js`.
 
-The built-in list is an open seed dataset for common venues and Chinese core journals. It is designed to be expanded from official public lists or clearly licensed open datasets. OnlyCCFA does not copy EasyScholar's packaged data.
+The built-in list is an open seed dataset for common venues, Chinese core journals and high-reputation domain venues such as CoRL, RSS, ICRA, IROS, TRO, IJRR, RA-L, Automatica, IEEE TAC, IEEE TPEL, IEEE TWC and IEEE JSAC.
+
+It is designed to be expanded from official public lists or clearly licensed open datasets. OnlyCCFA does not copy EasyScholar's packaged data.
 
 ## Release
 

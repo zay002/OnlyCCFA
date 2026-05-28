@@ -38,8 +38,35 @@ const cvprTags = rankSources.resolveVenueText(
 );
 assert.ok(cvprTags.some((tag) => tag.source === "ei"));
 
+const corlTags = rankSources.resolveVenueText("Conference on Robot Learning");
+assert.ok(corlTags.some((tag) => tag.source === "roboticsTop"));
+assert.ok(corlTags.some((tag) => tag.source === "hotTopic"));
+
+const twcTags = rankSources.resolveVenueText(
+  "IEEE Transactions on Wireless Communications",
+);
+assert.ok(twcTags.some((tag) => tag.source === "commTop"));
+assert.ok(twcTags.some((tag) => tag.source === "hotTopic"));
+
+const tpelTags = rankSources.resolveVenueText(
+  "IEEE Transactions on Power Electronics",
+);
+assert.ok(tpelTags.some((tag) => tag.source === "eeTop"));
+
+const tacTags = rankSources.resolveVenueText("Proceedings of TAC 2026");
+assert.ok(tacTags.some((tag) => tag.source === "controlTop"));
+
 const cnTags = rankSources.resolveVenueText("计算机学报");
 assert.ok(cnTags.some((tag) => tag.source === "pkuCore"));
 assert.ok(cnTags.some((tag) => tag.source === "cscd"));
 
 assert.strictEqual(rankSources.resolveVenueText("Unknown Venue").length, 0);
+assert.strictEqual(
+  rankSources.resolveVenueText("An attack on control systems").length,
+  0,
+);
+assert.strictEqual(
+  rankSources.resolveVenueText("A practical tie-breaking method").length,
+  0,
+);
+assert.strictEqual(rankSources.resolveVenueText("IEEE").length, 0);

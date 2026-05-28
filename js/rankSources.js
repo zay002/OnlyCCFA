@@ -15,6 +15,37 @@ rankSources.getRecordNames = function (record) {
   return [record.title].concat(record.aliases || []).filter(Boolean);
 };
 
+rankSources.containsNormalizedPhrase = function (text, phrase) {
+  return ` ${text} `.includes(` ${phrase} `);
+};
+
+rankSources.isShortAcronymName = function (name) {
+  const normalizedName = rankSources.normalizeText(name);
+  return /^[A-Z0-9]{2,4}$/.test(normalizedName);
+};
+
+rankSources.escapeRegExp = function (text) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+};
+
+rankSources.hasOriginalAcronymToken = function (venueText, name) {
+  const normalizedName = rankSources.normalizeText(name);
+  const variants = [name, normalizedName].filter(Boolean);
+  const pattern = variants
+    .map(rankSources.escapeRegExp)
+    .filter(Boolean)
+    .join("|");
+
+  return new RegExp(`(^|[^A-Za-z0-9])(${pattern})(?=$|[^A-Za-z0-9])`).test(
+    venueText || "",
+  );
+};
+
+rankSources.canReverseMatch = function (text) {
+  const tokens = text.split(" ").filter(Boolean);
+  return tokens.length > 1 && text.length >= 8;
+};
+
 rankSources.matchRecord = function (venueText, record) {
   const normalizedVenue = rankSources.normalizeText(venueText);
   if (!normalizedVenue) {
@@ -29,8 +60,11 @@ rankSources.matchRecord = function (venueText, record) {
 
     return (
       normalizedVenue === normalizedName ||
-      normalizedVenue.includes(normalizedName) ||
-      normalizedName.includes(normalizedVenue)
+      (rankSources.containsNormalizedPhrase(normalizedVenue, normalizedName) &&
+        (!rankSources.isShortAcronymName(name) ||
+          rankSources.hasOriginalAcronymToken(venueText, name))) ||
+      (rankSources.canReverseMatch(normalizedVenue) &&
+        rankSources.containsNormalizedPhrase(normalizedName, normalizedVenue))
     );
   });
 };
