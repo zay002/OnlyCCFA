@@ -26,7 +26,10 @@ if (!fs.existsSync(zipPath)) {
   throw new Error(`Release zip is missing: ${zipPath}`);
 }
 
-function request({ method, hostname, path: requestPath, headers = {} }, body) {
+function request(
+  { method, hostname, path: requestPath, headers = {}, allow404 = false },
+  body,
+) {
   return new Promise((resolve, reject) => {
     const req = https.request(
       {
@@ -46,6 +49,11 @@ function request({ method, hostname, path: requestPath, headers = {} }, body) {
         res.on("data", (chunk) => chunks.push(chunk));
         res.on("end", () => {
           const text = Buffer.concat(chunks).toString("utf8");
+          if (allow404 && res.statusCode === 404) {
+            resolve(null);
+            return;
+          }
+
           if (res.statusCode < 200 || res.statusCode >= 300) {
             reject(
               new Error(
@@ -69,25 +77,65 @@ function request({ method, hostname, path: requestPath, headers = {} }, body) {
 
 async function main() {
   const notes = fs.readFileSync(notesPath, "utf8");
-  const release = await request(
-    {
-      method: "POST",
-      hostname: "api.github.com",
-      path: `/repos/${repo}/releases`,
-      headers: { "Content-Type": "application/json" },
-    },
-    JSON.stringify({
-      tag_name: tag,
-      name: `OnlyCCFA ${tag}`,
-      body: notes,
-      draft: false,
-      prerelease: false,
-      generate_release_notes: false,
-    }),
-  );
+  let release = await request({
+    method: "GET",
+    hostname: "api.github.com",
+    path: `/repos/${repo}/releases/tags/${encodeURIComponent(tag)}`,
+    allow404: true,
+  });
+
+  if (release) {
+    release = await request(
+      {
+        method: "PATCH",
+        hostname: "api.github.com",
+        path: `/repos/${repo}/releases/${release.id}`,
+        headers: { "Content-Type": "application/json" },
+      },
+      JSON.stringify({
+        name: `OnlyCCFA ${tag}`,
+        body: notes,
+        draft: false,
+        prerelease: false,
+      }),
+    );
+  } else {
+    release = await request(
+      {
+        method: "POST",
+        hostname: "api.github.com",
+        path: `/repos/${repo}/releases`,
+        headers: { "Content-Type": "application/json" },
+      },
+      JSON.stringify({
+        tag_name: tag,
+        name: `OnlyCCFA ${tag}`,
+        body: notes,
+        draft: false,
+        prerelease: false,
+        generate_release_notes: false,
+      }),
+    );
+  }
+
+  const assets = await request({
+    method: "GET",
+    hostname: "api.github.com",
+    path: `/repos/${repo}/releases/${release.id}/assets`,
+  });
 
   const zipBuffer = fs.readFileSync(zipPath);
   const assetName = path.basename(zipPath);
+  const existingAsset = assets.find((asset) => asset.name === assetName);
+
+  if (existingAsset) {
+    await request({
+      method: "DELETE",
+      hostname: "api.github.com",
+      path: `/repos/${repo}/releases/assets/${existingAsset.id}`,
+    });
+  }
+
   const uploadPath = `/repos/${repo}/releases/${release.id}/assets?name=${encodeURIComponent(
     assetName,
   )}`;
@@ -105,7 +153,7 @@ async function main() {
     zipBuffer,
   );
 
-  console.log(`Created GitHub release ${release.html_url}`);
+  console.log(`Published GitHub release ${release.html_url}`);
 }
 
 main().catch((error) => {
