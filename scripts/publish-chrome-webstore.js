@@ -16,6 +16,7 @@ const publisherId = process.env.CWS_PUBLISHER_ID;
 const clientId = process.env.CWS_CLIENT_ID;
 const clientSecret = process.env.CWS_CLIENT_SECRET;
 const refreshToken = process.env.CWS_REFRESH_TOKEN;
+const proxyUrl = process.env.CWS_PROXY;
 const zipPath =
   process.env.CWS_ZIP ||
   path.join(root, "dist", `OnlyCCFA-${manifest.version}.zip`);
@@ -30,10 +31,44 @@ if (!fs.existsSync(zipPath)) {
   throw new Error(`Chrome Web Store zip is missing: ${zipPath}`);
 }
 
-function request({ method, hostname, path: requestPath, headers = {} }, body) {
+function normalizeProxyUrl(value) {
+  if (!value) {
+    return null;
+  }
+
+  return value.includes("://") ? value : `http://${value}`;
+}
+
+let proxyAgent;
+
+async function getProxyAgent() {
+  if (!proxyUrl) {
+    return null;
+  }
+
+  if (!proxyAgent) {
+    const { HttpsProxyAgent } = await import("https-proxy-agent");
+    proxyAgent = new HttpsProxyAgent(normalizeProxyUrl(proxyUrl));
+  }
+
+  return proxyAgent;
+}
+
+async function request(
+  { method, hostname, path: requestPath, headers = {} },
+  body,
+) {
+  const agent = await getProxyAgent();
+
   return new Promise((resolve, reject) => {
     const req = https.request(
-      { method, hostname, path: requestPath, headers },
+      {
+        method,
+        hostname,
+        path: requestPath,
+        headers,
+        agent: agent || undefined,
+      },
       (res) => {
         const chunks = [];
         res.on("data", (chunk) => chunks.push(chunk));
