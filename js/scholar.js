@@ -876,6 +876,51 @@ scholar.exportBibtex = async function (scope) {
   return bibtex;
 };
 
+scholar.getRankBadgeHost = function (
+  entry,
+  doc = typeof document === "undefined" ? null : document,
+) {
+  if (!entry) {
+    return null;
+  }
+
+  const existing = entry.querySelector(".onlyccfa-rank-badges");
+  if (existing) {
+    return existing;
+  }
+
+  if (!doc?.createElement) {
+    return null;
+  }
+
+  const title = entry.querySelector("h3");
+  if (!title) {
+    return null;
+  }
+
+  const host = doc.createElement("div");
+  host.className = "onlyccfa-rank-badges";
+  title.insertAdjacentElement("afterend", host);
+  return host;
+};
+
+scholar.getEntryFromRankAnchor = function (anchor) {
+  const node = anchor?.jquery ? anchor[0] : anchor;
+  return node?.closest?.("div.gs_ri") || null;
+};
+
+scholar.appendRankBadge = function (anchor, badge, entry) {
+  const host = scholar.getRankBadgeHost(
+    entry || scholar.getEntryFromRankAnchor(anchor),
+  );
+  if (host) {
+    $(host).append(badge);
+    return;
+  }
+
+  $(anchor).after(badge);
+};
+
 scholar.appendResultActions = function (entry) {
   if (entry.querySelector(".onlyccfa-result-actions")) {
     return;
@@ -929,17 +974,27 @@ scholar.appendVenueRank = function (node, venue, entry) {
     let venueMatch = ccf.resolveVenueText(venue);
     if (venueMatch) {
       for (let getRankSpan of scholar.rankSpanList) {
-        $(node).after(getRankSpan(venueMatch.refine, venueMatch.type));
+        scholar.appendRankBadge(
+          node,
+          getRankSpan(venueMatch.refine, venueMatch.type),
+          entry,
+        );
       }
       scholar.setVenueName(entry, venueMatch.refine || venue);
       matched = true;
     }
   }
 
-  if (typeof rankSources != "undefined" && rankSources.appendVenueTags) {
-    const rankSourceMatch = rankSources.appendVenueTags(node, venue);
-    if (rankSourceMatch) {
-      scholar.setVenueName(entry, rankSourceMatch.displayName || venue);
+  if (typeof rankSources != "undefined" && rankSources.resolveVenueText) {
+    const tags = rankSources.resolveVenueText(venue);
+    if (tags.length > 0) {
+      tags.forEach((tag) => {
+        scholar.appendRankBadge(node, rankSources.getTagSpan(tag), entry);
+      });
+      scholar.setVenueName(
+        entry,
+        tags.find((tag) => tag.matchedTitle)?.matchedTitle || venue,
+      );
       matched = true;
     }
   }
@@ -957,10 +1012,7 @@ scholar.appendRank = function () {
     }
 
     let node = $(this).find("h3 > a");
-    if (
-      !node.next().hasClass("ccf-rank") &&
-      !node.next().hasClass("rank-source")
-    ) {
+    if (node.length) {
       let title = node.text();
       let metadata = $(this).find("div.gs_a").text();
       let venue = scholar.extractVenue(metadata);

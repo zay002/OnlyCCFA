@@ -186,3 +186,38 @@ assert.strictEqual(
 
 assert.strictEqual(scholar.buildScholarBibtexSettingsUrl, undefined);
 assert.strictEqual(scholar.enableScholarBibtexLinks, undefined);
+
+function fakeScholarEntry() {
+  const entry = { rankHost: null };
+  const title = {
+    insertAdjacentElement(position, node) {
+      assert.strictEqual(position, "afterend");
+      entry.rankHost = node;
+    },
+  };
+
+  entry.querySelector = function (selector) {
+    if (selector === ".onlyccfa-rank-badges") {
+      return entry.rankHost;
+    }
+    if (selector === "h3") {
+      return title;
+    }
+    return null;
+  };
+
+  return entry;
+}
+
+const rankHostEntry = fakeScholarEntry();
+const rankHost = scholar.getRankBadgeHost(rankHostEntry, {
+  createElement(tagName) {
+    return {
+      tagName,
+      className: "",
+    };
+  },
+});
+assert.strictEqual(rankHost.tagName, "div");
+assert.strictEqual(rankHost.className, "onlyccfa-rank-badges");
+assert.strictEqual(scholar.getRankBadgeHost(rankHostEntry), rankHost);

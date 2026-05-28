@@ -40,6 +40,15 @@ function processPacmPlJournal(resp) {
   return PACM_PL_CONFERENCE_MAP[number] || "/journals/pacmpl/pacmpl";
 }
 
+function appendRankSpan(node, rankSpan, site) {
+  if (site && typeof site.appendRankBadge == "function") {
+    site.appendRankBadge(node, rankSpan);
+    return;
+  }
+
+  $(node).after(rankSpan);
+}
+
 function fetchRank(node, title, authorA, year, site) {
   const manifest = chrome.runtime.getManifest();
   const version = manifest.version;
@@ -75,20 +84,20 @@ function fetchFromCache(cached, node, title, authorA, year, site) {
 
     for (let getRankSpan of site.rankSpanList) {
       // console.log("with abbr");
-      $(node).after(getRankSpan(dblp_abbr, "abbr"));
+      appendRankSpan(node, getRankSpan(dblp_abbr, "abbr"), site);
     }
   } else if (dblp_url == "/journals/pacmpl/pacmpl") {
     // Process PACM PL conferences using centralized helper function
     dblp_url = processPacmPlJournal(resp);
 
     for (let getRankSpan of site.rankSpanList) {
-      $(node).after(getRankSpan(dblp_url, "url"));
+      appendRankSpan(node, getRankSpan(dblp_url, "url"), site);
     }
   } else {
     // console.log("dblp_url is not empty");
     for (let getRankSpan of site.rankSpanList) {
       // console.log("with url");
-      $(node).after(getRankSpan(dblp_url, "url"));
+      appendRankSpan(node, getRankSpan(dblp_url, "url"), site);
     }
   }
 }
@@ -171,7 +180,7 @@ function fetchFromDblpApi(query_url, node, title, authorA, year, site) {
         }
         for (let getRankSpan of site.rankSpanList) {
           // console.log("with abbr");
-          $(node).after(getRankSpan(dblp_abbr, "abbr"));
+          appendRankSpan(node, getRankSpan(dblp_abbr, "abbr"), site);
         }
       }
       // Process PACM PL conferences using centralized helper function
@@ -179,12 +188,12 @@ function fetchFromDblpApi(query_url, node, title, authorA, year, site) {
         dblp_url = processPacmPlJournal(resp);
 
         for (let getRankSpan of site.rankSpanList) {
-          $(node).after(getRankSpan(dblp_url, "url"));
+          appendRankSpan(node, getRankSpan(dblp_url, "url"), site);
         }
       } else {
         for (let getRankSpan of site.rankSpanList) {
           // console.log("with url");
-          $(node).after(getRankSpan(dblp_url, "url"));
+          appendRankSpan(node, getRankSpan(dblp_url, "url"), site);
         }
       }
     }

@@ -210,6 +210,20 @@
   font-size: 11px;
 }
 
+.onlyccfa-rank-badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin: 3px 0 4px;
+}
+
+.onlyccfa-rank-badges .ccf-rank,
+.onlyccfa-rank-badges .rank-source {
+  margin-left: 0;
+  margin-right: 2px;
+}
+
 .onlyccfa-result-actions label {
   display: inline-flex;
   align-items: center;
