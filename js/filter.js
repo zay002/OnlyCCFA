@@ -63,6 +63,16 @@ const filter = {
     const filterDiv = document.createElement("div");
     filterDiv.className = "ccf-filter";
     filterDiv.dataset.site = this.siteConfig.site;
+    const deepSearchControls =
+      this.siteConfig.site === "scholar"
+        ? `
+      <div class="ccf-filter-deep">
+        <button type="button" data-action="deep-search" title="加载约前 55 条 Google 学术结果，合并后应用当前筛选。">深筛 55</button>
+        <div class="ccf-filter-deep-status" aria-live="polite"></div>
+      </div>
+    `
+        : "";
+
     filterDiv.innerHTML = `
       <div class="ccf-filter-ranks">
         <button data-rank="ALL">ALL</button>
@@ -86,6 +96,7 @@ const filter = {
         </label>
       </div>
       <div class="ccf-filter-stats" aria-live="polite"></div>
+      ${deepSearchControls}
     `;
     filterDiv
       .querySelector(`[data-rank="${this.currentFilter}"]`)
@@ -290,7 +301,14 @@ const filter = {
     }
 
     filterElement.addEventListener("click", (e) => {
-      if (e.target.tagName === "BUTTON") {
+      if (e.target.dataset.action === "deep-search") {
+        if (typeof scholar !== "undefined" && scholar.loadDeepResults) {
+          scholar.loadDeepResults();
+        }
+        return;
+      }
+
+      if (e.target.tagName === "BUTTON" && e.target.dataset.rank) {
         this.currentFilter = e.target.dataset.rank;
         this.refreshActiveButton();
         this.applyFilter();

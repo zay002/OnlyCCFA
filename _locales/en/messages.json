@@ -4,7 +4,7 @@
     "description": "Extension name."
   },
   "extDesc": {
-    "message": "Displays CCF and open ranking-source badges, and filters Google Scholar to CCF-A papers by default.",
+    "message": "Filters Google Scholar to CCF-A by default, deep-filters about 55 results, and shows CCF, SCI/JCR, CAS and field TOP badges.",
     "description": "Extension description."
   }
 }

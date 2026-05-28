@@ -4,7 +4,7 @@
     "description": "Extension name."
   },
   "extDesc": {
-    "message": "显示 CCF 与开放榜单来源标签，并在 Google 学术中默认只显示 CCF-A 论文。",
+    "message": "Google 学术默认筛选 CCF-A，可按需深筛约 55 条结果，并显示 CCF、SCI/JCR、中科院和方向TOP标签。",
     "description": "Extension description."
   }
 }

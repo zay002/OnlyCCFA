@@ -24,6 +24,7 @@ The goal is simple: help students and researchers in computer science, robotics,
 
 - Shows CCF recommended ranks for papers on Google Scholar, dblp, Connected Papers, Semantic Scholar and Web of Science.
 - Filters Google Scholar search results to `CCF A` by default, with an on-page switcher for `ALL`, `CCF A`, `CCF B` and `CCF C`.
+- Adds `深筛 55`: on demand, OnlyCCFA sequentially loads later Google Scholar pages, merges about the first 55 results locally, then applies the current filter so strong papers are less likely to be buried on later pages.
 - Saves the default Google Scholar filter and lets you choose whether unmatched results should stay visible.
 - Shows how many results are visible, hidden and unmatched after filtering.
 - Adds local Google Scholar venue matching before falling back to DBLP lookup, improving matches for venues such as NeurIPS, CVPR, SIGMOD, AAAI and ICLR.
@@ -69,6 +70,7 @@ npm test
 The tests cover:
 
 - Google Scholar default CCF-A filtering behavior.
+- Google Scholar deep-filter pagination URLs, start offsets and result de-duplication.
 - Saved filter preferences and unmatched-result handling.
 - Filter result statistics.
 - Google Scholar venue extraction.
