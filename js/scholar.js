@@ -12,6 +12,8 @@ scholar.deepPageSize = 20;
 scholar.deepRequestDelay = 800;
 scholar.deepLoading = false;
 scholar.deepState = null;
+scholar.bibtexConcurrency = 4;
+scholar.bibtexCache = new Map();
 
 scholar.run = function () {
   let url = window.location.pathname;
@@ -240,6 +242,184 @@ scholar.isAcceptableYearMatch = function (expectedYear, candidateYear) {
   }
 
   return Math.abs(Number(expectedYear) - Number(candidateYear)) <= 1;
+};
+
+scholar.mapWithConcurrency = async function (items, limit, mapper) {
+  const results = new Array(items.length);
+  let nextIndex = 0;
+  const workerCount = Math.max(1, Math.min(Number(limit) || 1, items.length));
+
+  async function worker() {
+    while (nextIndex < items.length) {
+      const currentIndex = nextIndex;
+      nextIndex += 1;
+      results[currentIndex] = await mapper(items[currentIndex], currentIndex);
+    }
+  }
+
+  await Promise.all(
+    Array.from({ length: workerCount }, function () {
+      return worker();
+    }),
+  );
+
+  return results;
+};
+
+scholar.findBibtexValueEnd = function (source, start) {
+  if (source[start] === "{") {
+    let depth = 0;
+    for (let index = start; index < source.length; index += 1) {
+      if (source[index] === "{") {
+        depth += 1;
+      } else if (source[index] === "}") {
+        depth -= 1;
+        if (depth === 0) {
+          return index + 1;
+        }
+      }
+    }
+    return source.length;
+  }
+
+  if (source[start] === '"') {
+    for (let index = start + 1; index < source.length; index += 1) {
+      if (source[index] === '"' && source[index - 1] !== "\\") {
+        return index + 1;
+      }
+    }
+    return source.length;
+  }
+
+  let index = start;
+  while (index < source.length && source[index] !== ",") {
+    index += 1;
+  }
+  return index;
+};
+
+scholar.parseBibtexFields = function (body) {
+  const fields = [];
+  let index = 0;
+
+  while (index < body.length) {
+    while (index < body.length && /[\s,]/.test(body[index])) {
+      index += 1;
+    }
+
+    const nameMatch = body.slice(index).match(/^([A-Za-z][A-Za-z0-9_-]*)\s*=/);
+    if (!nameMatch) {
+      break;
+    }
+
+    const name = nameMatch[1];
+    index += nameMatch[0].length;
+    while (index < body.length && /\s/.test(body[index])) {
+      index += 1;
+    }
+
+    const valueStart = index;
+    const valueEnd = scholar.findBibtexValueEnd(body, valueStart);
+    fields.push({
+      name,
+      value: body.slice(valueStart, valueEnd).trim(),
+    });
+    index = valueEnd;
+  }
+
+  return fields;
+};
+
+scholar.normalizeBibtexValue = function (value) {
+  const trimmed = String(value || "")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!trimmed) {
+    return "{}";
+  }
+
+  if (trimmed.startsWith("{") || trimmed.startsWith('"')) {
+    if (trimmed.startsWith('"') && trimmed.endsWith('"')) {
+      return `{${trimmed.slice(1, -1)}}`;
+    }
+    return trimmed;
+  }
+
+  return `{${trimmed}}`;
+};
+
+scholar.formatBibtexEntry = function (entry) {
+  const source = String(entry || "").trim();
+  const header = source.match(/^@\s*([A-Za-z]+)\s*[{(]\s*([^,\s]+)\s*,/);
+  if (!header) {
+    return source;
+  }
+
+  const type = header[1];
+  const key = header[2];
+  const bodyStart = header[0].length;
+  const bodyEnd = Math.max(source.lastIndexOf("}"), source.lastIndexOf(")"));
+  const body = bodyEnd > bodyStart ? source.slice(bodyStart, bodyEnd) : "";
+  const fields = scholar.parseBibtexFields(body);
+  if (fields.length === 0) {
+    return source;
+  }
+
+  const lines = fields.map(function (field, index) {
+    const suffix = index === fields.length - 1 ? "" : ",";
+    return `  ${field.name} = ${scholar.normalizeBibtexValue(field.value)}${suffix}`;
+  });
+
+  return [`@${type}{${key},`, ...lines, "}"].join("\n");
+};
+
+scholar.splitBibtexEntries = function (bibtex) {
+  const source = String(bibtex || "").trim();
+  const entries = [];
+  let index = 0;
+
+  while (index < source.length) {
+    const start = source.indexOf("@", index);
+    if (start === -1) {
+      break;
+    }
+
+    const openIndex = source.slice(start).search(/[({]/);
+    if (openIndex === -1) {
+      entries.push(source.slice(start).trim());
+      break;
+    }
+
+    const absoluteOpen = start + openIndex;
+    const openChar = source[absoluteOpen];
+    const closeChar = openChar === "{" ? "}" : ")";
+    let depth = 0;
+    let end = source.length;
+    for (let cursor = absoluteOpen; cursor < source.length; cursor += 1) {
+      if (source[cursor] === openChar) {
+        depth += 1;
+      } else if (source[cursor] === closeChar) {
+        depth -= 1;
+        if (depth === 0) {
+          end = cursor + 1;
+          break;
+        }
+      }
+    }
+
+    entries.push(source.slice(start, end).trim());
+    index = end;
+  }
+
+  return entries;
+};
+
+scholar.formatBibtex = function (bibtex) {
+  return scholar
+    .splitBibtexEntries(bibtex)
+    .map(scholar.formatBibtexEntry)
+    .filter(Boolean)
+    .join("\n\n");
 };
 
 scholar.escapeBibtexValue = function (value) {
@@ -788,6 +968,37 @@ scholar.getEntriesForExport = function (scope) {
   return scholar.getVisibleEntries();
 };
 
+scholar.getBibtexCacheKey = function (entry) {
+  return scholar.getResultKey(entry) || scholar.getResultData(entry).title;
+};
+
+scholar.getCachedReliableBibtexForEntry = async function (entry) {
+  const key = scholar.getBibtexCacheKey(entry);
+  if (key && scholar.bibtexCache.has(key)) {
+    return scholar.bibtexCache.get(key);
+  }
+
+  const request = scholar
+    .getReliableBibtexForEntry(entry)
+    .then(scholar.formatBibtex);
+  if (key) {
+    scholar.bibtexCache.set(key, request);
+  }
+
+  try {
+    const formattedBibtex = await request;
+    if (key) {
+      scholar.bibtexCache.set(key, formattedBibtex);
+    }
+    return formattedBibtex;
+  } catch (error) {
+    if (key) {
+      scholar.bibtexCache.delete(key);
+    }
+    throw error;
+  }
+};
+
 scholar.buildBibtexForEntries = function (entries) {
   return scholar
     .buildBibtexResultForEntries(entries)
@@ -795,26 +1006,32 @@ scholar.buildBibtexForEntries = function (entries) {
 };
 
 scholar.buildBibtexResultForEntries = async function (entries) {
-  const results = [];
-  let failed = 0;
-
-  for (const entry of entries) {
-    try {
-      const bibtex = await scholar.getReliableBibtexForEntry(entry);
-      if (bibtex) {
-        results.push(bibtex);
-      } else {
-        failed += 1;
+  const results = await scholar.mapWithConcurrency(
+    entries,
+    scholar.bibtexConcurrency,
+    async function (entry) {
+      try {
+        const bibtex = await scholar.getCachedReliableBibtexForEntry(entry);
+        return {
+          bibtex,
+          failed: bibtex ? 0 : 1,
+        };
+      } catch (error) {
+        return {
+          bibtex: "",
+          failed: 1,
+        };
       }
-    } catch (error) {
-      failed += 1;
-    }
-  }
+    },
+  );
 
   return {
-    bibtex: results.join("\n\n"),
-    exported: results.length,
-    failed,
+    bibtex: results
+      .map((result) => result.bibtex)
+      .filter(Boolean)
+      .join("\n\n"),
+    exported: results.filter((result) => result.bibtex).length,
+    failed: results.reduce((count, result) => count + result.failed, 0),
   };
 };
 
@@ -1047,7 +1264,7 @@ if (typeof document !== "undefined") {
 
     scholar.setExportStatus(scholar.t("bibtexFetching"));
     scholar
-      .getReliableBibtexForEntry(entry)
+      .getCachedReliableBibtexForEntry(entry)
       .then((bibtex) => {
         if (!bibtex) {
           scholar.setExportStatus(scholar.t("bibtexUnavailable"));

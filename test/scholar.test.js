@@ -221,3 +221,72 @@ const rankHost = scholar.getRankBadgeHost(rankHostEntry, {
 assert.strictEqual(rankHost.tagName, "div");
 assert.strictEqual(rankHost.className, "onlyccfa-rank-badges");
 assert.strictEqual(scholar.getRankBadgeHost(rankHostEntry), rankHost);
+
+const uglyBibtex =
+  "@article{Yang_2021, title={TEASER: Fast and Certifiable Point Cloud Registration}, volume={37}, DOI={10.1109/tro.2020.3033695}, month=Apr, pages={314–333} }";
+const formattedBibtex = scholar.formatBibtex(uglyBibtex);
+assert.strictEqual(
+  formattedBibtex,
+  [
+    "@article{Yang_2021,",
+    "  title = {TEASER: Fast and Certifiable Point Cloud Registration},",
+    "  volume = {37},",
+    "  DOI = {10.1109/tro.2020.3033695},",
+    "  month = {Apr},",
+    "  pages = {314–333}",
+    "}",
+  ].join("\n"),
+);
+
+async function runAsyncTests() {
+  let running = 0;
+  let maxRunning = 0;
+  const result = await scholar.mapWithConcurrency(
+    [1, 2, 3, 4, 5],
+    2,
+    async (value) => {
+      running += 1;
+      maxRunning = Math.max(maxRunning, running);
+      await new Promise((resolve) => setTimeout(resolve, 5));
+      running -= 1;
+      return value * 10;
+    },
+  );
+
+  assert.strictEqual(
+    JSON.stringify(result),
+    JSON.stringify([10, 20, 30, 40, 50]),
+  );
+  assert.ok(maxRunning <= 2);
+
+  const originalGetReliableBibtexForEntry = scholar.getReliableBibtexForEntry;
+  const originalConcurrency = scholar.bibtexConcurrency;
+  scholar.bibtexCache = new Map();
+  scholar.bibtexConcurrency = 2;
+  scholar.getReliableBibtexForEntry = async function (entry) {
+    await new Promise((resolve) => setTimeout(resolve, 20 - entry.id));
+    return `@article{paper${entry.id}, title={Paper ${entry.id}}, year={202${entry.id}} }`;
+  };
+
+  const batch = await scholar.buildBibtexResultForEntries([
+    { id: 1, ...fakeResult("Paper 1", "https://example.org/1") },
+    { id: 2, ...fakeResult("Paper 2", "https://example.org/2") },
+    { id: 3, ...fakeResult("Paper 3", "https://example.org/3") },
+  ]);
+  assert.strictEqual(batch.exported, 3);
+  assert.strictEqual(batch.failed, 0);
+  assert.ok(
+    batch.bibtex.indexOf("@article{paper1,") <
+      batch.bibtex.indexOf("@article{paper2,"),
+  );
+  assert.ok(batch.bibtex.includes("\n  title = {Paper 1},\n"));
+
+  scholar.getReliableBibtexForEntry = originalGetReliableBibtexForEntry;
+  scholar.bibtexConcurrency = originalConcurrency;
+}
+
+runAsyncTests().catch((error) => {
+  setTimeout(() => {
+    throw error;
+  }, 0);
+});
