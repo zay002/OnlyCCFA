@@ -1,7 +1,7 @@
 const swjtuRankSources = {
   sources: {
     swjtuJournal: { label: "西南交大·", className: "rank-source-school" },
-    swjtuScai: { label: "西南交大SCAI·", className: "rank-source-school" },
+    swjtuScai: { label: "西南交大计算机C类", className: "rank-source-school" },
     swjtuTransport: { label: "西南交大交通·", className: "rank-source-school" },
   },
   records: [

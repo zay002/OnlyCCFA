@@ -25,6 +25,10 @@ const onlyccfaI18n = {
       selectResult: "选择",
       copyBibtex: "复制 BibTeX",
       copied: "已复制 BibTeX。",
+      bibtexFetching: "正在从 Google 学术获取 BibTeX...",
+      bibtexDone: "已导出 {count} 条 Google 学术 BibTeX，失败 {failed} 条。",
+      bibtexUnavailable:
+        "无法从 Google 学术获取 BibTeX。为避免不准确引用，已停止导出。",
       noResults: "没有可导出的论文。",
       noScholarResults: "未找到 Google 学术结果。",
       loading: "正在加载更多 Google 学术结果...",
@@ -62,6 +66,11 @@ const onlyccfaI18n = {
       selectResult: "Select",
       copyBibtex: "Copy BibTeX",
       copied: "BibTeX copied.",
+      bibtexFetching: "Fetching BibTeX from Google Scholar...",
+      bibtexDone:
+        "Exported {count} Google Scholar BibTeX entries, {failed} failed.",
+      bibtexUnavailable:
+        "Could not fetch BibTeX from Google Scholar. Export stopped to avoid inaccurate citations.",
       noResults: "No papers to export.",
       noScholarResults: "No Scholar results found.",
       loading: "Loading more Google Scholar results...",

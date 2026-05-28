@@ -66,8 +66,12 @@ onlyccfaBibtex.buildEntry = function (item) {
     ["author", (item.authors || []).join(" and ")],
     [venueField, item.venue],
     ["year", item.year],
+    ["volume", item.volume],
+    ["number", item.number || item.issue],
+    ["pages", item.pages],
+    ["publisher", item.publisher],
+    ["doi", item.doi],
     ["url", item.url],
-    ["keywords", (item.tags || []).join(", ")],
   ].filter((field) => field[1]);
 
   const body = fields
@@ -78,11 +82,22 @@ onlyccfaBibtex.buildEntry = function (item) {
 };
 
 onlyccfaBibtex.parseCreator = function (author) {
-  const parts = String(author || "")
+  const normalized = String(author || "")
     .replace(/\s+/g, " ")
-    .trim()
-    .split(" ")
+    .trim();
+  const commaParts = normalized
+    .split(",")
+    .map((part) => part.trim())
     .filter(Boolean);
+  if (commaParts.length >= 2) {
+    return {
+      creatorType: "author",
+      firstName: commaParts.slice(1).join(" "),
+      lastName: commaParts[0],
+    };
+  }
+
+  const parts = normalized.split(" ").filter(Boolean);
   if (parts.length <= 1) {
     return {
       creatorType: "author",
@@ -97,15 +112,147 @@ onlyccfaBibtex.parseCreator = function (author) {
   };
 };
 
+onlyccfaBibtex.unwrapValue = function (value) {
+  let result = String(value || "").trim();
+  if (
+    (result.startsWith("{") && result.endsWith("}")) ||
+    (result.startsWith('"') && result.endsWith('"'))
+  ) {
+    result = result.slice(1, -1);
+  }
+
+  return result
+    .replace(/\\([{}])/g, "$1")
+    .replace(/\\textbackslash\{\}/g, "\\")
+    .replace(/\s+/g, " ")
+    .trim();
+};
+
+onlyccfaBibtex.parseFields = function (body) {
+  const fields = {};
+  let index = 0;
+
+  while (index < body.length) {
+    while (index < body.length && /[\s,]/.test(body[index])) {
+      index += 1;
+    }
+
+    const nameMatch = body.slice(index).match(/^([A-Za-z][A-Za-z0-9_-]*)\s*=/);
+    if (!nameMatch) {
+      break;
+    }
+
+    const name = nameMatch[1].toLowerCase();
+    index += nameMatch[0].length;
+
+    while (index < body.length && /\s/.test(body[index])) {
+      index += 1;
+    }
+
+    let value = "";
+    if (body[index] === "{") {
+      const start = index;
+      let depth = 0;
+      while (index < body.length) {
+        const char = body[index];
+        if (char === "{") {
+          depth += 1;
+        } else if (char === "}") {
+          depth -= 1;
+          if (depth === 0) {
+            index += 1;
+            break;
+          }
+        }
+        index += 1;
+      }
+      value = body.slice(start, index);
+    } else if (body[index] === '"') {
+      const start = index;
+      index += 1;
+      while (index < body.length) {
+        if (body[index] === '"' && body[index - 1] !== "\\") {
+          index += 1;
+          break;
+        }
+        index += 1;
+      }
+      value = body.slice(start, index);
+    } else {
+      const start = index;
+      while (index < body.length && body[index] !== ",") {
+        index += 1;
+      }
+      value = body.slice(start, index);
+    }
+
+    fields[name] = onlyccfaBibtex.unwrapValue(value);
+  }
+
+  return fields;
+};
+
+onlyccfaBibtex.parseEntry = function (bibtex) {
+  const source = String(bibtex || "").trim();
+  const header = source.match(/^@\s*([A-Za-z]+)\s*[{(]\s*([^,\s]+)\s*,/);
+  if (!header) {
+    return { type: "", key: "", fields: {} };
+  }
+
+  const bodyStart = header[0].length;
+  const bodyEnd = Math.max(source.lastIndexOf("}"), source.lastIndexOf(")"));
+  const body = bodyEnd > bodyStart ? source.slice(bodyStart, bodyEnd) : "";
+
+  return {
+    type: header[1].toLowerCase(),
+    key: header[2],
+    fields: onlyccfaBibtex.parseFields(body),
+  };
+};
+
+onlyccfaBibtex.splitAuthors = function (authorField) {
+  return String(authorField || "")
+    .split(/\s+and\s+/i)
+    .map((author) => author.trim())
+    .filter(Boolean);
+};
+
+onlyccfaBibtex.toZoteroItemFromBibtex = function (bibtex, category) {
+  const parsed = onlyccfaBibtex.parseEntry(bibtex);
+  const fields = parsed.fields || {};
+  const isConference = /^(inproceedings|proceedings|conference)$/i.test(
+    parsed.type || "",
+  );
+  const itemType = isConference ? "conferencePaper" : "journalArticle";
+  const tags = category ? [{ tag: category }] : [];
+
+  return {
+    itemType,
+    title: fields.title || "Untitled",
+    creators: onlyccfaBibtex
+      .splitAuthors(fields.author)
+      .map(onlyccfaBibtex.parseCreator),
+    date: fields.year || "",
+    publicationTitle: itemType === "journalArticle" ? fields.journal || "" : "",
+    proceedingsTitle:
+      itemType === "conferencePaper"
+        ? fields.booktitle || fields.journal || ""
+        : "",
+    volume: fields.volume || "",
+    issue: fields.number || "",
+    pages: fields.pages || "",
+    DOI: fields.doi || "",
+    url: fields.url || "",
+    tags,
+  };
+};
+
 onlyccfaBibtex.toZoteroItem = function (item, category) {
   const itemType =
     onlyccfaBibtex.getEntryType(item) === "article"
       ? "journalArticle"
       : "conferencePaper";
-  const tags = (item.tags || []).map((tag) => ({ tag }));
-  if (category) {
-    tags.push({ tag: category });
-  }
+  const tags = category ? [{ tag: category }] : [];
 
   return {
     itemType,
@@ -114,6 +261,10 @@ onlyccfaBibtex.toZoteroItem = function (item, category) {
     date: item.year || "",
     publicationTitle: itemType === "journalArticle" ? item.venue || "" : "",
     proceedingsTitle: itemType === "conferencePaper" ? item.venue || "" : "",
+    volume: item.volume || "",
+    issue: item.number || item.issue || "",
+    pages: item.pages || "",
+    DOI: item.doi || "",
     url: item.url || "",
     tags,
   };

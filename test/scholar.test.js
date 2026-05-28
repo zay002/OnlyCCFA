@@ -77,3 +77,35 @@ assert.strictEqual(
   scholar.getResultKey(fakeResult("  A Survey of Embodied AI  ", "")),
   "a survey of embodied ai",
 );
+
+assert.strictEqual(
+  scholar.extractBibtexHref(
+    '<a href="/scholar.bib?q=info:abc&amp;output=citation">BibTeX</a>',
+    "https://scholar.google.com/scholar?q=info:abc&output=cite",
+  ),
+  "https://scholar.google.com/scholar.bib?q=info:abc&output=citation",
+);
+
+assert.strictEqual(
+  scholar.getCitationUrl({
+    querySelector(selector) {
+      if (selector === 'a[href*="output=cite"]') {
+        return {
+          href: "/scholar?q=info:abc:scholar.google.com/&output=cite",
+        };
+      }
+      return null;
+    },
+  }),
+  "https://scholar.google.com/scholar?q=info:abc:scholar.google.com/&output=cite",
+);
+
+assert.strictEqual(
+  scholar.getCitationUrl({
+    dataset: { cid: "abc123" },
+    querySelector() {
+      return null;
+    },
+  }),
+  "https://scholar.google.com/scholar?q=info%3Aabc123%3Ascholar.google.com%2F&output=cite&scirp=0",
+);

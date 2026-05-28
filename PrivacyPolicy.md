@@ -16,9 +16,9 @@ Supported sites include dblp, Google Scholar, Connected Papers, Semantic Scholar
 
 ## 使用方式 / How the information is used
 
-OnlyCCFA 使用这些页面文本在本地匹配 CCF、SCI/JCR、中科院、EI、中文核心和方向 TOP 标签，并根据用户选择筛选 Google 学术结果。用户主动点击深度筛选时，OnlyCCFA 会顺序请求后续 Google 学术结果页，并把结果合并到当前页面的本地结果池。
+OnlyCCFA 使用这些页面文本在本地匹配 CCF、SCI/JCR、中科院、EI、中文核心和方向 TOP 标签，并根据用户选择筛选 Google 学术结果。用户主动点击深度筛选时，OnlyCCFA 会顺序请求后续 Google 学术结果页，并把结果合并到当前页面的本地结果池。用户主动导出 BibTeX 或导入 Zotero 时，OnlyCCFA 会请求对应 Google 学术结果的引用页面和 BibTeX 链接，以使用 Google 学术提供的原始引用数据。
 
-OnlyCCFA uses this page text locally to match CCF, SCI/JCR, CAS, EI, Chinese core journal and field TOP badges, then filters Google Scholar results according to the user's settings. When the user explicitly starts deep filtering, OnlyCCFA requests later Google Scholar result pages and merges them into a local result pool on the current page.
+OnlyCCFA uses this page text locally to match CCF, SCI/JCR, CAS, EI, Chinese core journal and field TOP badges, then filters Google Scholar results according to the user's settings. When the user explicitly starts deep filtering, OnlyCCFA requests later Google Scholar result pages and merges them into a local result pool on the current page. When the user explicitly exports BibTeX or imports to Zotero, OnlyCCFA requests the corresponding Google Scholar citation page and BibTeX link so it can use Google Scholar's native citation data.
 
 ## 数据共享 / Data sharing
 

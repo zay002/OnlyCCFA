@@ -108,6 +108,86 @@ scholar.getResultKey = function (entry) {
   return titleLink.textContent.replace(/\s+/g, " ").trim().toLowerCase();
 };
 
+scholar.decodeHtmlAttribute = function (value) {
+  return String(value || "")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
+};
+
+scholar.getCitationUrl = function (entry) {
+  const citationLink = entry.querySelector('a[href*="output=cite"]');
+  if (citationLink?.href && !citationLink.href.startsWith("javascript:")) {
+    return new URL(citationLink.href, scholar.getBaseUrl()).toString();
+  }
+
+  const cid =
+    entry.dataset?.cid || entry.querySelector("[data-cid]")?.dataset?.cid || "";
+  if (!cid) {
+    return "";
+  }
+
+  const citationUrl = new URL("/scholar", scholar.getBaseUrl());
+  citationUrl.searchParams.set("q", `info:${cid}:scholar.google.com/`);
+  citationUrl.searchParams.set("output", "cite");
+  citationUrl.searchParams.set("scirp", "0");
+  return citationUrl.toString();
+};
+
+scholar.extractBibtexHref = function (html, baseUrl) {
+  const source = String(html || "");
+  if (typeof DOMParser !== "undefined") {
+    const doc = new DOMParser().parseFromString(source, "text/html");
+    const bibtexLink =
+      Array.from(doc.querySelectorAll("a")).find((link) =>
+        /bibtex/i.test(link.textContent || ""),
+      ) || doc.querySelector('a[href*="scholar.bib"]');
+    if (bibtexLink?.getAttribute("href")) {
+      return new URL(bibtexLink.getAttribute("href"), baseUrl).toString();
+    }
+  }
+
+  const textLinkMatch = source.match(
+    /<a\b[^>]*href=(["'])(.*?)\1[^>]*>\s*BibTeX\s*<\/a>/i,
+  );
+  const hrefMatch =
+    textLinkMatch || source.match(/href=(["'])([^"']*scholar\.bib[^"']*)\1/i);
+  if (!hrefMatch) {
+    return "";
+  }
+
+  return new URL(scholar.decodeHtmlAttribute(hrefMatch[2]), baseUrl).toString();
+};
+
+scholar.fetchGoogleScholarBibtex = async function (entry) {
+  const citationUrl = scholar.getCitationUrl(entry);
+  if (!citationUrl) {
+    return "";
+  }
+
+  const citationResponse = await fetch(citationUrl, { credentials: "include" });
+  if (!citationResponse.ok) {
+    throw new Error(
+      `Google Scholar citation returned ${citationResponse.status}`,
+    );
+  }
+
+  const citationHtml = await citationResponse.text();
+  const bibtexUrl = scholar.extractBibtexHref(citationHtml, citationUrl);
+  if (!bibtexUrl) {
+    return "";
+  }
+
+  const bibtexResponse = await fetch(bibtexUrl, { credentials: "include" });
+  if (!bibtexResponse.ok) {
+    throw new Error(`Google Scholar BibTeX returned ${bibtexResponse.status}`);
+  }
+
+  return (await bibtexResponse.text()).trim();
+};
+
 scholar.getExistingResultKeys = function () {
   return new Set(
     scholar
@@ -340,9 +420,33 @@ scholar.getEntriesForExport = function (scope) {
 };
 
 scholar.buildBibtexForEntries = function (entries) {
-  return entries
-    .map((entry) => onlyccfaBibtex.buildEntry(scholar.getResultData(entry)))
-    .join("\n\n");
+  return scholar
+    .buildBibtexResultForEntries(entries)
+    .then((result) => result.bibtex);
+};
+
+scholar.buildBibtexResultForEntries = async function (entries) {
+  const results = [];
+  let failed = 0;
+
+  for (const entry of entries) {
+    try {
+      const bibtex = await scholar.fetchGoogleScholarBibtex(entry);
+      if (bibtex) {
+        results.push(bibtex);
+      } else {
+        failed += 1;
+      }
+    } catch (error) {
+      failed += 1;
+    }
+  }
+
+  return {
+    bibtex: results.join("\n\n"),
+    exported: results.length,
+    failed,
+  };
 };
 
 scholar.downloadText = function (filename, content) {
@@ -378,16 +482,28 @@ scholar.setExportStatus = function (message) {
   }
 };
 
-scholar.exportBibtex = function (scope) {
+scholar.exportBibtex = async function (scope) {
   const entries = scholar.getEntriesForExport(scope);
   if (entries.length === 0) {
     scholar.setExportStatus(scholar.t("noResults"));
     return "";
   }
 
-  const bibtex = scholar.buildBibtexForEntries(entries);
+  scholar.setExportStatus(scholar.t("bibtexFetching"));
+  const result = await scholar.buildBibtexResultForEntries(entries);
+  const bibtex = result.bibtex;
+  if (!bibtex) {
+    scholar.setExportStatus(scholar.t("bibtexUnavailable"));
+    return "";
+  }
+
   scholar.downloadText(`onlyccfa-${scope}.bib`, bibtex);
-  scholar.setExportStatus(`${entries.length} BibTeX`);
+  scholar.setExportStatus(
+    scholar.t("bibtexDone", {
+      count: result.exported,
+      failed: result.failed,
+    }),
+  );
   return bibtex;
 };
 
@@ -399,9 +515,16 @@ scholar.importToZotero = async function (category) {
     return false;
   }
 
-  const items = targetEntries.map((entry) =>
-    onlyccfaBibtex.toZoteroItem(scholar.getResultData(entry), category),
-  );
+  scholar.setExportStatus(scholar.t("bibtexFetching"));
+  const bibtexResult = await scholar.buildBibtexResultForEntries(targetEntries);
+  if (!bibtexResult.bibtex) {
+    scholar.setExportStatus(scholar.t("bibtexUnavailable"));
+    return false;
+  }
+
+  const items = bibtexResult.bibtex
+    .split(/\n\s*\n/)
+    .map((bibtex) => onlyccfaBibtex.toZoteroItemFromBibtex(bibtex, category));
   const endpoints = [
     "http://127.0.0.1:23119/connector/saveItems",
     "http://localhost:23119/connector/saveItems",
@@ -425,8 +548,7 @@ scholar.importToZotero = async function (category) {
     }
     throw new Error("Zotero Connector unavailable");
   } catch (error) {
-    const bibtex = scholar.buildBibtexForEntries(targetEntries);
-    scholar.downloadText("onlyccfa-zotero-fallback.bib", bibtex);
+    scholar.downloadText("onlyccfa-zotero-fallback.bib", bibtexResult.bibtex);
     scholar.setExportStatus(scholar.t("zoteroFailed"));
     return false;
   }
@@ -526,10 +648,21 @@ if (typeof document !== "undefined") {
       return;
     }
 
-    const bibtex = onlyccfaBibtex.buildEntry(scholar.getResultData(entry));
-    scholar.copyText(bibtex).then(() => {
-      scholar.setExportStatus(scholar.t("copied"));
-    });
+    scholar.setExportStatus(scholar.t("bibtexFetching"));
+    scholar
+      .fetchGoogleScholarBibtex(entry)
+      .then((bibtex) => {
+        if (!bibtex) {
+          scholar.setExportStatus(scholar.t("bibtexUnavailable"));
+          return;
+        }
+        scholar.copyText(bibtex).then(() => {
+          scholar.setExportStatus(scholar.t("copied"));
+        });
+      })
+      .catch(() => {
+        scholar.setExportStatus(scholar.t("bibtexUnavailable"));
+      });
   });
 }
 

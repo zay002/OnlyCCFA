@@ -5,6 +5,7 @@ const vm = require("vm");
 const dataSource = fs.readFileSync("data/openRankSources.js", "utf8");
 const swjtuSource = fs.readFileSync("data/swjtuRankSources.js", "utf8");
 const source = fs.readFileSync("js/rankSources.js", "utf8");
+const swjtuData = vm.runInNewContext(`${swjtuSource}; swjtuRankSources;`);
 
 const rankSources = vm.runInNewContext(
   `${dataSource}; ${swjtuSource}; ${source}; rankSources;`,
@@ -44,6 +45,10 @@ assert.strictEqual(
 assert.strictEqual(
   rankSources.getTagText({ source: "jcr", value: "Q1" }),
   "JCRQ1",
+);
+assert.strictEqual(
+  rankSources.getTagText({ source: "swjtuScai", value: "C类" }),
+  "西南交大计算机C类",
 );
 
 const cvprTags = rankSources.resolveVenueText(
@@ -91,6 +96,20 @@ assert.ok(
     (tag) => tag.source === "swjtuScai" && tag.value === "C类",
   ),
 );
+
+const swjtuJournalValues = new Set();
+swjtuData.records.forEach((record) => {
+  (record.tags || []).forEach((tag) => {
+    if (tag.source === "swjtuJournal") {
+      swjtuJournalValues.add(tag.value);
+    }
+  });
+});
+assert.deepStrictEqual(Array.from(swjtuJournalValues).sort(), [
+  "A类",
+  "B类",
+  "T类",
+]);
 
 const transportTags = rankSources.resolveVenueText(
   "IEEE Transactions on Intelligent Transportation Systems",

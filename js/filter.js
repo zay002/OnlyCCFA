@@ -27,7 +27,7 @@ const filter = {
     { id: "controlTop", zh: "控制TOP", en: "Control TOP" },
     { id: "mechTop", zh: "机械TOP", en: "Mech TOP" },
     { id: "swjtuJournal", zh: "西南交大", en: "SWJTU" },
-    { id: "swjtuScai", zh: "交大SCAI", en: "SWJTU SCAI" },
+    { id: "swjtuScai", zh: "交大计算机C类", en: "SWJTU CS C" },
     { id: "swjtuTransport", zh: "交大交通", en: "SWJTU Transport" },
   ],
 
