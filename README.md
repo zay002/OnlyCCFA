@@ -7,6 +7,9 @@
   <a href="https://github.com/zay002/OnlyCCFA">
     <img alt="GitHub manifest version" src="https://img.shields.io/github/manifest-json/v/zay002/OnlyCCFA?color=%23EA4AAA&label=OnlyCCFA&logo=github&logoColor=%23EA4AAA">
   </a>
+  <a href="https://chromewebstore.google.com/detail/onlyccfa/cgbjdimlhdcjinagiacapnkmhpjkeabh">
+    <img alt="Chrome Web Store" src="https://img.shields.io/badge/Chrome%20Web%20Store-OnlyCCFA-4285F4?logo=googlechrome&logoColor=white">
+  </a>
 </p>
 
 OnlyCCFA is an independent Chrome extension based on [CCFrank](https://github.com/WenyanLiu/CCFrank4dblp). It keeps the original CCF rank labels, and makes Google Scholar search stricter: by default, Google Scholar search results only show papers recognized as CCF A.
@@ -32,7 +35,11 @@ OnlyCCFA 是基于 [CCFrank](https://github.com/WenyanLiu/CCFrank4dblp) 的独�
 
 ## Install
 
-OnlyCCFA is intended to be loaded from source as an unpacked Chrome extension.
+Install OnlyCCFA from the Chrome Web Store:
+
+[OnlyCCFA - Chrome Web Store](https://chromewebstore.google.com/detail/onlyccfa/cgbjdimlhdcjinagiacapnkmhpjkeabh)
+
+You can also load OnlyCCFA from source as an unpacked Chrome extension for development.
 
 1. Open `chrome://extensions`.
 2. Enable `Developer mode`.
