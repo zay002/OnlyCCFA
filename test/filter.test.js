@@ -113,3 +113,62 @@ assert.strictEqual(
   ),
   JSON.stringify({ left: 8, top: 372 }),
 );
+
+function fakeContainer() {
+  return {
+    children: [],
+    appendChild(child) {
+      if (child.parentNode?.children) {
+        child.parentNode.children = child.parentNode.children.filter(
+          (item) => item !== child,
+        );
+      }
+      this.children.push(child);
+      child.parentNode = this;
+      return child;
+    },
+  };
+}
+
+function fakeDomEntry(name) {
+  return {
+    name,
+    style: {},
+    dataset: {},
+    attributes: {},
+    setAttribute(key, value) {
+      this.attributes[key] = value;
+    },
+    removeAttribute(key) {
+      delete this.attributes[key];
+    },
+  };
+}
+
+const container = fakeContainer();
+const hiddenPool = fakeContainer();
+const first = fakeDomEntry("first");
+const second = fakeDomEntry("second");
+const third = fakeDomEntry("third");
+container.appendChild(first);
+container.appendChild(second);
+container.appendChild(third);
+filter.hiddenEntriesFragment = hiddenPool;
+filter.applyScholarDomFilter(container, [
+  { entry: first, shouldShow: true },
+  { entry: second, shouldShow: false },
+  { entry: third, shouldShow: true },
+]);
+assert.strictEqual(
+  JSON.stringify(container.children.map((entry) => entry.name)),
+  JSON.stringify(["first", "third"]),
+);
+assert.strictEqual(
+  JSON.stringify(hiddenPool.children.map((entry) => entry.name)),
+  JSON.stringify(["second"]),
+);
+assert.strictEqual(second.style.display, "none");
+assert.strictEqual(second.attributes["aria-hidden"], "true");
+assert.strictEqual(second.dataset.onlyccfaFilteredOut, "true");
+assert.strictEqual(first.style.display, "");
+assert.strictEqual(first.attributes["aria-hidden"], undefined);

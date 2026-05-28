@@ -11,6 +11,9 @@ const filter = {
   validFilters: ["ALL", "A", "B", "C"],
   validLanguages: ["zh", "en"],
   validSignalModes: ["any", "all"],
+  hiddenEntriesFragment: null,
+  managedEntries: [],
+  isApplyingDomFilter: false,
   deepCountOptions: [20, 40, 60, 80, 100],
   signalOptions: [
     { id: "sci", zh: "SCI", en: "SCI" },
@@ -117,16 +120,6 @@ const filter = {
           <button type="button" data-action="export-visible">${t("exportVisible")}</button>
         </div>
         <button type="button" data-action="export-pool">${t("exportPool")}</button>
-        <button type="button" data-action="enable-bibtex-links">${t(
-          "enableScholarBibtex",
-        )}</button>
-        <label class="ccf-filter-row">
-          <span>${t("zoteroCategory")}</span>
-          <input type="text" data-setting="zoteroCategory" value="${this.escapeHtml(
-            this.settings.zoteroCategory,
-          )}">
-        </label>
-        <button type="button" data-action="zotero-import">${t("zoteroImport")}</button>
         <div class="ccf-filter-export-status" aria-live="polite"></div>
       </div>
     `
@@ -243,6 +236,9 @@ const filter = {
       target
     ) {
       const reapplyFilter = this.debounce(() => {
+        if (this.isApplyingDomFilter) {
+          return;
+        }
         this.applyFilter();
       }, 50);
       const observer = new MutationObserver(reapplyFilter);
@@ -255,17 +251,108 @@ const filter = {
       return;
     }
 
+    const entries = this.getFilterEntries();
+    const visibility = entries.map((entry) => ({
+      entry,
+      shouldShow: this.shouldShowEntry(entry, this.getActiveFilterState()),
+    }));
+
+    if (this.siteConfig.site === "scholar") {
+      this.applyScholarDomFilter(
+        document.querySelector(this.siteConfig.triggerSelector),
+        visibility,
+      );
+    } else {
+      visibility.forEach(({ entry, shouldShow }) => {
+        entry.style.display = shouldShow ? "" : "none";
+      });
+    }
+    this.updateStats(this.calculateStats(entries));
+  },
+
+  getFilterEntries() {
     const entries = Array.from(
       document.querySelectorAll(this.siteConfig.entrySelector),
     );
+
+    if (this.siteConfig.site !== "scholar") {
+      return entries;
+    }
+
+    return this.syncManagedEntries(entries);
+  },
+
+  syncManagedEntries(entries) {
+    const knownEntries = new Set(this.managedEntries);
     entries.forEach((entry) => {
-      const shouldShow = this.shouldShowEntry(
-        entry,
-        this.getActiveFilterState(),
-      );
-      entry.style.display = shouldShow ? "" : "none";
+      if (!knownEntries.has(entry)) {
+        this.managedEntries.push(entry);
+        knownEntries.add(entry);
+      }
     });
-    this.updateStats(this.calculateStats(entries));
+
+    return this.managedEntries.filter(Boolean);
+  },
+
+  ensureHiddenEntriesFragment() {
+    if (this.hiddenEntriesFragment) {
+      return this.hiddenEntriesFragment;
+    }
+
+    if (typeof document !== "undefined" && document.createDocumentFragment) {
+      this.hiddenEntriesFragment = document.createDocumentFragment();
+      return this.hiddenEntriesFragment;
+    }
+
+    this.hiddenEntriesFragment = {
+      children: [],
+      appendChild(child) {
+        if (child.parentNode?.children) {
+          child.parentNode.children = child.parentNode.children.filter(
+            (item) => item !== child,
+          );
+        }
+        this.children.push(child);
+        child.parentNode = this;
+        return child;
+      },
+    };
+    return this.hiddenEntriesFragment;
+  },
+
+  applyScholarDomFilter(container, visibility) {
+    if (!container) {
+      return;
+    }
+
+    const hiddenPool = this.ensureHiddenEntriesFragment();
+    this.isApplyingDomFilter = true;
+    try {
+      visibility.forEach(({ entry, shouldShow }) => {
+        entry.style.display = shouldShow ? "" : "none";
+        if (shouldShow) {
+          entry.dataset.onlyccfaFilteredOut = "false";
+          entry.removeAttribute?.("aria-hidden");
+        } else {
+          entry.dataset.onlyccfaFilteredOut = "true";
+          entry.setAttribute?.("aria-hidden", "true");
+        }
+      });
+
+      visibility
+        .filter(({ shouldShow }) => shouldShow)
+        .forEach(({ entry }) => {
+          container.appendChild(entry);
+        });
+
+      visibility
+        .filter(({ shouldShow }) => !shouldShow)
+        .forEach(({ entry }) => {
+          hiddenPool.appendChild(entry);
+        });
+    } finally {
+      this.isApplyingDomFilter = false;
+    }
   },
 
   getActiveFilterState() {
@@ -441,7 +528,6 @@ const filter = {
       selectedSignals: [],
       signalMode: "any",
       deepTargetCount: 60,
-      zoteroCategory: "",
       panelPosition: null,
     };
 
@@ -476,10 +562,6 @@ const filter = {
         )
           ? Number(parsed.deepTargetCount)
           : defaults.deepTargetCount,
-        zoteroCategory:
-          typeof parsed.zoteroCategory === "string"
-            ? parsed.zoteroCategory
-            : defaults.zoteroCategory,
         panelPosition: parsed.panelPosition
           ? this.clampPanelPosition(parsed.panelPosition)
           : defaults.panelPosition,
@@ -518,10 +600,6 @@ const filter = {
           )
             ? Number(settings.deepTargetCount)
             : 60,
-          zoteroCategory:
-            typeof settings.zoteroCategory === "string"
-              ? settings.zoteroCategory
-              : "",
           panelPosition: settings.panelPosition
             ? this.clampPanelPosition(settings.panelPosition)
             : null,
@@ -721,23 +799,6 @@ const filter = {
         return;
       }
 
-      if (e.target.dataset.action === "zotero-import") {
-        if (typeof scholar !== "undefined") {
-          scholar.importToZotero(this.settings.zoteroCategory);
-        }
-        return;
-      }
-
-      if (e.target.dataset.action === "enable-bibtex-links") {
-        if (
-          typeof scholar !== "undefined" &&
-          scholar.enableScholarBibtexLinks
-        ) {
-          scholar.enableScholarBibtexLinks();
-        }
-        return;
-      }
-
       if (e.target.tagName === "BUTTON" && e.target.dataset.rank) {
         this.currentFilter = e.target.dataset.rank;
         this.refreshActiveButton();
@@ -784,11 +845,6 @@ const filter = {
 
       if (e.target.dataset.setting === "deepTargetCount") {
         this.settings.deepTargetCount = Number(e.target.value);
-        this.saveSettings(this.settings);
-      }
-
-      if (e.target.dataset.setting === "zoteroCategory") {
-        this.settings.zoteroCategory = e.target.value;
         this.saveSettings(this.settings);
       }
     });

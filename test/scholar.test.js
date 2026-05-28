@@ -184,34 +184,5 @@ assert.strictEqual(
   false,
 );
 
-const scholarSettingsUrl = scholar.buildScholarBibtexSettingsUrl(
-  `
-    <form id="gs_bdy_frm" action="/scholar_setprefs" method="GET">
-      <input type="hidden" name="scisig" value="abc123">
-      <input type="radio" name="scis" value="no" checked>
-      <input type="hidden" name="scisf" value="0">
-      <select name="hl"><option value="zh-CN" selected>中文</option></select>
-    </form>
-  `,
-  "https://scholar.google.com/scholar_settings?hl=zh-CN",
-);
-assert.strictEqual(
-  scholarSettingsUrl,
-  "https://scholar.google.com/scholar_setprefs?scisig=abc123&scis=yes&scisf=4&hl=zh-CN",
-);
-
-const webpageItem = scholar.buildZoteroWebItem(
-  {
-    title: "Learning force-aware manipulation",
-    url: "https://example.org/paper",
-    pdfUrl: "https://example.org/paper.pdf",
-  },
-  "Robotics",
-);
-assert.strictEqual(webpageItem.itemType, "webpage");
-assert.strictEqual(webpageItem.url, "https://example.org/paper");
-assert.strictEqual(
-  webpageItem.attachments[0].url,
-  "https://example.org/paper.pdf",
-);
-assert.ok(webpageItem.tags.some((tag) => tag.tag === "Robotics"));
+assert.strictEqual(scholar.buildScholarBibtexSettingsUrl, undefined);
+assert.strictEqual(scholar.enableScholarBibtexLinks, undefined);

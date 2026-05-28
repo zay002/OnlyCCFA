@@ -391,101 +391,6 @@ scholar.getBibtexUrlFromCitationDialog = async function (entry) {
   return href ? new URL(href, scholar.getBaseUrl()).toString() : "";
 };
 
-scholar.getHtmlAttribute = function (attributes, name) {
-  const match = String(attributes || "").match(
-    new RegExp(`${name}\\s*=\\s*(["'])(.*?)\\1`, "i"),
-  );
-  return match ? scholar.decodeHtmlAttribute(match[2]) : "";
-};
-
-scholar.extractScholarSettingsParams = function (settingsHtml) {
-  const params = new URLSearchParams();
-  const html = String(settingsHtml || "");
-
-  Array.from(html.matchAll(/<input\b([^>]*)>/gi)).forEach((match) => {
-    const attrs = match[1] || "";
-    const name = scholar.getHtmlAttribute(attrs, "name");
-    if (!name) {
-      return;
-    }
-
-    const type = (
-      scholar.getHtmlAttribute(attrs, "type") || "text"
-    ).toLowerCase();
-    const isToggle = type === "radio" || type === "checkbox";
-    if (isToggle && !/\bchecked\b/i.test(attrs)) {
-      return;
-    }
-
-    params.set(name, scholar.getHtmlAttribute(attrs, "value"));
-  });
-
-  Array.from(html.matchAll(/<select\b([^>]*)>([\s\S]*?)<\/select>/gi)).forEach(
-    (match) => {
-      const name = scholar.getHtmlAttribute(match[1], "name");
-      if (!name) {
-        return;
-      }
-
-      const options = Array.from(
-        String(match[2] || "").matchAll(
-          /<option\b([^>]*)>([\s\S]*?)<\/option>/gi,
-        ),
-      );
-      const selected = options.find((option) =>
-        /\bselected\b/i.test(option[1]),
-      );
-      const option = selected || options[0];
-      if (!option) {
-        return;
-      }
-
-      params.set(name, scholar.getHtmlAttribute(option[1], "value"));
-    },
-  );
-
-  return params;
-};
-
-scholar.buildScholarBibtexSettingsUrl = function (settingsHtml, baseUrl) {
-  const html = String(settingsHtml || "");
-  const formMatch = html.match(/<form\b([^>]*)>/i);
-  const action =
-    scholar.getHtmlAttribute(formMatch?.[1] || "", "action") ||
-    "/scholar_setprefs";
-  const params = scholar.extractScholarSettingsParams(html);
-
-  params.set("scis", "yes");
-  params.set("scisf", "4");
-
-  const url = new URL(action, baseUrl || scholar.getBaseUrl());
-  url.search = params.toString();
-  return url.toString();
-};
-
-scholar.enableScholarBibtexLinks = async function () {
-  scholar.setExportStatus(scholar.t("scholarBibtexEnabling"));
-  try {
-    const settingsUrl = new URL("/scholar_settings", scholar.getBaseUrl());
-    const currentUrl = new URL(scholar.getBaseUrl());
-    if (currentUrl.searchParams.get("hl")) {
-      settingsUrl.searchParams.set("hl", currentUrl.searchParams.get("hl"));
-    }
-
-    const settingsHtml = await scholar.fetchText(settingsUrl.toString());
-    const setPrefsUrl = scholar.buildScholarBibtexSettingsUrl(
-      settingsHtml,
-      settingsUrl.toString(),
-    );
-    await scholar.fetchText(setPrefsUrl);
-    scholar.setExportStatus(scholar.t("scholarBibtexEnabled"));
-    return true;
-  } catch (error) {
-    scholar.setExportStatus(scholar.t("scholarBibtexFailed"));
-    return false;
-  }
-};
-
 scholar.fetchGoogleScholarBibtex = async function (entry) {
   const directUrl = scholar.getDirectBibtexUrl(entry);
   if (directUrl) {
@@ -668,6 +573,23 @@ scholar.getDeepState = function () {
 };
 
 scholar.clearDeepResults = function () {
+  const entries =
+    typeof filter !== "undefined" && filter.getFilterEntries
+      ? filter.getFilterEntries()
+      : Array.from(document.querySelectorAll(".onlyccfa-deep-result"));
+
+  entries
+    .filter((entry) => entry.dataset?.onlyccfaDeepResult === "true")
+    .forEach((entry) => {
+      entry.remove();
+    });
+
+  if (typeof filter !== "undefined" && Array.isArray(filter.managedEntries)) {
+    filter.managedEntries = filter.managedEntries.filter(
+      (entry) => entry.dataset?.onlyccfaDeepResult !== "true",
+    );
+  }
+
   document.querySelectorAll(".onlyccfa-deep-result").forEach((entry) => {
     entry.remove();
   });
@@ -838,8 +760,20 @@ scholar.getVisibleEntries = function () {
     .filter((entry) => entry.style.display !== "none");
 };
 
+scholar.getManagedEntries = function () {
+  if (
+    typeof filter !== "undefined" &&
+    filter.siteConfig?.site === "scholar" &&
+    typeof filter.getFilterEntries === "function"
+  ) {
+    return filter.getFilterEntries();
+  }
+
+  return scholar.collectResultEntries(document);
+};
+
 scholar.getPoolEntries = function () {
-  return scholar.collectResultEntries(document).filter((entry) => {
+  return scholar.getManagedEntries().filter((entry) => {
     return entry.dataset.onlyccfaDeepResult === "true";
   });
 };
@@ -881,28 +815,6 @@ scholar.buildBibtexResultForEntries = async function (entries) {
     bibtex: results.join("\n\n"),
     exported: results.length,
     failed,
-  };
-};
-
-scholar.buildZoteroWebItem = function (item, category) {
-  const tags = category ? [{ tag: category }] : [];
-  const attachments = item.pdfUrl
-    ? [
-        {
-          title: "Full Text PDF",
-          mimeType: "application/pdf",
-          url: item.pdfUrl,
-        },
-      ]
-    : [];
-
-  return {
-    itemType: "webpage",
-    title: item.title || "Untitled",
-    url: item.url || item.pdfUrl || "",
-    accessDate: new Date().toISOString(),
-    attachments,
-    tags,
   };
 };
 
@@ -962,46 +874,6 @@ scholar.exportBibtex = async function (scope) {
     }),
   );
   return bibtex;
-};
-
-scholar.importToZotero = async function (category) {
-  const entries = scholar.getSelectedEntries();
-  const targetEntries = entries.length ? entries : scholar.getVisibleEntries();
-  if (targetEntries.length === 0) {
-    scholar.setExportStatus(scholar.t("noResults"));
-    return false;
-  }
-
-  scholar.setExportStatus(scholar.t("zoteroSending"));
-  const items = targetEntries.map((entry) =>
-    scholar.buildZoteroWebItem(scholar.getResultData(entry), category),
-  );
-  const endpoints = [
-    "http://127.0.0.1:23119/connector/saveItems",
-    "http://localhost:23119/connector/saveItems",
-  ];
-
-  try {
-    for (const endpoint of endpoints) {
-      try {
-        const response = await fetch(endpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ items }),
-        });
-        if (response.ok) {
-          scholar.setExportStatus(scholar.t("zoteroDone"));
-          return true;
-        }
-      } catch (error) {
-        // Try the next local Connector host before falling back to BibTeX.
-      }
-    }
-    throw new Error("Zotero Connector unavailable");
-  } catch (error) {
-    scholar.setExportStatus(scholar.t("zoteroFailed"));
-    return false;
-  }
 };
 
 scholar.appendResultActions = function (entry) {

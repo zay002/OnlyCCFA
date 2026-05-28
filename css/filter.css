@@ -189,8 +189,7 @@
 }
 
 .ccf-filter-deep button[data-action="deep-search"],
-.ccf-filter-export button[data-action="export-selected"],
-.ccf-filter-export button[data-action="zotero-import"] {
+.ccf-filter-export button[data-action="export-selected"] {
   background: #111827;
   border-color: #111827;
   color: #ffffff;

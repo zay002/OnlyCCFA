@@ -1,8 +1,8 @@
 {
   "name": "onlyccfa",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "private": true,
-  "description": "Chrome extension that deep-filters Google Scholar results and exports ranked papers to BibTeX or Zotero.",
+  "description": "Chrome extension that deep-filters Google Scholar results, exports reliable BibTeX, and makes Zotero Connector respect filters.",
   "license": "MIT",
   "repository": {
     "type": "git",

@@ -4,7 +4,7 @@
     "description": "Extension name."
   },
   "extDesc": {
-    "message": "深度筛选 Google 学术结果，支持可靠 BibTeX 与 Zotero 网页/PDF 导入，并显示 CCF、SCI/JCR、中科院和方向TOP标签。",
+    "message": "深度筛选 Google 学术结果，支持可靠 BibTeX，并让 Zotero Connector 只看到当前筛选后的结果。",
     "description": "Extension description."
   }
 }

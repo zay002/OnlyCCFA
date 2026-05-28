@@ -16,9 +16,9 @@ Supported sites include dblp, Google Scholar, Connected Papers, Semantic Scholar
 
 ## 使用方式 / How the information is used
 
-OnlyCCFA 使用这些页面文本在本地匹配 CCF、SCI/JCR、中科院、EI、中文核心和方向 TOP 标签，并根据用户选择筛选 Google 学术结果。用户主动点击深度筛选时，OnlyCCFA 会顺序请求后续 Google 学术结果页，并把结果合并到当前页面的本地结果池。用户主动导出 BibTeX 时，OnlyCCFA 会优先请求对应 Google 学术结果的原生引用页面和 BibTeX 链接；如果 Google 学术不可用，才会用 DOI、arXiv ID 或严格标题匹配请求 Crossref / arXiv 的公开引用接口。用户主动导入 Zotero 时，OnlyCCFA 会发送网页链接和 PDF 附件线索到本机 Zotero Connector。
+OnlyCCFA 使用这些页面文本在本地匹配 CCF、SCI/JCR、中科院、EI、中文核心和方向 TOP 标签，并根据用户选择筛选 Google 学术结果。用户主动点击深度筛选时，OnlyCCFA 会顺序请求后续 Google 学术结果页，并把结果合并到当前页面的本地结果池。用户主动导出 BibTeX 时，OnlyCCFA 会优先请求对应 Google 学术结果的原生引用页面和 BibTeX 链接；如果 Google 学术不可用，才会用 DOI、arXiv ID 或严格标题匹配请求 Crossref / arXiv 的公开引用接口。为了让 Zotero Connector 只看到用户当前筛选后的结果，OnlyCCFA 会把被筛掉的 Google 学术结果临时移出页面结果容器；这不会向 Zotero 或 OnlyCCFA 服务器发送任何数据。
 
-OnlyCCFA uses this page text locally to match CCF, SCI/JCR, CAS, EI, Chinese core journal and field TOP badges, then filters Google Scholar results according to the user's settings. When the user explicitly starts deep filtering, OnlyCCFA requests later Google Scholar result pages and merges them into a local result pool on the current page. When the user explicitly exports BibTeX, OnlyCCFA first requests the corresponding Google Scholar citation page and BibTeX link; if Google Scholar is unavailable, it may request Crossref or arXiv public citation endpoints by DOI, arXiv ID or strict title match. When the user explicitly imports to Zotero, OnlyCCFA sends webpage links and PDF attachment leads to the local Zotero Connector.
+OnlyCCFA uses this page text locally to match CCF, SCI/JCR, CAS, EI, Chinese core journal and field TOP badges, then filters Google Scholar results according to the user's settings. When the user explicitly starts deep filtering, OnlyCCFA requests later Google Scholar result pages and merges them into a local result pool on the current page. When the user explicitly exports BibTeX, OnlyCCFA first requests the corresponding Google Scholar citation page and BibTeX link; if Google Scholar is unavailable, it may request Crossref or arXiv public citation endpoints by DOI, arXiv ID or strict title match. To let Zotero Connector see only the user's currently filtered results, OnlyCCFA temporarily moves filtered-out Google Scholar results out of the result container. This does not send data to Zotero or to an OnlyCCFA server.
 
 ## 数据共享 / Data sharing
 
@@ -31,10 +31,6 @@ When local page text is not enough to identify a paper source, OnlyCCFA may requ
 如果 Google 学术无法提供 BibTeX，且用户主动点击 BibTeX 导出，OnlyCCFA 可能会把 DOI 或论文标题发送到 `api.crossref.org`，或把 arXiv ID 发送到 `export.arxiv.org`，仅用于获取公开 BibTeX 引用数据。
 
 If Google Scholar cannot provide BibTeX and the user explicitly clicks BibTeX export, OnlyCCFA may send a DOI or paper title to `api.crossref.org`, or an arXiv ID to `export.arxiv.org`, only to retrieve public BibTeX citation data.
-
-如果用户点击 Zotero 导入，OnlyCCFA 会尝试把用户选择或当前可见的文献网页链接和 PDF 附件线索发送到本机 Zotero Connector 服务（通常为 `127.0.0.1:23119` 或 `localhost:23119`）。这些请求只会发送到用户本机 Zotero 服务；如果本机 Zotero 不可用，OnlyCCFA 会提示导入失败，不会把网页摘要拼成虚假的正式引用。
-
-If the user clicks Zotero import, OnlyCCFA attempts to send selected or visible webpage links and PDF attachment leads to the local Zotero Connector service, usually `127.0.0.1:23119` or `localhost:23119`. These requests are sent only to the user's local Zotero service. If local Zotero is unavailable, OnlyCCFA reports the import failure and does not fabricate full citations from snippets.
 
 ## 存储 / Storage
 
