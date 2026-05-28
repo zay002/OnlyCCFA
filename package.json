@@ -14,18 +14,14 @@
   "homepage": "https://github.com/zay002/OnlyCCFA#readme",
   "devDependencies": {
     "git-format-staged": "^3.1.1",
-    "https-proxy-agent": "^9.0.0",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
     "prettier": "3.3.3"
   },
   "scripts": {
     "prepare": "husky",
-    "format:check": "prettier --check README.md PrivacyPolicy.md manifest.json package.json package-lock.json _locales/**/*.json css/filter.css js/apiCache.js js/ccf.js js/fetchRank.js js/filter.js js/scholar.js scripts/**/*.js store-listing/**/*.json store-listing/**/*.md test/**/*.js .github/workflows/*.yaml",
+    "format:check": "prettier --check README.md PrivacyPolicy.md manifest.json package.json package-lock.json _locales/**/*.json css/filter.css js/apiCache.js js/ccf.js js/fetchRank.js js/filter.js js/scholar.js scripts/package-release.js test/**/*.js .github/workflows/*.yaml",
     "package": "node scripts/package-release.js",
-    "release:prepare": "npm test && npm run format:check && npm run package && node scripts/prepare-store-listing.js",
-    "release:github": "node scripts/publish-github-release.js",
-    "release:chrome": "node scripts/publish-chrome-webstore.js",
     "test": "node test/filter.test.js && node test/scholar.test.js && node test/ccf.test.js"
   },
   "lint-staged": {

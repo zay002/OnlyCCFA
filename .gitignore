@@ -12,6 +12,13 @@ node_modules/
 dist/
 .env
 .env.local
+.env.example
+store-listing/
+scripts/generate-store-images.js
+scripts/load-env.js
+scripts/prepare-store-listing.js
+scripts/publish-chrome-webstore.js
+scripts/publish-github-release.js
 
 # Claude Code
 CLAUDE.md

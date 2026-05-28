@@ -69,27 +69,15 @@ The tests cover:
 
 ## Release
 
-Prepare a release package and Chrome Web Store listing assets:
+Prepare a release package:
 
 ```bash
-npm run release:prepare
+npm run package
 ```
 
 This creates:
 
 - `dist/OnlyCCFA-<version>.zip`
-- `dist/store-listing/`
-
-Optional publishing commands:
-
-```bash
-npm run release:github
-npm run release:chrome
-```
-
-`release:github` requires `GITHUB_TOKEN`. `release:chrome` requires `CWS_PUBLISHER_ID`, `CWS_CLIENT_ID`, `CWS_CLIENT_SECRET` and `CWS_REFRESH_TOKEN`.
-
-For local publishing, copy `.env.example` to `.env.local` and fill in the secrets. `.env.local` is ignored by Git.
 
 ## Credits
 
