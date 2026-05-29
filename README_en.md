@@ -72,26 +72,6 @@ When testing local changes, click the extension card's reload button in `chrome:
 
 Gentle reminder: batch BibTeX export may access public metadata endpoints from Crossref, arXiv, Google Scholar or Semantic Scholar. OnlyCCFA tries to keep requests conservative, but repeated large exports in a short time may still trigger anti-crawling or access-limit policies on those sites.
 
-## Development
-
-Run the local test suite:
-
-```bash
-npm test
-```
-
-The tests cover:
-
-- Google Scholar default CCF-A filtering behavior.
-- Google Scholar deep-filter pagination URLs, start offsets, result de-duplication and batch continuation.
-- Multi-source signal filtering.
-- Google Scholar / Semantic Scholar / Crossref / arXiv BibTeX fetching, BibTeX parsing and Zotero Connector filtered-result compatibility.
-- Saved filter preferences and unmatched-result handling.
-- Filter result statistics.
-- Google Scholar venue extraction.
-- Local venue-to-CCF matching for common CCF-A venues.
-- Open multi-source rank matching for common journals, conferences and Chinese core journals.
-
 ## Data Sources
 
 OnlyCCFA uses transparent data-source structures: general open seed data lives in `data/openRankSources.js`, while SWJTU-related derived public-list data lives in `data/swjtuRankSources.js`.
