@@ -28,6 +28,22 @@ assertVenueRank(
 );
 assertVenueRank("Proceedings of the ACM SIGMOD International Conference", "A");
 
+const cvprMatch = ccf.resolveVenueText(
+  "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition",
+);
+assert.strictEqual(
+  ccf.getVenueDisplayName(cvprMatch.refine, cvprMatch.type),
+  "IEEE/CVF Computer Vision and Pattern Recognition Conference",
+);
+
+const iccvMatch = ccf.resolveVenueText(
+  "International Conference on Computer Vision",
+);
+assert.strictEqual(
+  ccf.getVenueDisplayName(iccvMatch.refine, iccvMatch.type),
+  "International Conference on Computer Vision",
+);
+
 assert.strictEqual(
   ccf.resolveVenueText("arXiv preprint arXiv:2401.00001"),
   null,

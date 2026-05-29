@@ -1243,7 +1243,11 @@ scholar.appendVenueRank = function (node, venue, entry) {
           entry,
         );
       }
-      scholar.setVenueName(entry, venueMatch.refine || venue);
+      const displayName =
+        typeof ccf.getVenueDisplayName === "function"
+          ? ccf.getVenueDisplayName(venueMatch.refine, venueMatch.type, venue)
+          : venueMatch.refine || venue;
+      scholar.setVenueName(entry, displayName);
       matched = true;
     }
   }

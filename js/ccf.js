@@ -146,6 +146,20 @@ ccf.resolveVenueText = function (venueText) {
   return null;
 };
 
+ccf.getVenueDisplayName = function (refine, type, fallback) {
+  let url = "";
+  if (type == "abbr" || type == "meeting") {
+    const fullName = ccf.abbrFull?.[refine];
+    url = ccf.fullUrl?.[fullName];
+  } else if (type == "publication") {
+    url = ccf.fullUrl?.[refine];
+  } else if (type == "url") {
+    url = refine;
+  }
+
+  return ccf.rankFullName?.[url] || fallback || refine || "";
+};
+
 ccf.getRankInfo = function (refine, type) {
   let rankInfo = {};
   rankInfo.ranks = [];

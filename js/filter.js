@@ -326,6 +326,43 @@ const filter = {
     }
 
     const hiddenPool = this.ensureHiddenEntriesFragment();
+    const getNextSibling = (entry) => entry?.nextSibling || null;
+    const insertEntryBefore = (entry, before) => {
+      if (before && container.insertBefore) {
+        container.insertBefore(entry, before);
+        return;
+      }
+      container.appendChild(entry);
+    };
+    const moveToContainer = (entry, previousVisible) => {
+      const expectedBefore = previousVisible
+        ? getNextSibling(previousVisible)
+        : container.firstChild;
+      if (entry.parentNode === container && entry === expectedBefore) {
+        return;
+      }
+      if (
+        entry.parentNode === container &&
+        previousVisible &&
+        getNextSibling(previousVisible) === entry
+      ) {
+        return;
+      }
+      if (
+        !previousVisible &&
+        entry.parentNode === container &&
+        !expectedBefore
+      ) {
+        return;
+      }
+      insertEntryBefore(entry, expectedBefore);
+    };
+    const moveToHiddenPool = (entry) => {
+      if (entry.parentNode === hiddenPool) {
+        return;
+      }
+      hiddenPool.appendChild(entry);
+    };
     this.isApplyingDomFilter = true;
     try {
       visibility.forEach(({ entry, shouldShow }) => {
@@ -339,16 +376,18 @@ const filter = {
         }
       });
 
+      let previousVisible = null;
       visibility
         .filter(({ shouldShow }) => shouldShow)
         .forEach(({ entry }) => {
-          container.appendChild(entry);
+          moveToContainer(entry, previousVisible);
+          previousVisible = entry;
         });
 
       visibility
         .filter(({ shouldShow }) => !shouldShow)
         .forEach(({ entry }) => {
-          hiddenPool.appendChild(entry);
+          moveToHiddenPool(entry);
         });
     } finally {
       this.isApplyingDomFilter = false;

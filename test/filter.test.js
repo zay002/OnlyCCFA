@@ -115,9 +115,18 @@ assert.strictEqual(
 );
 
 function fakeContainer() {
+  function syncSiblings(container) {
+    container.firstChild = container.children[0] || null;
+    container.children.forEach((child, index) => {
+      child.nextSibling = container.children[index + 1] || null;
+    });
+  }
+
   return {
     children: [],
+    appendCount: 0,
     appendChild(child) {
+      this.appendCount += 1;
       if (child.parentNode?.children) {
         child.parentNode.children = child.parentNode.children.filter(
           (item) => item !== child,
@@ -125,6 +134,25 @@ function fakeContainer() {
       }
       this.children.push(child);
       child.parentNode = this;
+      syncSiblings(this);
+      return child;
+    },
+    insertBefore(child, before) {
+      this.appendCount += 1;
+      if (child.parentNode?.children) {
+        child.parentNode.children = child.parentNode.children.filter(
+          (item) => item !== child,
+        );
+        syncSiblings(child.parentNode);
+      }
+      const index = before ? this.children.indexOf(before) : -1;
+      if (index === -1) {
+        this.children.push(child);
+      } else {
+        this.children.splice(index, 0, child);
+      }
+      child.parentNode = this;
+      syncSiblings(this);
       return child;
     },
   };
@@ -172,3 +200,23 @@ assert.strictEqual(second.attributes["aria-hidden"], "true");
 assert.strictEqual(second.dataset.onlyccfaFilteredOut, "true");
 assert.strictEqual(first.style.display, "");
 assert.strictEqual(first.attributes["aria-hidden"], undefined);
+
+const containerAppendCount = container.appendCount;
+const hiddenAppendCount = hiddenPool.appendCount;
+filter.applyScholarDomFilter(container, [
+  { entry: first, shouldShow: true },
+  { entry: second, shouldShow: false },
+  { entry: third, shouldShow: true },
+]);
+assert.strictEqual(container.appendCount, containerAppendCount);
+assert.strictEqual(hiddenPool.appendCount, hiddenAppendCount);
+
+filter.applyScholarDomFilter(container, [
+  { entry: first, shouldShow: true },
+  { entry: second, shouldShow: true },
+  { entry: third, shouldShow: true },
+]);
+assert.strictEqual(
+  JSON.stringify(container.children.map((entry) => entry.name)),
+  JSON.stringify(["first", "second", "third"]),
+);
