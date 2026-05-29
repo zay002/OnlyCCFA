@@ -1,4 +1,11 @@
 const rankSources = {};
+rankSources.VENUE_SERIES_TOKENS = new Set([
+  "CONFERENCE",
+  "CONGRESS",
+  "PROCEEDINGS",
+  "SYMPOSIUM",
+  "WORKSHOP",
+]);
 
 rankSources.normalizeText = function (text) {
   return (text || "")
@@ -31,6 +38,46 @@ rankSources.isSingleWordTitle = function (name) {
   );
 };
 
+rankSources.hasVenueSeriesToken = function (normalizedText) {
+  return normalizedText
+    .split(" ")
+    .some((token) => rankSources.VENUE_SERIES_TOKENS.has(token));
+};
+
+rankSources.isUnsafeSeriesSubstringMatch = function (
+  normalizedVenue,
+  normalizedName,
+  name,
+  record,
+) {
+  if (!rankSources.hasVenueSeriesToken(normalizedVenue)) {
+    return false;
+  }
+
+  if (
+    normalizedVenue === normalizedName ||
+    rankSources.hasVenueSeriesToken(normalizedName)
+  ) {
+    return false;
+  }
+
+  if (rankSources.isShortAcronymName(name)) {
+    return false;
+  }
+
+  const nameTokenCount = normalizedName.split(" ").filter(Boolean).length;
+  if (nameTokenCount > 2) {
+    return false;
+  }
+
+  const recordNames = rankSources
+    .getRecordNames(record)
+    .map((recordName) => rankSources.normalizeText(recordName));
+  return !recordNames.some((recordName) =>
+    rankSources.hasVenueSeriesToken(recordName),
+  );
+};
+
 rankSources.escapeRegExp = function (text) {
   return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 };
@@ -53,7 +100,7 @@ rankSources.canReverseMatch = function (text) {
   return tokens.length > 1 && text.length >= 8;
 };
 
-rankSources.getNameMatchScore = function (venueText, name) {
+rankSources.getNameMatchScore = function (venueText, name, record) {
   const normalizedVenue = rankSources.normalizeText(venueText);
   if (!normalizedVenue) {
     return 0;
@@ -75,7 +122,13 @@ rankSources.getNameMatchScore = function (venueText, name) {
   if (
     rankSources.containsNormalizedPhrase(normalizedVenue, normalizedName) &&
     (!rankSources.isShortAcronymName(name) ||
-      rankSources.hasOriginalAcronymToken(venueText, name))
+      rankSources.hasOriginalAcronymToken(venueText, name)) &&
+    !rankSources.isUnsafeSeriesSubstringMatch(
+      normalizedVenue,
+      normalizedName,
+      name,
+      record,
+    )
   ) {
     return 50000 + normalizedName.length;
   }
@@ -86,7 +139,7 @@ rankSources.getNameMatchScore = function (venueText, name) {
 rankSources.getRecordMatch = function (venueText, record) {
   return rankSources.getRecordNames(record).reduce(
     (best, name) => {
-      const score = rankSources.getNameMatchScore(venueText, name);
+      const score = rankSources.getNameMatchScore(venueText, name, record);
       if (score > best.score) {
         return { score, matchedTitle: record.title, matchedName: name };
       }

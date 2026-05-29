@@ -55,6 +55,10 @@ const cvprTags = rankSources.resolveVenueText(
   "IEEE/CVF Conference on Computer Vision and Pattern Recognition",
 );
 assert.ok(cvprTags.some((tag) => tag.source === "ei"));
+assert.ok(!cvprTags.some((tag) => tag.source === "sci"));
+assert.ok(!cvprTags.some((tag) => tag.source === "jcr"));
+assert.ok(!cvprTags.some((tag) => tag.source === "casUpgraded"));
+assert.ok(!cvprTags.some((tag) => tag.source === "swjtuJournal"));
 
 const corlTags = rankSources.resolveVenueText("Conference on Robot Learning");
 assert.ok(corlTags.some((tag) => tag.source === "roboticsTop"));

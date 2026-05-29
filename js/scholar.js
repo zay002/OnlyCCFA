@@ -14,6 +14,24 @@ scholar.deepLoading = false;
 scholar.deepState = null;
 scholar.bibtexConcurrency = 4;
 scholar.bibtexCache = new Map();
+scholar.cvfVenueHints = [
+  {
+    pattern: /(^|\s)CVPR(\s|$)/i,
+    venue: "IEEE/CVF Conference on Computer Vision and Pattern Recognition",
+  },
+  {
+    pattern: /(^|\s)ICCV(\s|$)/i,
+    venue: "International Conference on Computer Vision",
+  },
+  {
+    pattern: /(^|\s)ECCV(\s|$)/i,
+    venue: "European Conference on Computer Vision",
+  },
+  {
+    pattern: /(^|\s)WACV(\s|$)/i,
+    venue: "IEEE/CVF Winter Conference on Applications of Computer Vision",
+  },
+];
 
 scholar.run = function () {
   let url = window.location.pathname;
@@ -25,7 +43,30 @@ scholar.run = function () {
   }
 };
 
-scholar.extractVenue = function (metadata) {
+scholar.normalizeUrlForVenueHint = function (url) {
+  return decodeURIComponent(String(url || ""))
+    .replace(/[^A-Za-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+};
+
+scholar.inferVenueFromUrl = function (url) {
+  const normalizedUrl = scholar.normalizeUrlForVenueHint(url);
+  if (!/(^|\s)openaccess\s+thecvf\s+com(\s|$)/i.test(normalizedUrl)) {
+    return "";
+  }
+
+  const match = scholar.cvfVenueHints.find((hint) =>
+    hint.pattern.test(normalizedUrl),
+  );
+  return match ? match.venue : "";
+};
+
+scholar.isTruncatedVenue = function (venue) {
+  return /…|\.\.\./.test(String(venue || ""));
+};
+
+scholar.extractVenue = function (metadata, url) {
   const parts = (metadata || "").split(/\s[-–—]\s/);
   if (parts.length < 2) {
     return "";
@@ -35,6 +76,11 @@ scholar.extractVenue = function (metadata) {
   let yearMatch = venue.match(/,\s*(19|20)\d{2}\b/);
   if (yearMatch) {
     venue = venue.substring(0, yearMatch.index);
+  }
+
+  const inferredVenue = scholar.inferVenueFromUrl(url);
+  if (inferredVenue && scholar.isTruncatedVenue(venue)) {
+    return inferredVenue;
   }
 
   return venue.trim();
@@ -919,7 +965,7 @@ scholar.getResultData = function (entry) {
     pdfUrl: scholar.getPdfUrl(entry),
     authors: scholar.extractAuthors(metadata),
     year: scholar.extractYear(metadata),
-    venue: scholar.extractVenue(metadata),
+    venue: scholar.extractVenue(metadata, titleLink?.href || ""),
     metadata,
     snippet,
     tags: scholar.getResultTags(entry),
@@ -1232,7 +1278,7 @@ scholar.appendRank = function () {
     if (node.length) {
       let title = node.text();
       let metadata = $(this).find("div.gs_a").text();
-      let venue = scholar.extractVenue(metadata);
+      let venue = scholar.extractVenue(metadata, node[0]?.href || "");
       $(this).addClass("ccf-ranked");
       if (scholar.appendVenueRank(node, venue, this)) {
         return;

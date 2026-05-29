@@ -34,6 +34,14 @@ assert.strictEqual(
 );
 
 assert.strictEqual(
+  scholar.extractVenue(
+    "J Li, BM Chen, GH Lee - Proceedings of the IEEE …, 2018 - openaccess.thecvf.com",
+    "https://openaccess.thecvf.com/content_cvpr_2018/html/Li_SO-Net_Self-Organizing_Network_CVPR_2018_paper.html",
+  ),
+  "IEEE/CVF Conference on Computer Vision and Pattern Recognition",
+);
+
+assert.strictEqual(
   scholar.extractVenue("A Author, B Author - arXiv preprint arXiv:2401.00001"),
   "arXiv preprint arXiv:2401.00001",
 );
