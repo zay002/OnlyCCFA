@@ -43,9 +43,13 @@ OnlyCCFA screenshots are organized around the core workflow: deep-scan multiple 
 | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | <img src="./img/demo-deep-filter-workflow.png" alt="OnlyCCFA deep filtering Google Scholar results" width="420"> | <img src="./img/demo-advanced-source-filters.png" alt="OnlyCCFA advanced source filters for Google Scholar" width="420"> |
 
-| BibTeX / Zotero Connector                                                                                                           | Continue the next batch                                                                                         |
-| ----------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| <img src="./img/demo-bibtex-zotero-export.png" alt="OnlyCCFA exporting filtered papers to BibTeX and Zotero Connector" width="420"> | <img src="./img/demo-continue-next-batch.png" alt="OnlyCCFA continuing the next deep-filter batch" width="420"> |
+| Field TOP venues beyond CCF/JCR/CAS                                                                       | Continue the next batch                                                                                         |
+| --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| <img src="./img/demo-field-top-venues.png" alt="OnlyCCFA field top venue filters beyond CCF" width="420"> | <img src="./img/demo-continue-next-batch.png" alt="OnlyCCFA continuing the next deep-filter batch" width="420"> |
+
+| Clean multi-line BibTeX                                                                                  | Zotero Connector sees only filtered clean results                                                                           |
+| -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| <img src="./img/demo-clean-bibtex-format.png" alt="OnlyCCFA clean multi-line BibTeX export" width="420"> | <img src="./img/demo-zotero-filtered-connector.png" alt="OnlyCCFA filtered Zotero Connector import candidates" width="420"> |
 
 ## Install
 
