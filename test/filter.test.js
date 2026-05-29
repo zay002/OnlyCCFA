@@ -59,6 +59,7 @@ assert.strictEqual(semanticScholarConfig.site, "semanticscholar");
 assert.strictEqual(semanticScholarConfig.defaultFilter, "ALL");
 assert.strictEqual(semanticScholarConfig.hideUnranked, false);
 assert.strictEqual(semanticScholarConfig.supportsExport, true);
+assert.strictEqual(semanticScholarConfig.strictRankFilter, true);
 
 assert.strictEqual(
   filter.shouldShowEntry(fakeEntry(["CCF A"]), "A", scholarConfig),
@@ -75,6 +76,14 @@ assert.strictEqual(
 assert.strictEqual(
   filter.shouldShowEntry(fakeEntry(["CCF B"]), "ALL", scholarConfig),
   true,
+);
+assert.strictEqual(
+  filter.shouldShowEntry(fakeEntry([]), "ALL", semanticScholarConfig),
+  true,
+);
+assert.strictEqual(
+  filter.shouldShowEntry(fakeEntry([]), "A", semanticScholarConfig),
+  false,
 );
 
 const relaxedScholarConfig = { ...scholarConfig, hideUnranked: false };

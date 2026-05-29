@@ -86,6 +86,7 @@ const filter = {
         hideUnranked: false,
         observeMutations: true,
         supportsExport: true,
+        strictRankFilter: true,
       };
     }
 
@@ -441,6 +442,10 @@ const filter = {
 
     const ranks = this.getEntryRanks(entry);
     if (ranks.length === 0) {
+      if (siteConfig.strictRankFilter) {
+        return false;
+      }
+
       return (
         !siteConfig.hideUnranked &&
         this.matchesSelectedSignals(entry, selectedSignals, signalMode)

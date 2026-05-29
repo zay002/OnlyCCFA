@@ -5,13 +5,68 @@ const vm = require("vm");
 const source = ["js/bibtex.js", "js/scholar.js", "js/semanticscholar.js"].map(
   (path) => fs.readFileSync(path, "utf8"),
 );
+const context = {
+  console,
+  URL,
+  URLSearchParams,
+  setInterval() {},
+  setTimeout(callback) {
+    callback();
+  },
+};
+context.$ = function (node) {
+  return {
+    append(child) {
+      node.children = node.children || [];
+      node.children.push(child);
+      child.parentNode = node;
+    },
+  };
+};
+context.document = {
+  entries: [],
+  body: {},
+  createElement(tagName) {
+    return {
+      tagName,
+      className: "",
+      children: [],
+      textContent: "",
+      insertAdjacentElement(position, node) {
+        this.inserted = this.inserted || [];
+        this.inserted.push({ position, node });
+      },
+      querySelectorAll(selector) {
+        if (selector === ".ccf-rank") {
+          return this.children.filter((child) =>
+            String(child.className || "").includes("ccf-rank"),
+          );
+        }
+        return [];
+      },
+    };
+  },
+  addEventListener() {},
+  querySelectorAll() {
+    return this.entries;
+  },
+  querySelector() {
+    return null;
+  },
+};
+context.ccf = {
+  resolveVenueText(venue) {
+    return venue === "CVPR" ? { refine: "CVPR", type: "abbr" } : null;
+  },
+  getVenueDisplayName() {
+    return "IEEE/CVF Conference on Computer Vision and Pattern Recognition";
+  },
+};
+context.fetchRank = function () {};
+
 const { scholar, semanticscholar } = vm.runInNewContext(
   `${source.join("\n")}; ({ scholar, semanticscholar });`,
-  {
-    console,
-    URL,
-    URLSearchParams,
-  },
+  context,
 );
 
 assert.strictEqual(
@@ -85,6 +140,77 @@ function fakeSemanticEntry() {
   };
 }
 
+function fakeClassList() {
+  const values = new Set();
+  return {
+    add(value) {
+      values.add(value);
+    },
+    contains(value) {
+      return values.has(value);
+    },
+  };
+}
+
+function fakeRankedSemanticEntry() {
+  const entry = {
+    dataset: {},
+    rankHost: null,
+    actionHost: null,
+    classList: fakeClassList(),
+  };
+  const titleHost = {
+    insertAdjacentElement(position, node) {
+      if (node.className === "onlyccfa-rank-badges") {
+        entry.rankHost = node;
+      } else if (node.className === "onlyccfa-result-actions") {
+        entry.actionHost = node;
+      }
+      node.parentNode = entry;
+      assert.strictEqual(position, "afterend");
+    },
+  };
+  const title = {
+    textContent: "So-net: Self-organizing network for point cloud analysis",
+    href: "https://www.semanticscholar.org/paper/example",
+    closest(selector) {
+      return selector === "h2,h3" ? titleHost : null;
+    },
+  };
+  const venue = {
+    textContent: "",
+  };
+
+  entry.querySelector = function (selector) {
+    if (selector === ".onlyccfa-result-actions") {
+      return entry.actionHost;
+    }
+    if (selector === ".onlyccfa-rank-badges") {
+      return entry.rankHost;
+    }
+    if (selector === ".onlyccfa-venue-name") {
+      return null;
+    }
+    if (/venue/i.test(selector)) {
+      return venue;
+    }
+    if (/title/i.test(selector) && /a/.test(selector)) {
+      return title;
+    }
+    return null;
+  };
+  entry.querySelectorAll = function (selector) {
+    if (selector === ".ccf-rank") {
+      return entry.rankHost?.querySelectorAll(".ccf-rank") || [];
+    }
+    if (selector === ".ccf-rank, .rank-source") {
+      return entry.querySelectorAll(".ccf-rank");
+    }
+    return [];
+  };
+  return { entry, venue };
+}
+
 const resultData = semanticscholar.getResultData(fakeSemanticEntry());
 assert.strictEqual(resultData.title, "Segment Anything");
 assert.strictEqual(resultData.year, "2023");
@@ -94,6 +220,34 @@ assert.strictEqual(
   JSON.stringify(["Alexander Kirillov", "Eric Mintun"]),
 );
 assert.strictEqual(resultData.pdfUrl, "https://arxiv.org/pdf/2304.02643.pdf");
+
+const dynamicVenueEntry = fakeRankedSemanticEntry();
+context.document.entries = [dynamicVenueEntry.entry];
+semanticscholar.rankSpanList = [
+  function () {
+    return {
+      className: "ccf-rank",
+      textContent: "CCF A",
+    };
+  },
+];
+semanticscholar.appendRanks();
+assert.strictEqual(
+  dynamicVenueEntry.entry.classList.contains("ccf-ranked"),
+  false,
+);
+
+dynamicVenueEntry.venue.textContent =
+  "Computer Vision and Pattern Recognition (CVPR) 2018";
+semanticscholar.appendRanks();
+assert.strictEqual(
+  dynamicVenueEntry.entry.classList.contains("ccf-ranked"),
+  true,
+);
+assert.strictEqual(
+  dynamicVenueEntry.entry.querySelectorAll(".ccf-rank")[0].textContent,
+  "CCF A",
+);
 
 async function runAsyncTests() {
   let googleFetchCount = 0;

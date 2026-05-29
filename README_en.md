@@ -58,6 +58,8 @@ Install OnlyCCFA from the Chrome Web Store:
 
 [OnlyCCFA - Chrome Web Store](https://chromewebstore.google.com/detail/onlyccfa/cgbjdimlhdcjinagiacapnkmhpjkeabh)
 
+GitHub Releases are usually updated faster than the Chrome Web Store. Web Store releases need review, so they may lag behind the newest GitHub version; for early testing, download the release zip and load it as an unpacked extension.
+
 You can also load OnlyCCFA from source as an unpacked Chrome extension for development.
 
 1. Open `chrome://extensions`.
@@ -67,6 +69,8 @@ You can also load OnlyCCFA from source as an unpacked Chrome extension for devel
 5. Open Google Scholar and search as usual.
 
 When testing local changes, click the extension card's reload button in `chrome://extensions` before refreshing Google Scholar.
+
+Gentle reminder: batch BibTeX export may access public metadata endpoints from Crossref, arXiv, Google Scholar or Semantic Scholar. OnlyCCFA tries to keep requests conservative, but repeated large exports in a short time may still trigger anti-crawling or access-limit policies on those sites.
 
 ## Development
 

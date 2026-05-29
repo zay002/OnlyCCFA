@@ -162,10 +162,12 @@ semanticscholar.appendRankBadge = function (anchor, badge, entry) {
   const host = semanticscholar.getRankBadgeHost(targetEntry);
   if (host) {
     $(host).append(badge);
+    targetEntry?.classList?.add("ccf-ranked");
     return;
   }
 
   $(anchor).after(badge);
+  targetEntry?.classList?.add("ccf-ranked");
 };
 
 semanticscholar.t = function (key, params) {
@@ -277,7 +279,13 @@ semanticscholar.appendRanks = function () {
   entries.forEach(function (entry, index) {
     semanticscholar.appendResultActions(entry);
 
-    if (entry.classList.contains("ccf-ranked")) {
+    if (
+      entry.classList.contains("ccf-ranked") &&
+      entry.dataset.onlyccfaVenueText ===
+        semanticscholar.normalizeVenueText(
+          entry.querySelector(semanticscholar.venueSelector)?.textContent || "",
+        )
+    ) {
       return;
     }
 
@@ -287,14 +295,21 @@ semanticscholar.appendRanks = function () {
       venueNode?.textContent || "",
     );
 
-    entry.classList.add("ccf-ranked");
+    if (!venue) {
+      return;
+    }
+
+    entry.dataset.onlyccfaVenueText = venue;
+
     if (semanticscholar.appendVenueRank(titleLink || venueNode, venue, entry)) {
       return;
     }
 
-    if (!titleLink) {
+    if (!titleLink || entry.dataset.onlyccfaDblpLookupQueued === "true") {
       return;
     }
+
+    entry.dataset.onlyccfaDblpLookupQueued = "true";
 
     const data = semanticscholar.getResultData(entry);
     setTimeout(function () {
