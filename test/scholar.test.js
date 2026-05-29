@@ -271,7 +271,8 @@ async function runAsyncTests() {
   const originalConcurrency = scholar.bibtexConcurrency;
   scholar.bibtexCache = new Map();
   scholar.bibtexConcurrency = 2;
-  scholar.getReliableBibtexForEntry = async function (entry) {
+  scholar.getReliableBibtexForEntry = async function (entry, options = {}) {
+    assert.strictEqual(options.allowGoogleCitationFetch, false);
     await new Promise((resolve) => setTimeout(resolve, 20 - entry.id));
     return `@article{paper${entry.id}, title={Paper ${entry.id}}, year={202${entry.id}} }`;
   };
@@ -291,6 +292,39 @@ async function runAsyncTests() {
 
   scholar.getReliableBibtexForEntry = originalGetReliableBibtexForEntry;
   scholar.bibtexConcurrency = originalConcurrency;
+
+  let googleFetchCount = 0;
+  const originalFetchGoogleScholarBibtex = scholar.fetchGoogleScholarBibtex;
+  const originalFetchCrossrefBibtexByTitle = scholar.fetchCrossrefBibtexByTitle;
+  const originalGetResultData = scholar.getResultData;
+  scholar.fetchGoogleScholarBibtex = async function () {
+    googleFetchCount += 1;
+    return "@article{google, title={Google Scholar}}";
+  };
+  scholar.fetchCrossrefBibtexByTitle = async function () {
+    return "@article{crossref, title={Crossref Metadata}}";
+  };
+  scholar.getResultData = function () {
+    return {
+      title: "Crossref Metadata",
+      url: "https://example.org/crossref",
+      metadata: "A Author - Journal, 2026",
+      snippet: "",
+      pdfUrl: "",
+      year: "2026",
+    };
+  };
+
+  const metadataFirstBibtex = await scholar.getReliableBibtexForEntry(
+    fakeResult("Crossref Metadata", "https://example.org/crossref"),
+    { allowGoogleCitationFetch: false },
+  );
+  assert.ok(metadataFirstBibtex.includes("@article{crossref"));
+  assert.strictEqual(googleFetchCount, 0);
+
+  scholar.fetchGoogleScholarBibtex = originalFetchGoogleScholarBibtex;
+  scholar.fetchCrossrefBibtexByTitle = originalFetchCrossrefBibtexByTitle;
+  scholar.getResultData = originalGetResultData;
 }
 
 runAsyncTests().catch((error) => {

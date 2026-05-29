@@ -76,6 +76,19 @@ const filter = {
       };
     }
 
+    if (hostname.endsWith("semanticscholar.org")) {
+      return {
+        site: "semanticscholar",
+        defaultFilter: "ALL",
+        entrySelector:
+          ".cl-paper-row, .cl-paper-card, [data-test-id='paper-card'], [data-testid='paper-card'], article",
+        triggerSelector: "main",
+        hideUnranked: false,
+        observeMutations: true,
+        supportsExport: true,
+      };
+    }
+
     return null;
   },
 
@@ -111,7 +124,7 @@ const filter = {
     `
         : "";
     const exportControls =
-      this.siteConfig.site === "scholar"
+      this.siteConfig.site === "scholar" || this.siteConfig.supportsExport
         ? `
       <div class="ccf-filter-export">
         <div class="ccf-filter-section-title">${t("exportSection")}</div>
@@ -119,7 +132,11 @@ const filter = {
           <button type="button" data-action="export-selected">${t("exportSelected")}</button>
           <button type="button" data-action="export-visible">${t("exportVisible")}</button>
         </div>
-        <button type="button" data-action="export-pool">${t("exportPool")}</button>
+        ${
+          this.siteConfig.site === "scholar"
+            ? `<button type="button" data-action="export-pool">${t("exportPool")}</button>`
+            : ""
+        }
         <div class="ccf-filter-export-status" aria-live="polite"></div>
       </div>
     `
@@ -753,6 +770,21 @@ const filter = {
     }
   },
 
+  getActiveExporter() {
+    if (this.siteConfig?.site === "scholar" && typeof scholar !== "undefined") {
+      return scholar;
+    }
+
+    if (
+      this.siteConfig?.site === "semanticscholar" &&
+      typeof semanticscholar !== "undefined"
+    ) {
+      return semanticscholar;
+    }
+
+    return null;
+  },
+
   rerenderPanel() {
     const oldPanel = document.querySelector(".ccf-filter");
     if (oldPanel) {
@@ -818,22 +850,25 @@ const filter = {
       }
 
       if (e.target.dataset.action === "export-selected") {
-        if (typeof scholar !== "undefined") {
-          scholar.exportBibtex("selected");
+        const exporter = this.getActiveExporter();
+        if (exporter?.exportBibtex) {
+          exporter.exportBibtex("selected");
         }
         return;
       }
 
       if (e.target.dataset.action === "export-visible") {
-        if (typeof scholar !== "undefined") {
-          scholar.exportBibtex("visible");
+        const exporter = this.getActiveExporter();
+        if (exporter?.exportBibtex) {
+          exporter.exportBibtex("visible");
         }
         return;
       }
 
       if (e.target.dataset.action === "export-pool") {
-        if (typeof scholar !== "undefined") {
-          scholar.exportBibtex("pool");
+        const exporter = this.getActiveExporter();
+        if (exporter?.exportBibtex) {
+          exporter.exportBibtex("pool");
         }
         return;
       }

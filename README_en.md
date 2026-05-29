@@ -16,7 +16,7 @@
   <a href="./README.md">中文</a> | English
 </p>
 
-OnlyCCFA is an independent Chrome extension based on [CCFrank](https://github.com/WenyanLiu/CCFrank4dblp). It keeps the original CCF rank labels and turns Google Scholar into a stricter paper-search workflow: load multiple Google Scholar pages, filter the local result pool by CCF, SCI/JCR, CAS partition, EI, Chinese core journal and field TOP venue badges, then export clean candidates to BibTeX or let Zotero Connector see only the filtered results.
+OnlyCCFA is an independent Chrome extension based on [CCFrank](https://github.com/WenyanLiu/CCFrank4dblp). It keeps the original CCF rank labels and turns Google Scholar and Semantic Scholar into stricter paper-search workflows: deep-load multiple Google Scholar pages, filter search results by CCF, SCI/JCR, CAS partition, EI, Chinese core journal and field TOP venue badges, then export clean candidates to BibTeX or let Zotero Connector see only the filtered Google Scholar results.
 
 The goal is simple: help students and researchers in computer science, robotics, mechanical engineering, electrical engineering and communications see venue-quality signals directly in their daily paper search results, with data that is transparent, extensible and free.
 
@@ -24,10 +24,11 @@ The goal is simple: help students and researchers in computer science, robotics,
 
 - Shows CCF recommended ranks for papers on Google Scholar, dblp, Connected Papers, Semantic Scholar and Web of Science.
 - Filters Google Scholar search results to `CCF A` by default, with an on-page switcher for `ALL`, `CCF A`, `CCF B` and `CCF C`.
+- Adds Semantic Scholar filtering with the side panel, CCF/open-source badges, single-paper BibTeX copy and batch export for selected or visible results.
 - Adds configurable deep filtering: scan `20 / 40 / 60 / 80 / 100` Google Scholar results per batch, continue to the next batch, or clear the local result pool.
 - Adds a redesigned bilingual side panel with local settings for language, default rank, deep-filter count and filter preferences.
 - Combines SCI, JCR Q1/Q2, CAS 1/2/TOP, EI, Chinese core journals, SWJTU / SWJTU CS C-level / transportation lists and field TOP filters with `any` or `all` matching.
-- Exports single papers, selected papers, visible papers or the whole deep-filter pool to BibTeX. BibTeX uses Google Scholar's native import links first, then falls back only to DOI, arXiv ID or strict-title Crossref/arXiv matches, never fabricated fields from result snippets.
+- Exports single papers, selected papers, visible papers or the whole deep-filter pool to BibTeX. BibTeX now prefers DOI, arXiv ID or strict-title Crossref/arXiv matches; Google Scholar's native import links are used only as a low-frequency fallback, and fields are never fabricated from result snippets.
 - Makes the filtered Google Scholar DOM compatible with Zotero Connector: filtered-out results are temporarily moved out of the result list, so Zotero Connector sees the current candidate set instead of the original ALL results.
 - Saves the default Google Scholar filter and lets you choose whether unmatched results should stay visible.
 - Shows how many results are visible, hidden and unmatched after filtering.
@@ -80,7 +81,7 @@ The tests cover:
 - Google Scholar default CCF-A filtering behavior.
 - Google Scholar deep-filter pagination URLs, start offsets, result de-duplication and batch continuation.
 - Multi-source signal filtering.
-- Google Scholar / Crossref / arXiv BibTeX fetching, BibTeX parsing and Zotero Connector filtered-result compatibility.
+- Google Scholar / Semantic Scholar / Crossref / arXiv BibTeX fetching, BibTeX parsing and Zotero Connector filtered-result compatibility.
 - Saved filter preferences and unmatched-result handling.
 - Filter result statistics.
 - Google Scholar venue extraction.

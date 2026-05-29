@@ -2,7 +2,7 @@ const onlyccfaI18n = {
   messages: {
     zh: {
       title: "OnlyCCFA",
-      subtitle: "Google 学术深度筛选器",
+      subtitle: "学术搜索深度筛选器",
       language: "EN",
       ccfSection: "CCF 筛选",
       sourceSection: "开放标签",
@@ -27,7 +27,7 @@ const onlyccfaI18n = {
       bibtexFetching: "正在获取可靠 BibTeX...",
       bibtexDone: "已导出 {count} 条 BibTeX，失败 {failed} 条。",
       bibtexUnavailable:
-        "无法从 Google 学术或 Crossref 获取可靠 BibTeX。为避免不准确引用，已停止导出。",
+        "无法从开放元数据源获取可靠 BibTeX。为避免不准确引用，已停止导出。",
       noResults: "没有可导出的论文。",
       noScholarResults: "未找到 Google 学术结果。",
       loading: "正在加载更多 Google 学术结果...",
@@ -40,7 +40,7 @@ const onlyccfaI18n = {
     },
     en: {
       title: "OnlyCCFA",
-      subtitle: "Google Scholar deep filter",
+      subtitle: "Academic search deep filter",
       language: "中文",
       ccfSection: "CCF Filter",
       sourceSection: "Open Badges",
@@ -65,7 +65,7 @@ const onlyccfaI18n = {
       bibtexFetching: "Fetching reliable BibTeX...",
       bibtexDone: "Exported {count} BibTeX entries, {failed} failed.",
       bibtexUnavailable:
-        "Could not fetch reliable BibTeX from Google Scholar or Crossref. Export stopped to avoid inaccurate citations.",
+        "Could not fetch reliable BibTeX from open metadata sources. Export stopped to avoid inaccurate citations.",
       noResults: "No papers to export.",
       noScholarResults: "No Scholar results found.",
       loading: "Loading more Google Scholar results...",

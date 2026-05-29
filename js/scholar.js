@@ -12,8 +12,9 @@ scholar.deepPageSize = 20;
 scholar.deepRequestDelay = 800;
 scholar.deepLoading = false;
 scholar.deepState = null;
-scholar.bibtexConcurrency = 4;
+scholar.bibtexConcurrency = 2;
 scholar.bibtexCache = new Map();
+scholar.googleCitationCooldownUntil = 0;
 scholar.cvfVenueHints = [
   {
     pattern: /(^|\s)CVPR(\s|$)/i,
@@ -617,10 +618,38 @@ scholar.getBibtexUrlFromCitationDialog = async function (entry) {
   return href ? new URL(href, scholar.getBaseUrl()).toString() : "";
 };
 
-scholar.fetchGoogleScholarBibtex = async function (entry) {
+scholar.isGoogleCitationInCooldown = function () {
+  return Date.now() < scholar.googleCitationCooldownUntil;
+};
+
+scholar.rememberGoogleCitationLimit = function () {
+  scholar.googleCitationCooldownUntil = Date.now() + 5 * 60 * 1000;
+};
+
+scholar.isGoogleCitationLimitError = function (error) {
+  return /\b(403|429|rate|captcha|unusual traffic|restricted)\b/i.test(
+    error?.message || "",
+  );
+};
+
+scholar.fetchGoogleScholarBibtex = async function (entry, options = {}) {
+  if (
+    options.allowGoogleCitationFetch === false ||
+    scholar.isGoogleCitationInCooldown()
+  ) {
+    return "";
+  }
+
   const directUrl = scholar.getDirectBibtexUrl(entry);
   if (directUrl) {
-    return scholar.fetchText(directUrl);
+    try {
+      return await scholar.fetchText(directUrl);
+    } catch (error) {
+      if (scholar.isGoogleCitationLimitError(error)) {
+        scholar.rememberGoogleCitationLimit();
+      }
+      throw error;
+    }
   }
 
   const citationUrl = scholar.getCitationUrl(entry);
@@ -634,19 +663,26 @@ scholar.fetchGoogleScholarBibtex = async function (entry) {
     }
   }
 
-  const citationHtml = await scholar.fetchText(citationUrl);
-  const bibtexUrl = scholar.extractBibtexHref(citationHtml, citationUrl);
-  if (!bibtexUrl) {
-    try {
-      const dialogBibtexUrl =
-        await scholar.getBibtexUrlFromCitationDialog(entry);
-      return dialogBibtexUrl ? scholar.fetchText(dialogBibtexUrl) : "";
-    } catch (error) {
-      return "";
+  try {
+    const citationHtml = await scholar.fetchText(citationUrl);
+    const bibtexUrl = scholar.extractBibtexHref(citationHtml, citationUrl);
+    if (!bibtexUrl) {
+      try {
+        const dialogBibtexUrl =
+          await scholar.getBibtexUrlFromCitationDialog(entry);
+        return dialogBibtexUrl ? scholar.fetchText(dialogBibtexUrl) : "";
+      } catch (error) {
+        return "";
+      }
     }
-  }
 
-  return scholar.fetchText(bibtexUrl);
+    return await scholar.fetchText(bibtexUrl);
+  } catch (error) {
+    if (scholar.isGoogleCitationLimitError(error)) {
+      scholar.rememberGoogleCitationLimit();
+    }
+    throw error;
+  }
 };
 
 scholar.fetchCrossrefBibtexByDoi = async function (doi) {
@@ -694,16 +730,7 @@ scholar.fetchCrossrefBibtexByTitle = async function (title, year) {
   return match?.DOI ? scholar.fetchCrossrefBibtexByDoi(match.DOI) : "";
 };
 
-scholar.getReliableBibtexForEntry = async function (entry) {
-  try {
-    const googleBibtex = await scholar.fetchGoogleScholarBibtex(entry);
-    if (googleBibtex) {
-      return googleBibtex;
-    }
-  } catch (error) {
-    // Google Scholar citation requests can be rate-limited; try DOI sources.
-  }
-
+scholar.getMetadataBibtexForEntry = async function (entry) {
   const resultData = scholar.getResultData(entry);
   const doi = scholar.extractDoiFromText(
     `${resultData.title} ${resultData.url} ${resultData.metadata || ""} ${
@@ -737,7 +764,29 @@ scholar.getReliableBibtexForEntry = async function (entry) {
     // Fall through to arXiv lookup.
   }
 
-  return scholar.fetchArxivBibtexById(arxivId);
+  try {
+    const arxivBibtex = await scholar.fetchArxivBibtexById(arxivId);
+    if (arxivBibtex) {
+      return arxivBibtex;
+    }
+  } catch (error) {
+    // Keep export conservative rather than fabricating citation fields.
+  }
+
+  return "";
+};
+
+scholar.getReliableBibtexForEntry = async function (entry, options = {}) {
+  const metadataBibtex = await scholar.getMetadataBibtexForEntry(entry);
+  if (metadataBibtex) {
+    return metadataBibtex;
+  }
+
+  try {
+    return await scholar.fetchGoogleScholarBibtex(entry, options);
+  } catch (error) {
+    return "";
+  }
 };
 
 scholar.getExistingResultKeys = function () {
@@ -1014,18 +1063,20 @@ scholar.getEntriesForExport = function (scope) {
   return scholar.getVisibleEntries();
 };
 
-scholar.getBibtexCacheKey = function (entry) {
-  return scholar.getResultKey(entry) || scholar.getResultData(entry).title;
+scholar.getBibtexCacheKey = function (entry, options = {}) {
+  const mode =
+    options.allowGoogleCitationFetch === false ? "metadata" : "with-google";
+  return `${mode}:${scholar.getResultKey(entry) || scholar.getResultData(entry).title}`;
 };
 
-scholar.getCachedReliableBibtexForEntry = async function (entry) {
-  const key = scholar.getBibtexCacheKey(entry);
+scholar.getCachedReliableBibtexForEntry = async function (entry, options = {}) {
+  const key = scholar.getBibtexCacheKey(entry, options);
   if (key && scholar.bibtexCache.has(key)) {
     return scholar.bibtexCache.get(key);
   }
 
   const request = scholar
-    .getReliableBibtexForEntry(entry)
+    .getReliableBibtexForEntry(entry, options)
     .then(scholar.formatBibtex);
   if (key) {
     scholar.bibtexCache.set(key, request);
@@ -1057,7 +1108,9 @@ scholar.buildBibtexResultForEntries = async function (entries) {
     scholar.bibtexConcurrency,
     async function (entry) {
       try {
-        const bibtex = await scholar.getCachedReliableBibtexForEntry(entry);
+        const bibtex = await scholar.getCachedReliableBibtexForEntry(entry, {
+          allowGoogleCitationFetch: false,
+        });
         return {
           bibtex,
           failed: bibtex ? 0 : 1,
@@ -1314,7 +1367,9 @@ if (typeof document !== "undefined") {
 
     scholar.setExportStatus(scholar.t("bibtexFetching"));
     scholar
-      .getCachedReliableBibtexForEntry(entry)
+      .getCachedReliableBibtexForEntry(entry, {
+        allowGoogleCitationFetch: true,
+      })
       .then((bibtex) => {
         if (!bibtex) {
           scholar.setExportStatus(scholar.t("bibtexUnavailable"));

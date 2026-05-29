@@ -4,7 +4,7 @@
     "description": "Extension name."
   },
   "extDesc": {
-    "message": "Deep-filters Google Scholar, exports reliable BibTeX, and lets Zotero Connector see only filtered results.",
+    "message": "Filters Google Scholar and Semantic Scholar, exports reliable BibTeX, and keeps noisy results out.",
     "description": "Extension description."
   }
 }

@@ -51,6 +51,15 @@ const dblpConfig = filter.getSiteConfig("dblp.org", "/search");
 assert.strictEqual(dblpConfig.defaultFilter, "ALL");
 assert.strictEqual(dblpConfig.hideUnranked, false);
 
+const semanticScholarConfig = filter.getSiteConfig(
+  "www.semanticscholar.org",
+  "/search",
+);
+assert.strictEqual(semanticScholarConfig.site, "semanticscholar");
+assert.strictEqual(semanticScholarConfig.defaultFilter, "ALL");
+assert.strictEqual(semanticScholarConfig.hideUnranked, false);
+assert.strictEqual(semanticScholarConfig.supportsExport, true);
+
 assert.strictEqual(
   filter.shouldShowEntry(fakeEntry(["CCF A"]), "A", scholarConfig),
   true,
