@@ -371,6 +371,32 @@ assert.strictEqual(
   ),
   "Journal of Machine Learning Research",
 );
+assert.strictEqual(
+  scholar.extractCitationVenue(
+    "IEEE Transactions on Industrial Electronics 71 (4), 4108-4119, 2023",
+  ),
+  "IEEE Transactions on Industrial Electronics",
+);
+assert.strictEqual(
+  scholar.extractCitationVenue(
+    "2023 IEEE/CVF Conference on Computer Vision and Pattern Recognition, 1922-1960, 2023",
+  ),
+  "2023 IEEE/CVF Conference on Computer Vision and Pattern Recognition",
+);
+
+assert.strictEqual(
+  scholar.extractCitationDetailVenue(`
+    <div class="gsc_oci_field">Authors</div>
+    <div class="gsc_oci_value">Y Li, Y Zhang, T Li</div>
+    <div class="gsc_oci_field">Publication date</div>
+    <div class="gsc_oci_value">2023</div>
+    <div class="gsc_oci_field">Source</div>
+    <div class="gsc_oci_value">
+      Proceedings of the IEEE/CVF conference on computer vision and pattern recognition
+    </div>
+  `),
+  "Proceedings of the IEEE/CVF conference on computer vision and pattern recognition",
+);
 
 const citationEntry = fakeCitationEntry();
 const citationRankHost = scholar.getRankBadgeHost(citationEntry, fakeDocument);
@@ -396,6 +422,19 @@ const citationAnchor = citationAnchorEntry.querySelector("a.gsc_a_at");
 assert.strictEqual(
   scholar.getEntryFromRankAnchor(citationAnchor),
   citationAnchorEntry,
+);
+
+citationAnchor.href =
+  "/citations?view_op=view_citation&hl=en&user=CQ1HneMAAAAJ&citation_for_view=CQ1HneMAAAAJ:HqhvjgTjE9cC";
+assert.strictEqual(
+  scholar.getCitationDetailUrl(citationAnchorEntry),
+  "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=CQ1HneMAAAAJ&citation_for_view=CQ1HneMAAAAJ:HqhvjgTjE9cC",
+);
+assert.strictEqual(
+  scholar.shouldFetchCitationDetailVenue(
+    "Proceedings of the IEEE/CVF conference on computer vision and pattern …",
+  ),
+  true,
 );
 
 const selectedCitationEntry = fakeCitationEntry();

@@ -14,6 +14,7 @@ scholar.deepLoading = false;
 scholar.deepState = null;
 scholar.bibtexConcurrency = 2;
 scholar.bibtexCache = new Map();
+scholar.citationDetailVenueCache = new Map();
 scholar.googleCitationCooldownUntil = 0;
 scholar.cvfVenueHints = [
   {
@@ -162,8 +163,119 @@ scholar.decodeHtmlAttribute = function (value) {
     .replace(/&amp;/g, "&")
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&ndash;/g, "–")
+    .replace(/&hellip;/g, "…")
     .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">");
+    .replace(/&gt;/g, ">")
+    .replace(/&#x([0-9a-f]+);/gi, function (_match, code) {
+      return String.fromCodePoint(parseInt(code, 16));
+    })
+    .replace(/&#(\d+);/g, function (_match, code) {
+      return String.fromCodePoint(parseInt(code, 10));
+    });
+};
+
+scholar.cleanHtmlText = function (value) {
+  return scholar
+    .decodeHtmlAttribute(String(value || "").replace(/<[^>]+>/g, " "))
+    .replace(/\s+/g, " ")
+    .trim();
+};
+
+scholar.getCitationDetailFields = function (html) {
+  const source = String(html || "");
+  const fields = [];
+
+  if (typeof DOMParser !== "undefined") {
+    const doc = new DOMParser().parseFromString(source, "text/html");
+    Array.from(doc.querySelectorAll(".gsc_oci_field")).forEach((fieldNode) => {
+      const valueNode = fieldNode.nextElementSibling;
+      if (!valueNode?.classList?.contains("gsc_oci_value")) {
+        return;
+      }
+      fields.push({
+        field: scholar.cleanHtmlText(fieldNode.textContent || ""),
+        value: scholar.cleanHtmlText(valueNode.textContent || ""),
+      });
+    });
+    if (fields.length > 0) {
+      return fields;
+    }
+  }
+
+  const pairPattern =
+    /<div\b[^>]*class=(["'])[^"']*\bgsc_oci_field\b[^"']*\1[^>]*>([\s\S]*?)<\/div>\s*<div\b[^>]*class=(["'])[^"']*\bgsc_oci_value\b[^"']*\3[^>]*>([\s\S]*?)<\/div>/gi;
+  let match = pairPattern.exec(source);
+  while (match) {
+    fields.push({
+      field: scholar.cleanHtmlText(match[2]),
+      value: scholar.cleanHtmlText(match[4]),
+    });
+    match = pairPattern.exec(source);
+  }
+  return fields;
+};
+
+scholar.isCitationDetailVenueField = function (field) {
+  const normalized = scholar.cleanProfileText(field).toLowerCase();
+  return /^(source|journal|conference|book|book title|publication|published in|proceedings|venue|来源|期刊|会议|书籍|图书|书名|出版物|发表在|论文集)$/.test(
+    normalized,
+  );
+};
+
+scholar.extractCitationDetailVenue = function (html) {
+  const fields = scholar.getCitationDetailFields(html);
+  const venueField = fields.find(function (item) {
+    return item.value && scholar.isCitationDetailVenueField(item.field);
+  });
+  return venueField ? venueField.value : "";
+};
+
+scholar.getCitationDetailUrl = function (entry) {
+  const titleLink =
+    entry?.querySelector?.("a.gsc_a_at") ||
+    entry?.querySelector?.("td.gsc_a_t > a");
+  const href = titleLink?.getAttribute?.("href") || titleLink?.href || "";
+  if (!href) {
+    return "";
+  }
+
+  const detailUrl = new URL(href, scholar.getBaseUrl());
+  if (
+    detailUrl.pathname !== "/citations" ||
+    detailUrl.searchParams.get("view_op") !== "view_citation"
+  ) {
+    return "";
+  }
+  return detailUrl.toString();
+};
+
+scholar.shouldFetchCitationDetailVenue = function (venue) {
+  return scholar.isTruncatedVenue(venue);
+};
+
+scholar.fetchCitationDetailVenue = function (entry) {
+  const detailUrl = scholar.getCitationDetailUrl(entry);
+  if (!detailUrl) {
+    return Promise.resolve("");
+  }
+
+  if (scholar.citationDetailVenueCache.has(detailUrl)) {
+    return scholar.citationDetailVenueCache.get(detailUrl);
+  }
+
+  const request = scholar
+    .fetchText(detailUrl)
+    .then(function (html) {
+      return scholar.extractCitationDetailVenue(html);
+    })
+    .catch(function () {
+      return "";
+    });
+
+  scholar.citationDetailVenueCache.set(detailUrl, request);
+  return request;
 };
 
 scholar.getCitationUrl = function (entry) {
@@ -992,10 +1104,9 @@ scholar.cleanProfileText = function (text) {
 scholar.extractCitationVenue = function (metadata) {
   return scholar
     .cleanProfileText(metadata)
-    .replace(/\b(19|20)\d{2}\b.*$/g, "")
-    .replace(/,\s*\d[\d\s,–-]*$/g, "")
-    .replace(/\s*,\s*$/g, "")
-    .replace(/\s+\d+\s*$/g, "")
+    .replace(/,?\s*\b(19|20)\d{2}\b\s*$/g, "")
+    .replace(/,\s*\d[\d\s,–-]*(?:,\s*)?$/g, "")
+    .replace(/\s+\d+(?:\s*\([^)]*\)|\s*\[[^\]]*\])?\s*$/g, "")
     .replace(/\s*,\s*$/g, "")
     .trim();
 };
@@ -1496,27 +1607,48 @@ scholar.observeCitations = function () {
 scholar.appendRanks = function () {
   let elements = $("tr.gsc_a_tr");
   elements.each(function (index) {
-    scholar.appendResultActions(this);
-    scholar.appendAuthorBadges(this);
+    const entry = this;
+    scholar.appendResultActions(entry);
+    scholar.appendAuthorBadges(entry);
 
-    if ($(this).hasClass("ccf-ranked")) {
+    if ($(entry).hasClass("ccf-ranked")) {
       return;
     }
 
-    let node = $(this).find("td.gsc_a_t > a.gsc_a_at, td.gsc_a_t > a").first();
+    let node = $(entry).find("td.gsc_a_t > a.gsc_a_at, td.gsc_a_t > a").first();
     if (!node.length) {
       return;
     }
 
-    const data = scholar.getResultData(this);
-    $(this).addClass("ccf-ranked");
-    if (scholar.appendVenueRank(node, data.venue, this)) {
+    const data = scholar.getResultData(entry);
+    const fetchFallbackRank = function () {
+      const author = (data.authors[0] || "").split(/\s+/).pop() || "";
+      setTimeout(function () {
+        fetchRank(node, data.title, author, data.year, scholar);
+      }, 100 * index);
+    };
+
+    $(entry).addClass("ccf-ranked");
+    if (scholar.appendVenueRank(node, data.venue, entry)) {
       return;
     }
 
-    const author = (data.authors[0] || "").split(/\s+/).pop() || "";
-    setTimeout(function () {
-      fetchRank(node, data.title, author, data.year, scholar);
-    }, 100 * index);
+    if (
+      scholar.shouldFetchCitationDetailVenue(data.venue) &&
+      scholar.getCitationDetailUrl(entry)
+    ) {
+      scholar.fetchCitationDetailVenue(entry).then(function (detailVenue) {
+        if (detailVenue && scholar.appendVenueRank(node, detailVenue, entry)) {
+          if (typeof filter !== "undefined") {
+            filter.applyFilter();
+          }
+          return;
+        }
+        fetchFallbackRank();
+      });
+      return;
+    }
+
+    fetchFallbackRank();
   });
 };
