@@ -1,4 +1,5 @@
 const rankSources = {};
+rankSources.databaseIndexCache = new WeakMap();
 rankSources.VENUE_SERIES_TOKENS = new Set([
   "CONFERENCE",
   "CONGRESS",
@@ -20,6 +21,17 @@ rankSources.normalizeText = function (text) {
 
 rankSources.getRecordNames = function (record) {
   return [record.title].concat(record.aliases || []).filter(Boolean);
+};
+
+rankSources.getRecordNormalizedNames = function (record) {
+  if (!record.__onlyccfaNormalizedNames) {
+    Object.defineProperty(record, "__onlyccfaNormalizedNames", {
+      value: rankSources.getRecordNames(record).map(rankSources.normalizeText),
+      enumerable: false,
+    });
+  }
+
+  return record.__onlyccfaNormalizedNames;
 };
 
 rankSources.containsNormalizedPhrase = function (text, phrase) {
@@ -211,8 +223,32 @@ rankSources.addTagCandidates = function (candidates, newTags, match) {
 rankSources.getDatabases = function () {
   return [
     typeof openRankSources === "undefined" ? null : openRankSources,
+    typeof journalRankSources === "undefined" ? null : journalRankSources,
     typeof swjtuRankSources === "undefined" ? null : swjtuRankSources,
   ].filter((db) => db && Array.isArray(db.records));
+};
+
+rankSources.getDatabaseIndex = function (db) {
+  if (rankSources.databaseIndexCache.has(db)) {
+    return rankSources.databaseIndexCache.get(db);
+  }
+
+  const exact = new Map();
+  db.records.forEach(function (record) {
+    rankSources.getRecordNormalizedNames(record).forEach(function (name) {
+      if (!name) {
+        return;
+      }
+      if (!exact.has(name)) {
+        exact.set(name, []);
+      }
+      exact.get(name).push(record);
+    });
+  });
+
+  const index = { exact };
+  rankSources.databaseIndexCache.set(db, index);
+  return index;
 };
 
 rankSources.getSources = function () {
@@ -223,8 +259,26 @@ rankSources.getSources = function () {
 
 rankSources.resolveVenueText = function (venueText) {
   const candidates = new Map();
+  const normalizedVenue = rankSources.normalizeText(venueText);
 
   rankSources.getDatabases().forEach(function (db) {
+    const exactRecords = rankSources
+      .getDatabaseIndex(db)
+      .exact.get(normalizedVenue);
+    if (exactRecords) {
+      exactRecords.forEach(function (record) {
+        const match = rankSources.getRecordMatch(venueText, record);
+        if (match.score > 0) {
+          rankSources.addTagCandidates(candidates, record.tags, match);
+        }
+      });
+      return;
+    }
+
+    if (db.exactOnly) {
+      return;
+    }
+
     db.records.forEach(function (record) {
       const match = rankSources.getRecordMatch(venueText, record);
       if (match.score === 0) {

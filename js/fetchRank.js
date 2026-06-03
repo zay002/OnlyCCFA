@@ -49,6 +49,41 @@ function appendRankSpan(node, rankSpan, site) {
   $(node).after(rankSpan);
 }
 
+function appendRankSourceSpans(node, venueText, site) {
+  if (
+    !venueText ||
+    typeof rankSources == "undefined" ||
+    !rankSources.resolveVenueText
+  ) {
+    return;
+  }
+
+  const tags = rankSources.resolveVenueText(venueText);
+  tags.forEach(function (tag) {
+    appendRankSpan(node, rankSources.getTagSpan(tag), site);
+  });
+}
+
+function getDblpVenueText(refine, type) {
+  if (typeof ccf == "undefined") {
+    return refine || "";
+  }
+
+  if (type == "url") {
+    return ccf.rankFullName?.[refine] || "";
+  }
+
+  if (type == "abbr" || type == "meeting") {
+    return ccf.abbrFull?.[refine] || refine || "";
+  }
+
+  return refine || "";
+}
+
+function appendRankSourceSpansForDblpRef(node, refine, type, site) {
+  appendRankSourceSpans(node, getDblpVenueText(refine, type), site);
+}
+
 function fetchRank(node, title, authorA, year, site) {
   const manifest = chrome.runtime.getManifest();
   const version = manifest.version;
@@ -86,6 +121,7 @@ function fetchFromCache(cached, node, title, authorA, year, site) {
       // console.log("with abbr");
       appendRankSpan(node, getRankSpan(dblp_abbr, "abbr"), site);
     }
+    appendRankSourceSpansForDblpRef(node, dblp_abbr, "abbr", site);
   } else if (dblp_url == "/journals/pacmpl/pacmpl") {
     // Process PACM PL conferences using centralized helper function
     dblp_url = processPacmPlJournal(resp);
@@ -93,12 +129,14 @@ function fetchFromCache(cached, node, title, authorA, year, site) {
     for (let getRankSpan of site.rankSpanList) {
       appendRankSpan(node, getRankSpan(dblp_url, "url"), site);
     }
+    appendRankSourceSpansForDblpRef(node, dblp_url, "url", site);
   } else {
     // console.log("dblp_url is not empty");
     for (let getRankSpan of site.rankSpanList) {
       // console.log("with url");
       appendRankSpan(node, getRankSpan(dblp_url, "url"), site);
     }
+    appendRankSourceSpansForDblpRef(node, dblp_url, "url", site);
   }
 }
 
@@ -182,6 +220,7 @@ function fetchFromDblpApi(query_url, node, title, authorA, year, site) {
           // console.log("with abbr");
           appendRankSpan(node, getRankSpan(dblp_abbr, "abbr"), site);
         }
+        appendRankSourceSpansForDblpRef(node, dblp_abbr, "abbr", site);
       }
       // Process PACM PL conferences using centralized helper function
       else if (dblp_url == "/journals/pacmpl/pacmpl") {
@@ -190,11 +229,13 @@ function fetchFromDblpApi(query_url, node, title, authorA, year, site) {
         for (let getRankSpan of site.rankSpanList) {
           appendRankSpan(node, getRankSpan(dblp_url, "url"), site);
         }
+        appendRankSourceSpansForDblpRef(node, dblp_url, "url", site);
       } else {
         for (let getRankSpan of site.rankSpanList) {
           // console.log("with url");
           appendRankSpan(node, getRankSpan(dblp_url, "url"), site);
         }
+        appendRankSourceSpansForDblpRef(node, dblp_url, "url", site);
       }
     }
   };

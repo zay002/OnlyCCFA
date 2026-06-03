@@ -70,6 +70,18 @@ const richEntry = entry([
       dataset: { rankSource: "swjtuScai", rankValue: "C类" },
     }),
   },
+  {
+    kind: "source",
+    node: node("国家杰青", {
+      dataset: { rankSource: "distinguishedYoungScholar", rankValue: "" },
+    }),
+  },
+  {
+    kind: "source",
+    node: node("中科院院士", {
+      dataset: { rankSource: "casAcademician", rankValue: "" },
+    }),
+  },
 ]);
 
 assert.strictEqual(
@@ -80,6 +92,10 @@ assert.ok(filter.getEntrySignalIds(richEntry).includes("ccfA"));
 assert.ok(filter.getEntrySignalIds(richEntry).includes("jcrQ1"));
 assert.ok(filter.getEntrySignalIds(richEntry).includes("roboticsTop"));
 assert.ok(filter.getEntrySignalIds(richEntry).includes("swjtuScai"));
+assert.ok(
+  filter.getEntrySignalIds(richEntry).includes("distinguishedYoungScholar"),
+);
+assert.ok(filter.getEntrySignalIds(richEntry).includes("casAcademician"));
 
 const config = filter.getSiteConfig("scholar.google.com", "/scholar");
 assert.strictEqual(
@@ -99,4 +115,13 @@ assert.strictEqual(
     signalMode: "any",
   }),
   false,
+);
+assert.strictEqual(
+  filter.shouldShowEntry(richEntry, {
+    currentFilter: "A",
+    siteConfig: config,
+    selectedSignals: ["distinguishedYoungScholar", "caeAcademician"],
+    signalMode: "any",
+  }),
+  true,
 );

@@ -1279,6 +1279,47 @@ scholar.setVenueName = function (entry, venueName) {
   anchor.insertAdjacentElement("afterend", venue);
 };
 
+scholar.appendBadgeToHost = function (host, badge) {
+  if (!host || !badge) {
+    return;
+  }
+
+  if (badge.jquery && badge[0] && host.appendChild) {
+    host.appendChild(badge[0]);
+    return;
+  }
+
+  if (badge.nodeType && host.appendChild) {
+    host.appendChild(badge);
+    return;
+  }
+
+  $(host).append(badge);
+};
+
+scholar.appendAuthorBadges = function (entry) {
+  if (
+    !entry ||
+    entry.dataset?.onlyccfaAuthorRanked === "true" ||
+    typeof authorSources === "undefined"
+  ) {
+    return false;
+  }
+
+  const metadata = entry.querySelector(".gs_a")?.textContent || "";
+  const tags = authorSources.resolveAuthors(scholar.extractAuthors(metadata));
+  entry.dataset.onlyccfaAuthorRanked = "true";
+  if (tags.length === 0) {
+    return false;
+  }
+
+  const host = scholar.getRankBadgeHost(entry);
+  tags.forEach((tag) => {
+    scholar.appendBadgeToHost(host, authorSources.getTagSpan(tag));
+  });
+  return true;
+};
+
 scholar.appendVenueRank = function (node, venue, entry) {
   if (!venue) {
     return false;
@@ -1326,6 +1367,7 @@ scholar.appendRank = function () {
   let elements = $("#gs_res_ccl_mid > div > div.gs_ri");
   elements.each(function (index) {
     scholar.appendResultActions(this);
+    scholar.appendAuthorBadges(this);
 
     if ($(this).hasClass("ccf-ranked")) {
       return;

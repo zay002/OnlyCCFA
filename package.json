@@ -1,6 +1,6 @@
 {
   "name": "onlyccfa",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "private": true,
   "description": "Chrome extension that filters Google Scholar and Semantic Scholar results, exports reliable BibTeX, and makes Zotero Connector respect filters.",
   "license": "MIT",
@@ -20,9 +20,9 @@
   },
   "scripts": {
     "prepare": "husky",
-    "format:check": "prettier --check README.md README_en.md PrivacyPolicy.md manifest.json package.json package-lock.json _locales/**/*.json css/filter.css css/style.css data/openRankSources.js data/swjtuRankSources.js js/apiCache.js js/background.js js/bibtex.js js/ccf.js js/fetchRank.js js/filter.js js/i18n.js js/rankSources.js js/scholar.js scripts/package-release.js test/**/*.js .github/workflows/*.yaml",
+    "format:check": "prettier --check README.md README_en.md PrivacyPolicy.md manifest.json package.json package-lock.json _locales/**/*.json css/filter.css css/style.css data/openRankSources.js data/authorRankSources.js data/swjtuRankSources.js js/apiCache.js js/authorSources.js js/background.js js/bibtex.js js/ccf.js js/fetchRank.js js/filter.js js/i18n.js js/rankSources.js js/scholar.js js/semanticscholar.js scripts/package-release.js test/**/*.js .github/workflows/*.yaml",
     "package": "node scripts/package-release.js",
-    "test": "node test/filter.test.js && node test/filterSignals.test.js && node test/scholar.test.js && node test/semanticscholar.test.js && node test/bibtex.test.js && node test/ccf.test.js && node test/rankSources.test.js"
+    "test": "node test/filter.test.js && node test/filterSignals.test.js && node test/scholar.test.js && node test/semanticscholar.test.js && node test/bibtex.test.js && node test/ccf.test.js && node test/rankSources.test.js && node test/authorSources.test.js && node test/fetchRank.test.js"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"

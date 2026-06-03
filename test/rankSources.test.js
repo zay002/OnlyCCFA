@@ -3,12 +3,13 @@ const fs = require("fs");
 const vm = require("vm");
 
 const dataSource = fs.readFileSync("data/openRankSources.js", "utf8");
+const journalSource = fs.readFileSync("data/journalRankSources.js", "utf8");
 const swjtuSource = fs.readFileSync("data/swjtuRankSources.js", "utf8");
 const source = fs.readFileSync("js/rankSources.js", "utf8");
 const swjtuData = vm.runInNewContext(`${swjtuSource}; swjtuRankSources;`);
 
 const rankSources = vm.runInNewContext(
-  `${dataSource}; ${swjtuSource}; ${source}; rankSources;`,
+  `${dataSource}; ${journalSource}; ${swjtuSource}; ${source}; rankSources;`,
   {
     console,
     $() {
@@ -49,6 +50,28 @@ assert.strictEqual(
 assert.strictEqual(
   rankSources.getTagText({ source: "swjtuScai", value: "C类" }),
   "西南交大计算机C类",
+);
+
+const csurTags = rankSources.resolveVenueText("ACM Computing Surveys, 2025");
+assert.ok(csurTags.some((tag) => tag.source === "sci"));
+assert.ok(csurTags.some((tag) => tag.source === "jcr" && tag.value === "Q1"));
+assert.ok(
+  csurTags.some((tag) => tag.source === "casUpgraded" && tag.value === "1区"),
+);
+assert.ok(csurTags.some((tag) => tag.source === "casTop"));
+
+const artificialIntelligenceTags = rankSources.resolveVenueText(
+  "Artificial Intelligence, 2024",
+);
+assert.ok(
+  artificialIntelligenceTags.some(
+    (tag) => tag.source === "jcr" && tag.value === "Q2",
+  ),
+);
+assert.ok(
+  artificialIntelligenceTags.some(
+    (tag) => tag.source === "casUpgraded" && tag.value === "2区",
+  ),
 );
 
 const cvprTags = rankSources.resolveVenueText(

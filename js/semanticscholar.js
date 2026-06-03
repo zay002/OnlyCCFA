@@ -225,6 +225,48 @@ semanticscholar.setVenueName = function (entry, venueName) {
   anchor.insertAdjacentElement("afterend", venue);
 };
 
+semanticscholar.appendBadgeToHost = function (host, badge) {
+  if (!host || !badge) {
+    return;
+  }
+
+  if (badge.jquery && badge[0] && host.appendChild) {
+    host.appendChild(badge[0]);
+    return;
+  }
+
+  if (badge.nodeType && host.appendChild) {
+    host.appendChild(badge);
+    return;
+  }
+
+  $(host).append(badge);
+};
+
+semanticscholar.appendAuthorBadges = function (entry) {
+  if (
+    !entry ||
+    entry.dataset?.onlyccfaAuthorRanked === "true" ||
+    typeof authorSources === "undefined"
+  ) {
+    return false;
+  }
+
+  const tags = authorSources.resolveAuthors(
+    semanticscholar.extractAuthors(entry),
+  );
+  entry.dataset.onlyccfaAuthorRanked = "true";
+  if (tags.length === 0) {
+    return false;
+  }
+
+  const host = semanticscholar.getRankBadgeHost(entry);
+  tags.forEach((tag) => {
+    semanticscholar.appendBadgeToHost(host, authorSources.getTagSpan(tag));
+  });
+  return true;
+};
+
 semanticscholar.appendVenueRank = function (node, venue, entry) {
   if (!venue) {
     return false;
@@ -278,6 +320,7 @@ semanticscholar.appendRanks = function () {
   );
   entries.forEach(function (entry, index) {
     semanticscholar.appendResultActions(entry);
+    semanticscholar.appendAuthorBadges(entry);
 
     if (
       entry.classList.contains("ccf-ranked") &&

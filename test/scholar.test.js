@@ -7,6 +7,38 @@ const scholar = vm.runInNewContext(`${source}; scholar;`, {
   console,
   URL,
   URLSearchParams,
+  document: {
+    addEventListener() {},
+    createElement(tagName) {
+      return {
+        tagName,
+        className: "",
+        children: [],
+        appendChild(child) {
+          this.children.push(child);
+          child.parentNode = this;
+        },
+      };
+    },
+  },
+  authorSources: {
+    resolveAuthors(authors) {
+      return authors.includes("姚期智")
+        ? [{ source: "casAcademician", matchedName: "姚期智" }]
+        : [];
+    },
+    getTagSpan(tag) {
+      return { className: "rank-source", textContent: tag.source };
+    },
+  },
+  $() {
+    return {
+      append(child) {
+        this.children = this.children || [];
+        this.children.push(child);
+      },
+    };
+  },
 });
 
 function fakeLink(href, textContent = "") {
@@ -196,7 +228,7 @@ assert.strictEqual(scholar.buildScholarBibtexSettingsUrl, undefined);
 assert.strictEqual(scholar.enableScholarBibtexLinks, undefined);
 
 function fakeScholarEntry() {
-  const entry = { rankHost: null };
+  const entry = { dataset: {}, rankHost: null };
   const title = {
     insertAdjacentElement(position, node) {
       assert.strictEqual(position, "afterend");
@@ -229,6 +261,31 @@ const rankHost = scholar.getRankBadgeHost(rankHostEntry, {
 assert.strictEqual(rankHost.tagName, "div");
 assert.strictEqual(rankHost.className, "onlyccfa-rank-badges");
 assert.strictEqual(scholar.getRankBadgeHost(rankHostEntry), rankHost);
+
+assert.strictEqual(typeof scholar.appendAuthorBadges, "function");
+
+const authorBadgeEntry = fakeScholarEntry();
+authorBadgeEntry.querySelector = function (selector) {
+  if (selector === ".onlyccfa-rank-badges") {
+    return this.rankHost;
+  }
+  if (selector === "h3") {
+    return {
+      insertAdjacentElement: (_position, node) => {
+        this.rankHost = node;
+      },
+    };
+  }
+  if (selector === ".gs_a") {
+    return {
+      textContent: "姚期智, A Researcher - Journal of the ACM, 2025",
+    };
+  }
+  return null;
+};
+scholar.appendAuthorBadges(authorBadgeEntry);
+assert.ok(authorBadgeEntry.rankHost);
+assert.strictEqual(authorBadgeEntry.dataset.onlyccfaAuthorRanked, "true");
 
 const uglyBibtex =
   "@article{Yang_2021, title={TEASER: Fast and Certifiable Point Cloud Registration}, volume={37}, DOI={10.1109/tro.2020.3033695}, month=Apr, pages={314–333} }";
