@@ -983,13 +983,30 @@ scholar.extractAuthors = function (metadata) {
     .filter(Boolean);
 };
 
+scholar.cleanProfileText = function (text) {
+  return String(text || "")
+    .replace(/\s+/g, " ")
+    .trim();
+};
+
+scholar.extractCitationVenue = function (metadata) {
+  return scholar
+    .cleanProfileText(metadata)
+    .replace(/\b(19|20)\d{2}\b.*$/g, "")
+    .replace(/,\s*\d[\d\s,–-]*$/g, "")
+    .replace(/\s*,\s*$/g, "")
+    .replace(/\s+\d+\s*$/g, "")
+    .replace(/\s*,\s*$/g, "")
+    .trim();
+};
+
 scholar.extractYear = function (metadata) {
   const match = (metadata || "").match(/\b(19|20)\d{2}\b/);
   return match ? match[0] : "";
 };
 
 scholar.getResultTags = function (entry) {
-  return Array.from(entry.querySelectorAll(".ccf-rank, .rank-source"))
+  return Array.from(entry.querySelectorAll?.(".ccf-rank, .rank-source") || [])
     .map((node) => node.textContent.trim())
     .filter(Boolean);
 };
@@ -997,7 +1014,7 @@ scholar.getResultTags = function (entry) {
 scholar.getPdfUrl = function (entry) {
   const pdfLink =
     entry.querySelector(".gs_or_ggsm a") ||
-    Array.from(entry.querySelectorAll("a")).find((link) =>
+    Array.from(entry.querySelectorAll?.("a") || []).find((link) =>
       /\.pdf(\?|#|$)/i.test(link.href || link.getAttribute?.("href") || ""),
     );
   const href = pdfLink?.href || pdfLink?.getAttribute?.("href") || "";
@@ -1005,16 +1022,33 @@ scholar.getPdfUrl = function (entry) {
 };
 
 scholar.getResultData = function (entry) {
-  const titleLink = entry.querySelector("h3 a");
-  const metadata = entry.querySelector(".gs_a")?.textContent || "";
+  const titleLink =
+    entry.querySelector("h3 a") || entry.querySelector("a.gsc_a_at");
+  const citationMeta = Array.from(entry.querySelectorAll?.(".gs_gray") || []);
+  const citationAuthorText = citationMeta[0]?.textContent || "";
+  const citationVenueText = citationMeta[1]?.textContent || "";
+  const metadata =
+    entry.querySelector(".gs_a")?.textContent ||
+    (citationVenueText
+      ? `${scholar.cleanProfileText(citationAuthorText)} - ${scholar.cleanProfileText(
+          citationVenueText,
+        )}`
+      : scholar.cleanProfileText(citationAuthorText));
   const snippet = entry.querySelector(".gs_rs")?.textContent || "";
+  const citationYear =
+    entry.querySelector("td.gsc_a_y span")?.textContent ||
+    entry.querySelector("td.gsc_a_y")?.textContent ||
+    "";
+  const venue = citationVenueText
+    ? scholar.extractCitationVenue(citationVenueText)
+    : scholar.extractVenue(metadata, titleLink?.href || "");
   return {
     title: titleLink?.textContent?.replace(/\s+/g, " ").trim() || "Untitled",
     url: titleLink?.href || "",
     pdfUrl: scholar.getPdfUrl(entry),
-    authors: scholar.extractAuthors(metadata),
-    year: scholar.extractYear(metadata),
-    venue: scholar.extractVenue(metadata, titleLink?.href || ""),
+    authors: scholar.extractAuthors(citationAuthorText || metadata),
+    year: scholar.extractYear(citationYear || metadata),
+    venue,
     metadata,
     snippet,
     tags: scholar.getResultTags(entry),
@@ -1025,20 +1059,31 @@ scholar.getSelectedEntries = function () {
   return Array.from(
     document.querySelectorAll(".onlyccfa-select-result:checked"),
   )
-    .map((input) => input.closest("#gs_res_ccl_mid > div"))
+    .map((input) => input.closest("#gs_res_ccl_mid > div, tr.gsc_a_tr"))
     .filter(Boolean);
 };
 
+scholar.getCitationEntries = function (
+  doc = typeof document === "undefined" ? null : document,
+) {
+  return Array.from(doc?.querySelectorAll?.("#gsc_a_b tr.gsc_a_tr") || []);
+};
+
 scholar.getVisibleEntries = function () {
-  return scholar
-    .collectResultEntries(document)
-    .filter((entry) => entry.style.display !== "none");
+  const citationEntries = scholar.getCitationEntries();
+  if (citationEntries.length > 0) {
+    return citationEntries.filter((entry) => entry.style.display !== "none");
+  }
+
+  return scholar.collectResultEntries(document).filter((entry) => {
+    return entry.style.display !== "none";
+  });
 };
 
 scholar.getManagedEntries = function () {
   if (
     typeof filter !== "undefined" &&
-    filter.siteConfig?.site === "scholar" &&
+    ["scholar", "scholarCitations"].includes(filter.siteConfig?.site) &&
     typeof filter.getFilterEntries === "function"
   ) {
     return filter.getFilterEntries();
@@ -1209,7 +1254,7 @@ scholar.getRankBadgeHost = function (
     return null;
   }
 
-  const title = entry.querySelector("h3");
+  const title = entry.querySelector("h3") || entry.querySelector("a.gsc_a_at");
   if (!title) {
     return null;
   }
@@ -1222,7 +1267,7 @@ scholar.getRankBadgeHost = function (
 
 scholar.getEntryFromRankAnchor = function (anchor) {
   const node = anchor?.jquery ? anchor[0] : anchor;
-  return node?.closest?.("div.gs_ri") || null;
+  return node?.closest?.("div.gs_ri, tr.gsc_a_tr") || null;
 };
 
 scholar.appendRankBadge = function (anchor, badge, entry) {
@@ -1242,7 +1287,7 @@ scholar.appendResultActions = function (entry) {
     return;
   }
 
-  const title = entry.querySelector("h3");
+  const title = entry.querySelector("h3") || entry.querySelector("a.gsc_a_at");
   if (!title) {
     return;
   }
@@ -1268,7 +1313,9 @@ scholar.setVenueName = function (entry, venueName) {
 
   const anchor =
     entry.querySelector(".onlyccfa-result-actions") ||
-    entry.querySelector("h3");
+    entry.querySelector(".onlyccfa-rank-badges") ||
+    entry.querySelector("h3") ||
+    entry.querySelector("a.gsc_a_at");
   if (!anchor) {
     return;
   }
@@ -1306,8 +1353,9 @@ scholar.appendAuthorBadges = function (entry) {
     return false;
   }
 
-  const metadata = entry.querySelector(".gs_a")?.textContent || "";
-  const tags = authorSources.resolveAuthors(scholar.extractAuthors(metadata));
+  const tags = authorSources.resolveAuthors(
+    scholar.getResultData(entry).authors,
+  );
   entry.dataset.onlyccfaAuthorRanked = "true";
   if (tags.length === 0) {
     return false;
@@ -1402,7 +1450,7 @@ if (typeof document !== "undefined") {
       return;
     }
 
-    const entry = event.target.closest("#gs_res_ccl_mid > div");
+    const entry = event.target.closest("#gs_res_ccl_mid > div, tr.gsc_a_tr");
     if (!entry) {
       return;
     }
@@ -1448,18 +1496,27 @@ scholar.observeCitations = function () {
 scholar.appendRanks = function () {
   let elements = $("tr.gsc_a_tr");
   elements.each(function (index) {
-    let node = $(this).find("td.gsc_a_t > a").first();
-    if (!node.next().hasClass("ccf-rank") && !$(this).hasClass("ccf-ranked")) {
-      let title = node.text();
-      let author = $(this)
-        .find("div.gs_gray")[0]
-        .innerText.replace(/[\,\…]/g, "")
-        .split(" ")[1];
-      let year = $(this).find("td.gsc_a_y").text();
-      $(this).addClass("ccf-ranked");
-      setTimeout(function () {
-        fetchRank(node, title, author, year, scholar);
-      }, 100 * index);
+    scholar.appendResultActions(this);
+    scholar.appendAuthorBadges(this);
+
+    if ($(this).hasClass("ccf-ranked")) {
+      return;
     }
+
+    let node = $(this).find("td.gsc_a_t > a.gsc_a_at, td.gsc_a_t > a").first();
+    if (!node.length) {
+      return;
+    }
+
+    const data = scholar.getResultData(this);
+    $(this).addClass("ccf-ranked");
+    if (scholar.appendVenueRank(node, data.venue, this)) {
+      return;
+    }
+
+    const author = (data.authors[0] || "").split(/\s+/).pop() || "";
+    setTimeout(function () {
+      fetchRank(node, data.title, author, data.year, scholar);
+    }, 100 * index);
   });
 };

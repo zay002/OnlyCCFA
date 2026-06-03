@@ -3,24 +3,28 @@ const fs = require("fs");
 const vm = require("vm");
 
 const source = fs.readFileSync("js/scholar.js", "utf8");
+const fakeDocument = {
+  addEventListener() {},
+  createElement(tagName) {
+    return {
+      tagName,
+      className: "",
+      children: [],
+      appendChild(child) {
+        this.children.push(child);
+        child.parentNode = this;
+      },
+    };
+  },
+  querySelectorAll() {
+    return [];
+  },
+};
 const scholar = vm.runInNewContext(`${source}; scholar;`, {
   console,
   URL,
   URLSearchParams,
-  document: {
-    addEventListener() {},
-    createElement(tagName) {
-      return {
-        tagName,
-        className: "",
-        children: [],
-        appendChild(child) {
-          this.children.push(child);
-          child.parentNode = this;
-        },
-      };
-    },
-  },
+  document: fakeDocument,
   authorSources: {
     resolveAuthors(authors) {
       return authors.includes("姚期智")
@@ -249,6 +253,65 @@ function fakeScholarEntry() {
   return entry;
 }
 
+function fakeCitationEntry() {
+  const entry = { dataset: {}, rankHost: null, style: { display: "" } };
+  const titleLink = {
+    textContent: "A profile paper",
+    href: "https://example.org/profile-paper",
+    insertAdjacentElement(position, node) {
+      assert.strictEqual(position, "afterend");
+      entry.rankHost = node;
+    },
+    closest(selector) {
+      return selector.includes("tr.gsc_a_tr") ? entry : null;
+    },
+    getAttribute(name) {
+      return name === "href" ? this.href : "";
+    },
+  };
+  const titleCell = {
+    insertAdjacentElement(position, node) {
+      assert.strictEqual(position, "afterend");
+      entry.rankHost = node;
+    },
+  };
+  const authors = { textContent: "A Author, B Researcher" };
+  const venue = {
+    textContent: "Journal of Machine Learning Research 11, 2079-2107, 2010",
+  };
+  const year = { textContent: "2010" };
+
+  entry.querySelector = function (selector) {
+    if (selector === ".onlyccfa-rank-badges") {
+      return this.rankHost;
+    }
+    if (selector === "h3" || selector === "h3 a" || selector === ".gs_a") {
+      return null;
+    }
+    if (selector === "a.gsc_a_at" || selector === "td.gsc_a_t > a") {
+      return titleLink;
+    }
+    if (selector === "td.gsc_a_t") {
+      return titleCell;
+    }
+    if (selector === "td.gsc_a_y" || selector === "td.gsc_a_y span") {
+      return year;
+    }
+    return null;
+  };
+  entry.querySelectorAll = function (selector) {
+    if (selector === ".gs_gray") {
+      return [authors, venue];
+    }
+    if (selector === "a") {
+      return [titleLink];
+    }
+    return [];
+  };
+
+  return entry;
+}
+
 const rankHostEntry = fakeScholarEntry();
 const rankHost = scholar.getRankBadgeHost(rankHostEntry, {
   createElement(tagName) {
@@ -286,6 +349,62 @@ authorBadgeEntry.querySelector = function (selector) {
 scholar.appendAuthorBadges(authorBadgeEntry);
 assert.ok(authorBadgeEntry.rankHost);
 assert.strictEqual(authorBadgeEntry.dataset.onlyccfaAuthorRanked, "true");
+
+assert.strictEqual(
+  scholar.extractCitationVenue(
+    "Journal of Machine Learning Research 11, 2079-2107, 2010",
+  ),
+  "Journal of Machine Learning Research",
+);
+
+const citationEntry = fakeCitationEntry();
+const citationRankHost = scholar.getRankBadgeHost(citationEntry, fakeDocument);
+assert.strictEqual(citationRankHost.tagName, "div");
+assert.strictEqual(citationRankHost.className, "onlyccfa-rank-badges");
+
+const citationData = scholar.getResultData(citationEntry);
+assert.strictEqual(citationData.title, "A profile paper");
+assert.strictEqual(citationData.url, "https://example.org/profile-paper");
+assert.strictEqual(
+  JSON.stringify(citationData.authors),
+  JSON.stringify(["A Author", "B Researcher"]),
+);
+assert.strictEqual(citationData.year, "2010");
+assert.strictEqual(citationData.venue, "Journal of Machine Learning Research");
+assert.strictEqual(
+  citationData.metadata,
+  "A Author, B Researcher - Journal of Machine Learning Research 11, 2079-2107, 2010",
+);
+
+const citationAnchorEntry = fakeCitationEntry();
+const citationAnchor = citationAnchorEntry.querySelector("a.gsc_a_at");
+assert.strictEqual(
+  scholar.getEntryFromRankAnchor(citationAnchor),
+  citationAnchorEntry,
+);
+
+const selectedCitationEntry = fakeCitationEntry();
+fakeDocument.querySelectorAll = function (selector) {
+  if (selector === ".onlyccfa-select-result:checked") {
+    return [
+      {
+        closest(matchSelector) {
+          assert.strictEqual(
+            matchSelector,
+            "#gs_res_ccl_mid > div, tr.gsc_a_tr",
+          );
+          return selectedCitationEntry;
+        },
+      },
+    ];
+  }
+  if (selector === "#gsc_a_b tr.gsc_a_tr") {
+    return [selectedCitationEntry, { style: { display: "none" } }];
+  }
+  return [];
+};
+assert.strictEqual(scholar.getSelectedEntries()[0], selectedCitationEntry);
+assert.strictEqual(scholar.getVisibleEntries()[0], selectedCitationEntry);
 
 const uglyBibtex =
   "@article{Yang_2021, title={TEASER: Fast and Certifiable Point Cloud Registration}, volume={37}, DOI={10.1109/tro.2020.3033695}, month=Apr, pages={314–333} }";

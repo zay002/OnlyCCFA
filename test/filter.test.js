@@ -42,10 +42,20 @@ const scholarConfig = filter.getSiteConfig("scholar.google.com", "/scholar");
 assert.strictEqual(scholarConfig.defaultFilter, "A");
 assert.strictEqual(scholarConfig.entrySelector, "#gs_res_ccl_mid > div");
 assert.strictEqual(scholarConfig.hideUnranked, true);
-assert.strictEqual(
-  filter.getSiteConfig("scholar.google.com", "/citations"),
-  null,
+
+const scholarCitationsConfig = filter.getSiteConfig(
+  "scholar.google.com",
+  "/citations",
 );
+assert.strictEqual(scholarCitationsConfig.site, "scholarCitations");
+assert.strictEqual(scholarCitationsConfig.defaultFilter, "ALL");
+assert.strictEqual(
+  scholarCitationsConfig.entrySelector,
+  "#gsc_a_b tr.gsc_a_tr",
+);
+assert.strictEqual(scholarCitationsConfig.hideUnranked, false);
+assert.strictEqual(scholarCitationsConfig.supportsExport, true);
+assert.strictEqual(scholarCitationsConfig.strictRankFilter, true);
 
 const dblpConfig = filter.getSiteConfig("dblp.org", "/search");
 assert.strictEqual(dblpConfig.defaultFilter, "ALL");
@@ -79,6 +89,14 @@ assert.strictEqual(
 );
 assert.strictEqual(
   filter.shouldShowEntry(fakeEntry([]), "ALL", semanticScholarConfig),
+  true,
+);
+assert.strictEqual(
+  filter.shouldShowEntry(fakeEntry([]), "A", scholarCitationsConfig),
+  false,
+);
+assert.strictEqual(
+  filter.shouldShowEntry(fakeEntry([]), "ALL", scholarCitationsConfig),
   true,
 );
 assert.strictEqual(

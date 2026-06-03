@@ -16,7 +16,7 @@
   中文 | <a href="./README_en.md">English</a>
 </p>
 
-OnlyCCFA 是基于 [CCFrank](https://github.com/WenyanLiu/CCFrank4dblp) 的独立 Chrome 扩展。它保留原有 CCF 等级标签能力，并把 Google 学术和 Semantic Scholar 搜索进一步变成“更适合筛论文”的工作流：在 Google 学术中深度加载多页结果，在两个搜索站点中按 CCF、SCI/JCR、中科院分区、EI、中文核心、杰青/院士作者身份以及各方向 TOP venue 标签降噪筛选，再把结果导出为 BibTeX，或让 Zotero Connector 只识别当前筛选后的 Google 学术结果。
+OnlyCCFA 是基于 [CCFrank](https://github.com/WenyanLiu/CCFrank4dblp) 的独立 Chrome 扩展。它保留原有 CCF 等级标签能力，并把 Google 学术和 Semantic Scholar 搜索进一步变成“更适合筛论文”的工作流：在 Google 学术中深度加载多页结果，在 Google 学术个人主页中筛选作者论文表，在两个搜索站点中按 CCF、SCI/JCR、中科院分区、EI、中文核心、杰青/院士作者身份以及各方向 TOP venue 标签降噪筛选，再把结果导出为 BibTeX，或让 Zotero Connector 只识别当前筛选后的 Google 学术结果。
 
 这个项目的目标很直接：面向计算机、机器人、机械、电气、通信等方向的学生和研究者，把常用论文搜索结果里的 venue 质量信息尽可能公开、透明、免费地展示出来。
 
@@ -28,6 +28,7 @@ OnlyCCFA 面向中文科研用户，聚焦 Google Scholar / Semantic Scholar 的
 
 - 在 Google 学术、dblp、Connected Papers、Semantic Scholar 和 Web of Science 搜索结果中显示 CCF 推荐等级。
 - Google 学术默认筛选为 `CCF A`，页面上可随时切换 `ALL`、`CCF A`、`CCF B`、`CCF C`。
+- Google 学术个人主页（`/citations?user=...`）现在支持论文表标注、组合筛选、单篇复制 BibTeX 和批量导出；默认显示 `ALL`，避免打开作者主页时直接隐藏论文。
 - Semantic Scholar 现在支持右侧筛选面板、CCF/开放多源标签、单篇复制 BibTeX、批量导出勾选或当前可见结果。
 - 新增可调深筛：每批可扫描 `20 / 40 / 60 / 80 / 100` 条 Google 学术结果；第一次建立结果池，之后可继续下一批，也可清空重来。
 - 新版右侧控制台支持中文 / English 切换，语言、默认等级、深筛数量和筛选偏好都会保存在本地。

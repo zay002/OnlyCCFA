@@ -79,6 +79,19 @@ const filter = {
       };
     }
 
+    if (hostname.startsWith("scholar.google") && pathname == "/citations") {
+      return {
+        site: "scholarCitations",
+        defaultFilter: "ALL",
+        entrySelector: "#gsc_a_b tr.gsc_a_tr",
+        triggerSelector: "#gsc_a_b",
+        hideUnranked: false,
+        observeMutations: true,
+        supportsExport: true,
+        strictRankFilter: true,
+      };
+    }
+
     if (hostname.endsWith("semanticscholar.org")) {
       return {
         site: "semanticscholar",
@@ -782,7 +795,10 @@ const filter = {
   },
 
   getActiveExporter() {
-    if (this.siteConfig?.site === "scholar" && typeof scholar !== "undefined") {
+    if (
+      ["scholar", "scholarCitations"].includes(this.siteConfig?.site) &&
+      typeof scholar !== "undefined"
+    ) {
       return scholar;
     }
 

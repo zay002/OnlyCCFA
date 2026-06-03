@@ -16,7 +16,7 @@
   <a href="./README.md">中文</a> | English
 </p>
 
-OnlyCCFA is an independent Chrome extension based on [CCFrank](https://github.com/WenyanLiu/CCFrank4dblp). It keeps the original CCF rank labels and turns Google Scholar and Semantic Scholar into stricter paper-search workflows: deep-load multiple Google Scholar pages, filter search results by CCF, SCI/JCR, CAS partition, EI, Chinese core journal, NSFC Distinguished Young Scholar / academician author badges, and field TOP venue badges, then export clean candidates to BibTeX or let Zotero Connector see only the filtered Google Scholar results.
+OnlyCCFA is an independent Chrome extension based on [CCFrank](https://github.com/WenyanLiu/CCFrank4dblp). It keeps the original CCF rank labels and turns Google Scholar and Semantic Scholar into stricter paper-search workflows: deep-load multiple Google Scholar pages, filter author publication tables on Google Scholar profiles, filter search results by CCF, SCI/JCR, CAS partition, EI, Chinese core journal, NSFC Distinguished Young Scholar / academician author badges, and field TOP venue badges, then export clean candidates to BibTeX or let Zotero Connector see only the filtered Google Scholar results.
 
 The goal is simple: help students and researchers in computer science, robotics, mechanical engineering, electrical engineering and communications see venue-quality signals directly in their daily paper search results, with data that is transparent, extensible and free.
 
@@ -24,6 +24,7 @@ The goal is simple: help students and researchers in computer science, robotics,
 
 - Shows CCF recommended ranks for papers on Google Scholar, dblp, Connected Papers, Semantic Scholar and Web of Science.
 - Filters Google Scholar search results to `CCF A` by default, with an on-page switcher for `ALL`, `CCF A`, `CCF B` and `CCF C`.
+- Supports Google Scholar profile pages (`/citations?user=...`) with publication-table badges, combined filters, single-paper BibTeX copy and batch export; profile pages default to `ALL` so opening an author page does not immediately hide papers.
 - Adds Semantic Scholar filtering with the side panel, CCF/open-source badges, single-paper BibTeX copy and batch export for selected or visible results.
 - Adds configurable deep filtering: scan `20 / 40 / 60 / 80 / 100` Google Scholar results per batch, continue to the next batch, or clear the local result pool.
 - Adds a redesigned bilingual side panel with local settings for language, default rank, deep-filter count and filter preferences.
