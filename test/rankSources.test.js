@@ -83,6 +83,17 @@ assert.ok(!cvprTags.some((tag) => tag.source === "jcr"));
 assert.ok(!cvprTags.some((tag) => tag.source === "casUpgraded"));
 assert.ok(!cvprTags.some((tag) => tag.source === "swjtuJournal"));
 
+const truncatedCvprProceedingsTags = rankSources.resolveVenueText(
+  "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern ...",
+);
+assert.ok(!truncatedCvprProceedingsTags.some((tag) => tag.source === "sci"));
+assert.ok(!truncatedCvprProceedingsTags.some((tag) => tag.source === "jcr"));
+assert.ok(
+  !truncatedCvprProceedingsTags.some(
+    (tag) => tag.source === "casUpgraded" || tag.source === "casTop",
+  ),
+);
+
 const corlTags = rankSources.resolveVenueText("Conference on Robot Learning");
 assert.ok(corlTags.some((tag) => tag.source === "roboticsTop"));
 assert.ok(!corlTags.some((tag) => tag.source === "jcr"));

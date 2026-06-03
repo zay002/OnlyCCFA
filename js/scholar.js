@@ -17,19 +17,19 @@ scholar.bibtexCache = new Map();
 scholar.googleCitationCooldownUntil = 0;
 scholar.cvfVenueHints = [
   {
-    pattern: /(^|\s)CVPR(\s|$)/i,
+    pattern: /(^|\s)CVPR(?:W?(?:19|20)\d{2}|(?:19|20)\d{2}W?)?(\s|$)/i,
     venue: "IEEE/CVF Conference on Computer Vision and Pattern Recognition",
   },
   {
-    pattern: /(^|\s)ICCV(\s|$)/i,
+    pattern: /(^|\s)ICCV(?:W?(?:19|20)\d{2}|(?:19|20)\d{2}W?)?(\s|$)/i,
     venue: "International Conference on Computer Vision",
   },
   {
-    pattern: /(^|\s)ECCV(\s|$)/i,
+    pattern: /(^|\s)ECCV(?:W?(?:19|20)\d{2}|(?:19|20)\d{2}W?)?(\s|$)/i,
     venue: "European Conference on Computer Vision",
   },
   {
-    pattern: /(^|\s)WACV(\s|$)/i,
+    pattern: /(^|\s)WACV(?:W?(?:19|20)\d{2}|(?:19|20)\d{2}W?)?(\s|$)/i,
     venue: "IEEE/CVF Winter Conference on Applications of Computer Vision",
   },
 ];

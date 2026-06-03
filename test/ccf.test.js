@@ -30,6 +30,15 @@ assertVenueRank("Proceedings of the ACM SIGMOD International Conference", "A");
 assertVenueRank("Artificial Intelligence", "A");
 assertVenueRank("Engineering Applications of Artificial Intelligence", "C");
 assertVenueRank("Signal Processing", "C");
+assertVenueRank("MICCAI", "B");
+assertVenueRank(
+  "International Conference on Medical Image Computing and Computer-Assisted Intervention",
+  "B",
+);
+assertVenueRank(
+  "International Conference on Medical Image Computing and Computer-Assisted ...",
+  "B",
+);
 
 const cvprMatch = ccf.resolveVenueText(
   "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition",

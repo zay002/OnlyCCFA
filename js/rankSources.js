@@ -68,9 +68,17 @@ rankSources.isUnsafeSeriesSubstringMatch = function (
 
   if (
     normalizedVenue === normalizedName ||
-    rankSources.hasVenueSeriesToken(normalizedName)
+    (rankSources.hasVenueSeriesToken(normalizedName) &&
+      !normalizedName.startsWith("PROCEEDINGS "))
   ) {
     return false;
+  }
+
+  if (
+    normalizedName.startsWith("PROCEEDINGS ") &&
+    normalizedVenue.startsWith(`${normalizedName} `)
+  ) {
+    return true;
   }
 
   if (rankSources.isShortAcronymName(name)) {

@@ -78,6 +78,21 @@ assert.strictEqual(
 );
 
 assert.strictEqual(
+  scholar.inferVenueFromUrl(
+    "https://openaccess.thecvf.com/content/CVPR2023W/NTIRE/html/Li_NTIRE_2023_Challenge_on_Efficient_Super-Resolution_CVPRW_2023_paper.html",
+  ),
+  "IEEE/CVF Conference on Computer Vision and Pattern Recognition",
+);
+
+assert.strictEqual(
+  scholar.extractVenue(
+    "Y Li, J Zhang - Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern ..., 2023 - openaccess.thecvf.com",
+    "https://openaccess.thecvf.com/content/CVPR2023W/NTIRE/html/Li_NTIRE_2023_Challenge_on_Efficient_Super-Resolution_CVPRW_2023_paper.html",
+  ),
+  "IEEE/CVF Conference on Computer Vision and Pattern Recognition",
+);
+
+assert.strictEqual(
   scholar.extractVenue("A Author, B Author - arXiv preprint arXiv:2401.00001"),
   "arXiv preprint arXiv:2401.00001",
 );
