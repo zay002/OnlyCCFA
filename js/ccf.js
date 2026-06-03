@@ -95,18 +95,25 @@ ccf.findFullNameInVenue = function (normalizedVenue) {
 
   for (let fullName of fullNames) {
     let normalizedFullName = ccf.normalizeVenueText(fullName);
-    if (
-      normalizedFullName.length > 8 &&
-      (normalizedVenue.includes(normalizedFullName) ||
-        normalizedFullName.includes(normalizedVenue))
-    ) {
+    if (normalizedFullName && normalizedFullName === normalizedVenue) {
       return fullName;
     }
   }
 
   const venueTokens = new Set(ccf.getVenueTokens(normalizedVenue));
-  for (let fullName of fullNames) {
-    let fullNameTokens = ccf.getVenueTokens(fullName);
+  const fullNameCandidates = fullNames
+    .map(function (fullName) {
+      return {
+        fullName,
+        tokens: ccf.getVenueTokens(fullName),
+      };
+    })
+    .sort(function (left, right) {
+      return right.tokens.length - left.tokens.length;
+    });
+
+  for (let candidate of fullNameCandidates) {
+    let fullNameTokens = candidate.tokens;
     if (fullNameTokens.length < 3) {
       continue;
     }
@@ -114,8 +121,8 @@ ccf.findFullNameInVenue = function (normalizedVenue) {
     let matched = fullNameTokens.every(function (token) {
       return venueTokens.has(token);
     });
-    if (matched) {
-      return fullName;
+    if (matched && venueTokens.size - fullNameTokens.length <= 1) {
+      return candidate.fullName;
     }
   }
 

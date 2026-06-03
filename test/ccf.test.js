@@ -27,6 +27,9 @@ assertVenueRank(
   "A",
 );
 assertVenueRank("Proceedings of the ACM SIGMOD International Conference", "A");
+assertVenueRank("Artificial Intelligence", "A");
+assertVenueRank("Engineering Applications of Artificial Intelligence", "C");
+assertVenueRank("Signal Processing", "C");
 
 const cvprMatch = ccf.resolveVenueText(
   "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition",
@@ -46,5 +49,10 @@ assert.strictEqual(
 
 assert.strictEqual(
   ccf.resolveVenueText("arXiv preprint arXiv:2401.00001"),
+  null,
+);
+
+assert.strictEqual(
+  ccf.resolveVenueText("Mechanical Systems and Signal Processing"),
   null,
 );
