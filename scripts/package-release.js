@@ -76,13 +76,24 @@ function createZip() {
   });
 }
 
-fs.mkdirSync(distDir, { recursive: true });
-removeIfExists(stagingDir);
-removeIfExists(zipPath);
-fs.mkdirSync(stagingDir, { recursive: true });
-entries.forEach(copyEntry);
-createZip();
-removeIfExists(stagingDir);
+function packageRelease() {
+  fs.mkdirSync(distDir, { recursive: true });
+  removeIfExists(stagingDir);
+  removeIfExists(zipPath);
+  fs.mkdirSync(stagingDir, { recursive: true });
+  entries.forEach(copyEntry);
+  createZip();
+  removeIfExists(stagingDir);
 
-const zipSize = fs.statSync(zipPath).size;
-console.log(`Created ${path.relative(root, zipPath)} (${zipSize} bytes)`);
+  const zipSize = fs.statSync(zipPath).size;
+  console.log(`Created ${path.relative(root, zipPath)} (${zipSize} bytes)`);
+}
+
+if (require.main === module) {
+  packageRelease();
+}
+
+module.exports = {
+  packageRelease,
+  releaseEntries: entries,
+};
