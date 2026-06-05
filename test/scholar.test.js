@@ -93,6 +93,21 @@ assert.strictEqual(
 );
 
 assert.strictEqual(
+  scholar.inferVenueFromUrl(
+    "https://proceedings.mlr.press/v202/michel23a.html",
+  ),
+  "International Conference on Machine Learning",
+);
+
+assert.strictEqual(
+  scholar.extractVenue(
+    "G Michel, G Nikolentzos, JF Lutzeyer - International ..., 2023 - proceedings.mlr.press",
+    "https://proceedings.mlr.press/v202/michel23a.html",
+  ),
+  "International Conference on Machine Learning",
+);
+
+assert.strictEqual(
   scholar.extractVenue(
     "Y Li, J Zhang - Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern ..., 2023 - openaccess.thecvf.com",
     "https://openaccess.thecvf.com/content/CVPR2023W/NTIRE/html/Li_NTIRE_2023_Challenge_on_Efficient_Super-Resolution_CVPRW_2023_paper.html",

@@ -1,6 +1,6 @@
 {
   "name": "onlyccfa",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "private": true,
   "description": "Chrome extension that filters Google Scholar and Semantic Scholar results, exports reliable BibTeX, and makes Zotero Connector respect filters.",
   "license": "MIT",

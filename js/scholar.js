@@ -37,6 +37,14 @@ scholar.cvfVenueHints = [
     venue: "IEEE/CVF Winter Conference on Applications of Computer Vision",
   },
 ];
+scholar.pmlrVolumeVenues = {
+  v119: "International Conference on Machine Learning",
+  v139: "International Conference on Machine Learning",
+  v162: "International Conference on Machine Learning",
+  v202: "International Conference on Machine Learning",
+  v235: "International Conference on Machine Learning",
+  v267: "International Conference on Machine Learning",
+};
 
 scholar.run = function () {
   let url = window.location.pathname;
@@ -57,14 +65,19 @@ scholar.normalizeUrlForVenueHint = function (url) {
 
 scholar.inferVenueFromUrl = function (url) {
   const normalizedUrl = scholar.normalizeUrlForVenueHint(url);
-  if (!/(^|\s)openaccess\s+thecvf\s+com(\s|$)/i.test(normalizedUrl)) {
-    return "";
+  if (/(^|\s)openaccess\s+thecvf\s+com(\s|$)/i.test(normalizedUrl)) {
+    const match = scholar.cvfVenueHints.find((hint) =>
+      hint.pattern.test(normalizedUrl),
+    );
+    return match ? match.venue : "";
   }
 
-  const match = scholar.cvfVenueHints.find((hint) =>
-    hint.pattern.test(normalizedUrl),
-  );
-  return match ? match.venue : "";
+  if (/(^|\s)proceedings\s+mlr\s+press(\s|$)/i.test(normalizedUrl)) {
+    const volume = (normalizedUrl.match(/(^|\s)(v\d+)(\s|$)/i) || [])[2];
+    return scholar.pmlrVolumeVenues[volume?.toLowerCase()] || "";
+  }
+
+  return "";
 };
 
 scholar.isTruncatedVenue = function (venue) {
