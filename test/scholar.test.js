@@ -393,6 +393,20 @@ const rankHost = scholar.getRankBadgeHost(rankHostEntry, {
             String(child.className || "").includes("ccf-rank"),
           );
         }
+        if (selector === ".rank-source") {
+          return this.children.filter((child) =>
+            String(child.className || "").includes("rank-source"),
+          );
+        }
+        if (selector === ".ccf-rank, .rank-source") {
+          return this.children.filter((child) => {
+            const className = String(child.className || "");
+            return (
+              className.includes("ccf-rank") ||
+              className.includes("rank-source")
+            );
+          });
+        }
         return [];
       },
     };
@@ -429,9 +443,36 @@ scholar.appendRankBadge(
   },
   rankHostEntry,
 );
+scholar.appendRankBadge(
+  {},
+  {
+    className: "rank-source rank-source-sci",
+    dataset: { rankSource: "sci", rankValue: "" },
+    textContent: "SCI",
+  },
+  rankHostEntry,
+);
+scholar.appendRankBadge(
+  {},
+  {
+    className: "rank-source rank-source-sci",
+    dataset: { rankSource: "sci", rankValue: "" },
+    textContent: "SCI",
+  },
+  rankHostEntry,
+);
+scholar.appendRankBadge(
+  {},
+  {
+    className: "rank-source rank-source-school",
+    dataset: { rankSource: "swjtuScai", rankValue: "C类" },
+    textContent: "西南交大计算机C类",
+  },
+  rankHostEntry,
+);
 assert.deepStrictEqual(
   rankHost.children.map((child) => child.textContent),
-  ["CCF C", "西南交大计算机C类"],
+  ["CCF C", "西南交大计算机C类", "SCI"],
 );
 
 assert.strictEqual(typeof scholar.appendAuthorBadges, "function");
