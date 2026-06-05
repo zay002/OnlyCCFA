@@ -1481,11 +1481,64 @@ scholar.getEntryFromRankAnchor = function (anchor) {
   return node?.closest?.("div.gs_ri, tr.gsc_a_tr") || null;
 };
 
+scholar.getBadgeNode = function (badge) {
+  return badge?.jquery ? badge[0] : badge;
+};
+
+scholar.getNodeClassName = function (node) {
+  const className = node?.className || "";
+  return typeof className === "string" ? className : className.baseVal || "";
+};
+
+scholar.getBadgeRankSource = function (badge) {
+  const node = scholar.getBadgeNode(badge);
+  return (
+    node?.dataset?.rankSource || node?.getAttribute?.("data-rank-source") || ""
+  );
+};
+
+scholar.getBadgeRankValue = function (badge) {
+  const node = scholar.getBadgeNode(badge);
+  return (
+    node?.dataset?.rankValue ||
+    node?.getAttribute?.("data-rank-value") ||
+    String(node?.textContent || "")
+      .replace(/\s+/g, " ")
+      .trim()
+  );
+};
+
+scholar.isCcfRankBadge = function (badge) {
+  const node = scholar.getBadgeNode(badge);
+  return (
+    scholar.getBadgeRankSource(node) === "ccf" ||
+    scholar.getNodeClassName(node).split(/\s+/).includes("ccf-rank")
+  );
+};
+
+scholar.hasDuplicateCcfRankBadge = function (host, badge) {
+  if (!host?.querySelectorAll || !scholar.isCcfRankBadge(badge)) {
+    return false;
+  }
+
+  const rankValue = scholar.getBadgeRankValue(badge);
+  if (!rankValue) {
+    return false;
+  }
+
+  return Array.from(host.querySelectorAll(".ccf-rank")).some(
+    (existing) => scholar.getBadgeRankValue(existing) === rankValue,
+  );
+};
+
 scholar.appendRankBadge = function (anchor, badge, entry) {
   const host = scholar.getRankBadgeHost(
     entry || scholar.getEntryFromRankAnchor(anchor),
   );
   if (host) {
+    if (scholar.hasDuplicateCcfRankBadge(host, badge)) {
+      return;
+    }
     $(host).append(badge);
     return;
   }

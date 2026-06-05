@@ -243,15 +243,20 @@ ccf.getRankSpan = function (refine, type) {
     .addClass("ccf-rank")
     .addClass(ccf.getRankClass(rankInfo.ranks));
   let firstRank = rankInfo.ranks[0];
+  let label;
   if (firstRank == "E") {
-    span.text("Expanded");
+    label = "Expanded";
   } else if (firstRank == "P") {
-    span.text("Preprint");
+    label = "Preprint";
   } else if (firstRank == "none") {
-    span.text("CCF None");
+    label = "CCF None";
   } else {
-    span.text("CCF " + rankInfo.ranks.join("/"));
+    label = "CCF " + rankInfo.ranks.join("/");
   }
+  span
+    .attr("data-rank-source", "ccf")
+    .attr("data-rank-value", label)
+    .text(label);
   if (rankInfo.info.length != 0) {
     span
       .addClass("ccf-tooltip")

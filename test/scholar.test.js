@@ -36,11 +36,18 @@ const scholar = vm.runInNewContext(`${source}; scholar;`, {
       return { className: "rank-source", textContent: tag.source };
     },
   },
-  $() {
+  $(target) {
     return {
       append(child) {
-        this.children = this.children || [];
-        this.children.push(child);
+        if (target && Array.isArray(target.children)) {
+          target.children.push(child);
+          if (child) {
+            child.parentNode = target;
+          }
+        } else {
+          this.children = this.children || [];
+          this.children.push(child);
+        }
       },
     };
   },
@@ -364,12 +371,53 @@ const rankHost = scholar.getRankBadgeHost(rankHostEntry, {
     return {
       tagName,
       className: "",
+      children: [],
+      querySelectorAll(selector) {
+        if (selector === ".ccf-rank") {
+          return this.children.filter((child) =>
+            String(child.className || "").includes("ccf-rank"),
+          );
+        }
+        return [];
+      },
     };
   },
 });
 assert.strictEqual(rankHost.tagName, "div");
 assert.strictEqual(rankHost.className, "onlyccfa-rank-badges");
 assert.strictEqual(scholar.getRankBadgeHost(rankHostEntry), rankHost);
+
+scholar.appendRankBadge(
+  {},
+  {
+    className: "ccf-rank ccf-c",
+    dataset: { rankSource: "ccf", rankValue: "CCF C" },
+    textContent: "CCF C",
+  },
+  rankHostEntry,
+);
+scholar.appendRankBadge(
+  {},
+  {
+    className: "ccf-rank ccf-c",
+    dataset: { rankSource: "ccf", rankValue: "CCF C" },
+    textContent: "CCF C",
+  },
+  rankHostEntry,
+);
+scholar.appendRankBadge(
+  {},
+  {
+    className: "rank-source rank-source-school",
+    dataset: { rankSource: "swjtuScai", rankValue: "C类" },
+    textContent: "西南交大计算机C类",
+  },
+  rankHostEntry,
+);
+assert.deepStrictEqual(
+  rankHost.children.map((child) => child.textContent),
+  ["CCF C", "西南交大计算机C类"],
+);
 
 assert.strictEqual(typeof scholar.appendAuthorBadges, "function");
 
