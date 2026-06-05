@@ -34,6 +34,12 @@ rankSources.getRecordNormalizedNames = function (record) {
   return record.__onlyccfaNormalizedNames;
 };
 
+rankSources.getNormalizedTokens = function (normalizedText) {
+  return String(normalizedText || "")
+    .split(" ")
+    .filter(Boolean);
+};
+
 rankSources.containsNormalizedPhrase = function (text, phrase) {
   return ` ${text} `.includes(` ${phrase} `);
 };
@@ -242,6 +248,7 @@ rankSources.getDatabaseIndex = function (db) {
   }
 
   const exact = new Map();
+  const byToken = new Map();
   db.records.forEach(function (record) {
     rankSources.getRecordNormalizedNames(record).forEach(function (name) {
       if (!name) {
@@ -251,12 +258,34 @@ rankSources.getDatabaseIndex = function (db) {
         exact.set(name, []);
       }
       exact.get(name).push(record);
+
+      rankSources.getNormalizedTokens(name).forEach(function (token) {
+        if (!byToken.has(token)) {
+          byToken.set(token, new Set());
+        }
+        byToken.get(token).add(record);
+      });
     });
   });
 
-  const index = { exact };
+  const index = { exact, byToken };
   rankSources.databaseIndexCache.set(db, index);
   return index;
+};
+
+rankSources.getCandidateRecords = function (db, normalizedVenue) {
+  const index = rankSources.getDatabaseIndex(db);
+  const candidates = new Set();
+  rankSources.getNormalizedTokens(normalizedVenue).forEach(function (token) {
+    const records = index.byToken.get(token);
+    if (!records) {
+      return;
+    }
+    records.forEach(function (record) {
+      candidates.add(record);
+    });
+  });
+  return Array.from(candidates);
 };
 
 rankSources.getSources = function () {
@@ -287,14 +316,16 @@ rankSources.resolveVenueText = function (venueText) {
       return;
     }
 
-    db.records.forEach(function (record) {
-      const match = rankSources.getRecordMatch(venueText, record);
-      if (match.score === 0) {
-        return;
-      }
+    rankSources
+      .getCandidateRecords(db, normalizedVenue)
+      .forEach(function (record) {
+        const match = rankSources.getRecordMatch(venueText, record);
+        if (match.score === 0) {
+          return;
+        }
 
-      rankSources.addTagCandidates(candidates, record.tags, match);
-    });
+        rankSources.addTagCandidates(candidates, record.tags, match);
+      });
   });
 
   return Array.from(candidates.values());

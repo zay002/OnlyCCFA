@@ -15,6 +15,9 @@ scholar.deepState = null;
 scholar.bibtexConcurrency = 2;
 scholar.bibtexCache = new Map();
 scholar.citationDetailVenueCache = new Map();
+scholar.searchResultVenueCache = new Map();
+scholar.searchResultVenueQueue = Promise.resolve();
+scholar.searchResultVenueDelay = 120;
 scholar.googleCitationCooldownUntil = 0;
 scholar.cvfVenueHints = [
   {
@@ -401,6 +404,103 @@ scholar.isAcceptableYearMatch = function (expectedYear, candidateYear) {
   }
 
   return Math.abs(Number(expectedYear) - Number(candidateYear)) <= 1;
+};
+
+scholar.getCrossrefItemYear = function (item) {
+  return String(item?.issued?.["date-parts"]?.[0]?.[0] || "");
+};
+
+scholar.isShortContainerAcronym = function (text) {
+  return /^[A-Z][A-Z0-9&-]{1,10}$/.test(String(text || "").trim());
+};
+
+scholar.getCrossrefContainerTitle = function (item) {
+  const containerTitle = (item?.["container-title"] || [])
+    .find((title) => String(title || "").trim())
+    ?.trim();
+  if (!containerTitle) {
+    return "";
+  }
+
+  const shortTitle = (item?.["short-container-title"] || [])
+    .find((title) => scholar.isShortContainerAcronym(title))
+    ?.trim();
+  if (!shortTitle) {
+    return containerTitle;
+  }
+
+  const normalizedContainer = scholar.normalizeTitleForMatch(containerTitle);
+  const normalizedShort = scholar.normalizeTitleForMatch(shortTitle);
+  if (
+    !normalizedShort ||
+    ` ${normalizedContainer} `.includes(` ${normalizedShort} `)
+  ) {
+    return containerTitle;
+  }
+
+  return `${containerTitle} (${shortTitle})`;
+};
+
+scholar.shouldFetchSearchResultVenue = function (data) {
+  if (!data?.title || !data.year || !scholar.isTruncatedVenue(data.venue)) {
+    return false;
+  }
+
+  return !/\barxiv\b/i.test(String(data.venue || ""));
+};
+
+scholar.fetchCrossrefVenueByTitle = async function (title, year) {
+  if (!title) {
+    return "";
+  }
+
+  const url = new URL("https://api.crossref.org/works");
+  url.searchParams.set("rows", "5");
+  url.searchParams.set("query.title", title);
+  url.searchParams.set(
+    "select",
+    "title,issued,container-title,short-container-title",
+  );
+
+  const text = await scholar.fetchText(url.toString());
+  const data = JSON.parse(text);
+  const items = data.message?.items || [];
+  const match = items.find((item) => {
+    const candidateTitle = (item.title || [])[0] || "";
+    const issuedYear = scholar.getCrossrefItemYear(item);
+    return (
+      scholar.isAcceptableYearMatch(year, issuedYear) &&
+      scholar.isCrossrefTitleMatch(title, candidateTitle) &&
+      scholar.getCrossrefContainerTitle(item)
+    );
+  });
+
+  return match ? scholar.getCrossrefContainerTitle(match) : "";
+};
+
+scholar.enqueueSearchResultVenueLookup = function (lookup) {
+  const run = scholar.searchResultVenueQueue.catch(() => {}).then(lookup);
+  scholar.searchResultVenueQueue = run
+    .catch(() => {})
+    .then(() => scholar.wait(scholar.searchResultVenueDelay));
+  return run;
+};
+
+scholar.fetchSearchResultVenue = async function (data) {
+  if (!scholar.shouldFetchSearchResultVenue(data)) {
+    return "";
+  }
+
+  const key = `${scholar.normalizeTitleForMatch(data.title)}|${data.year}`;
+  if (scholar.searchResultVenueCache.has(key)) {
+    return scholar.searchResultVenueCache.get(key);
+  }
+
+  const venue = await scholar.enqueueSearchResultVenueLookup(() =>
+    scholar.fetchCrossrefVenueByTitle(data.title, data.year),
+  );
+  scholar.searchResultVenueCache.set(key, venue || "");
+  return venue || "";
 };
 
 scholar.mapWithConcurrency = async function (items, limit, mapper) {
@@ -1522,6 +1622,36 @@ scholar.appendVenueRank = function (node, venue, entry) {
   return matched;
 };
 
+scholar.appendResolvedSearchResultVenueRank = async function (
+  node,
+  entry,
+  data,
+) {
+  try {
+    const resolvedVenue = await scholar.fetchSearchResultVenue(data);
+    if (!resolvedVenue) {
+      return false;
+    }
+    scholar.setVenueName(entry, resolvedVenue);
+    return scholar.appendVenueRank(node, resolvedVenue, entry);
+  } catch (error) {
+    return false;
+  }
+};
+
+scholar.scheduleSearchResultVenueRank = function (node, entry, data) {
+  if (
+    !scholar.shouldFetchSearchResultVenue(data) ||
+    entry.dataset?.onlyccfaSearchVenueLookupStarted === "true"
+  ) {
+    return false;
+  }
+
+  entry.dataset.onlyccfaSearchVenueLookupStarted = "true";
+  scholar.appendResolvedSearchResultVenueRank(node, entry, data);
+  return true;
+};
+
 scholar.appendRank = function () {
   let elements = $("#gs_res_ccl_mid > div > div.gs_ri");
   elements.each(function (index) {
@@ -1541,6 +1671,11 @@ scholar.appendRank = function () {
       if (scholar.appendVenueRank(node, venue, this)) {
         return;
       }
+      scholar.scheduleSearchResultVenueRank(node, this, {
+        title,
+        year: (metadata.match(/\b(19|20)\d{2}\b/g) || []).slice(-1)[0] || "",
+        venue,
+      });
       let data = $(this)
         .find("div.gs_a")
         .text()

@@ -29,6 +29,50 @@ const rankSources = vm.runInNewContext(
   },
 );
 
+const candidateRankSources = vm.runInNewContext(
+  `
+  const openRankSources = {
+    sources: { test: { label: "TEST" } },
+    records: [
+      { title: "Quantum Frobnication Forum", tags: [{ source: "test" }] },
+      { title: "Wireless Systems Journal", tags: [{ source: "test" }] },
+      { title: "Mechanical Letters", tags: [{ source: "test" }] }
+    ]
+  };
+  ${source};
+  rankSources;
+  `,
+  {
+    console,
+    $() {
+      return {
+        addClass() {
+          return this;
+        },
+        attr() {
+          return this;
+        },
+        text(value) {
+          this.value = value;
+          return this;
+        },
+      };
+    },
+  },
+);
+
+const visitedCandidateRecords = [];
+const originalGetRecordMatch = candidateRankSources.getRecordMatch;
+candidateRankSources.getRecordMatch = function (venueText, record) {
+  visitedCandidateRecords.push(record.title);
+  return originalGetRecordMatch.call(this, venueText, record);
+};
+const candidateTags = candidateRankSources.resolveVenueText(
+  "Proceedings of Quantum Frobnication Forum 2026",
+);
+assert.ok(candidateTags.some((tag) => tag.source === "test"));
+assert.deepStrictEqual(visitedCandidateRecords, ["Quantum Frobnication Forum"]);
+
 assert.strictEqual(
   rankSources.normalizeText("IEEE/CVF Conference on Computer Vision, 2024"),
   "IEEE CVF CONFERENCE ON COMPUTER VISION",

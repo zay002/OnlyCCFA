@@ -7,7 +7,9 @@ const source = fs.readFileSync("js/fetchRank.js", "utf8");
 const appended = [];
 const context = {
   console,
-  apiCache: {},
+  apiCache: {
+    setItem() {},
+  },
   ccf: {
     rankFullName: {
       "/journals/pami/pami":
@@ -37,8 +39,8 @@ context.$ = function () {
   return {};
 };
 
-const { fetchFromCache } = vm.runInNewContext(
-  `${source}; ({ fetchFromCache });`,
+const { fetchFromCache, fetchFromDblpApi } = vm.runInNewContext(
+  `${source}; ({ fetchFromCache, fetchFromDblpApi });`,
   context,
 );
 
@@ -86,3 +88,47 @@ assert.ok(
   ),
 );
 assert.ok(appended.some((badge) => badge.tag?.source === "casTop"));
+
+function withFakeXhr(responseText, status = 200) {
+  context.XMLHttpRequest = function () {
+    return {
+      readyState: 0,
+      status,
+      responseText,
+      open() {},
+      send() {
+        this.readyState = 4;
+        this.onreadystatechange();
+      },
+    };
+  };
+}
+
+withFakeXhr("<!DOCTYPE html><title>dblp: error</title>", 500);
+assert.doesNotThrow(() => {
+  fetchFromDblpApi(
+    "https://dblp.org/search/publ/api?q=broken",
+    {},
+    "Broken title",
+    "Author",
+    "2026",
+    site,
+  );
+});
+
+const appendedAfterError = appended.length;
+context.ccf.rankDb = {};
+withFakeXhr(
+  JSON.stringify({
+    result: { hits: { "@total": 0, "@sent": 0, hit: [] } },
+  }),
+);
+fetchFromDblpApi(
+  "https://dblp.org/search/publ/api?q=no-hit",
+  {},
+  "No hit title",
+  "Author",
+  "2026",
+  site,
+);
+assert.strictEqual(appended.length, appendedAfterError);

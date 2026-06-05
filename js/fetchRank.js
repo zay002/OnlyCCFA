@@ -106,6 +106,9 @@ function fetchFromCache(cached, node, title, authorA, year, site) {
   let dblp_url = cached.dblp_url;
   let resp = cached.resp;
   let resp_flag = cached.flag;
+  if (resp_flag === false) {
+    return;
+  }
   // console.log("dblp_url: ", dblp_url);
 
   //Find a new vul: rankDB lacks of `tacas` etc., but it does occur in file `dataGen`.
@@ -149,11 +152,27 @@ function fetchFromDblpApi(query_url, node, title, authorA, year, site) {
   var resp_flag = true;
   xhr.onreadystatechange = function () {
     if (xhr.readyState == 4) {
+      if (xhr.status && (xhr.status < 200 || xhr.status >= 300)) {
+        return;
+      }
+
       var dblp_url = "";
-      var resp = JSON.parse(xhr.responseText).result.hits;
+      var resp;
+      try {
+        resp = JSON.parse(xhr.responseText).result?.hits;
+      } catch (error) {
+        return;
+      }
+      if (!resp) {
+        return;
+      }
       if (resp["@total"] == 0) {
-        dblp_url = "";
-        resp_flag = false;
+        apiCache.setItem(query_url, {
+          dblp_url: "",
+          resp: resp,
+          flag: false,
+        });
+        return;
       } else if (resp["@total"] == 1) {
         let url = resp.hit[0].info.url;
         dblp_url = url.substring(
@@ -202,7 +221,7 @@ function fetchFromDblpApi(query_url, node, title, authorA, year, site) {
           }
         }
       }
-      dblp_url = ccf.rankDb[dblp_url];
+      dblp_url = ccf.rankDb?.[dblp_url];
       apiCache.setItem(query_url, {
         dblp_url: dblp_url,
         resp: resp,

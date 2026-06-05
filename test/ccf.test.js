@@ -39,6 +39,11 @@ assertVenueRank(
   "International Conference on Medical Image Computing and Computer-Assisted ...",
   "B",
 );
+assertVenueRank("IEEE International Conference on Image Processing", "C");
+assertVenueRank(
+  "Proceedings of the 28th ACM International Conference on Multimedia",
+  "A",
+);
 
 const cvprMatch = ccf.resolveVenueText(
   "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition",

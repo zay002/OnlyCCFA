@@ -24,6 +24,7 @@ const scholar = vm.runInNewContext(`${source}; scholar;`, {
   console,
   URL,
   URLSearchParams,
+  setTimeout,
   document: fakeDocument,
   authorSources: {
     resolveAuthors(authors) {
@@ -240,6 +241,36 @@ assert.strictEqual(
     "Learning force-aware manipulation for contact-rich robotics",
     "A survey of wireless communications",
   ),
+  false,
+);
+assert.strictEqual(
+  scholar.getCrossrefItemYear({
+    issued: { "date-parts": [[2026, 1, 1]] },
+  }),
+  "2026",
+);
+assert.strictEqual(
+  scholar.getCrossrefContainerTitle({
+    "container-title": ["IEEE International Conference on Image Processing"],
+    "short-container-title": ["ICIP"],
+  }),
+  "IEEE International Conference on Image Processing (ICIP)",
+);
+assert.strictEqual(
+  scholar.shouldFetchSearchResultVenue({
+    title: "Deep learning-based point cloud registration",
+    year: "2026",
+    venue: "International Journal of ...",
+  }),
+  true,
+);
+assert.strictEqual(
+  scholar.shouldFetchSearchResultVenue({
+    title:
+      "Pathnet: Evolution channels gradient descent in super neural networks",
+    year: "2017",
+    venue: "arXiv preprint arXiv ...",
+  }),
   false,
 );
 
@@ -555,6 +586,102 @@ async function runAsyncTests() {
   scholar.fetchGoogleScholarBibtex = originalFetchGoogleScholarBibtex;
   scholar.fetchCrossrefBibtexByTitle = originalFetchCrossrefBibtexByTitle;
   scholar.getResultData = originalGetResultData;
+
+  const originalFetchText = scholar.fetchText;
+  const originalAppendVenueRank = scholar.appendVenueRank;
+  const originalFetchSearchResultVenue = scholar.fetchSearchResultVenue;
+  const originalSetVenueName = scholar.setVenueName;
+  const ijcvTitle =
+    "Deep learning-based point cloud registration: A comprehensive survey and taxonomy";
+  const tpamiTitle = "PathNet: Path-selective point cloud denoising";
+  scholar.searchResultVenueCache = new Map();
+  scholar.searchResultVenueQueue = Promise.resolve();
+  scholar.fetchText = async function (url) {
+    assert.ok(String(url).startsWith("https://api.crossref.org/works?"));
+    const parsed = new URL(url);
+    const queryTitle = parsed.searchParams.get("query.title");
+    if (queryTitle === ijcvTitle) {
+      return JSON.stringify({
+        message: {
+          items: [
+            {
+              title: [ijcvTitle],
+              issued: { "date-parts": [[2026]] },
+              "container-title": ["International Journal of Computer Vision"],
+            },
+          ],
+        },
+      });
+    }
+    if (queryTitle === tpamiTitle) {
+      return JSON.stringify({
+        message: {
+          items: [
+            {
+              title: [tpamiTitle],
+              issued: { "date-parts": [[2024]] },
+              "container-title": [
+                "IEEE Transactions on Pattern Analysis and Machine Intelligence",
+              ],
+            },
+          ],
+        },
+      });
+    }
+    return JSON.stringify({ message: { items: [] } });
+  };
+
+  assert.strictEqual(
+    await scholar.fetchSearchResultVenue({
+      title: ijcvTitle,
+      year: "2026",
+      venue: "International Journal of ...",
+    }),
+    "International Journal of Computer Vision",
+  );
+  assert.strictEqual(
+    await scholar.fetchSearchResultVenue({
+      title: tpamiTitle,
+      year: "2024",
+      venue: "IEEE Transactions on ...",
+    }),
+    "IEEE Transactions on Pattern Analysis and Machine Intelligence",
+  );
+
+  const resolvedEntry = fakeScholarEntry();
+  const resolvedVenues = [];
+  const displayedVenues = [];
+  scholar.fetchSearchResultVenue = async function () {
+    return "International Journal of Computer Vision";
+  };
+  scholar.setVenueName = function (entry, venue) {
+    assert.strictEqual(entry, resolvedEntry);
+    displayedVenues.push(venue);
+  };
+  scholar.appendVenueRank = function (_node, venue, entry) {
+    assert.strictEqual(entry, resolvedEntry);
+    resolvedVenues.push(venue);
+    return true;
+  };
+  assert.strictEqual(
+    await scholar.appendResolvedSearchResultVenueRank({}, resolvedEntry, {
+      title: ijcvTitle,
+      year: "2026",
+      venue: "International Journal of ...",
+    }),
+    true,
+  );
+  assert.deepStrictEqual(resolvedVenues, [
+    "International Journal of Computer Vision",
+  ]);
+  assert.deepStrictEqual(displayedVenues, [
+    "International Journal of Computer Vision",
+  ]);
+
+  scholar.fetchText = originalFetchText;
+  scholar.appendVenueRank = originalAppendVenueRank;
+  scholar.fetchSearchResultVenue = originalFetchSearchResultVenue;
+  scholar.setVenueName = originalSetVenueName;
 }
 
 runAsyncTests().catch((error) => {
