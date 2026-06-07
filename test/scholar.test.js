@@ -100,6 +100,21 @@ assert.strictEqual(
 );
 
 assert.strictEqual(
+  scholar.inferVenueFromUrl(
+    "https://proceedings.neurips.cc/paper_files/paper/2026/hash/ac-dit.html",
+  ),
+  "Conference on Neural Information Processing Systems",
+);
+
+assert.strictEqual(
+  scholar.extractVenue(
+    "S Chen, J Liu, S Qian - Advances in ..., 2026 - proceedings.neurips.cc",
+    "https://proceedings.neurips.cc/paper_files/paper/2026/hash/ac-dit.html",
+  ),
+  "Conference on Neural Information Processing Systems",
+);
+
+assert.strictEqual(
   scholar.extractVenue(
     "G Michel, G Nikolentzos, JF Lutzeyer - International ..., 2023 - proceedings.mlr.press",
     "https://proceedings.mlr.press/v202/michel23a.html",

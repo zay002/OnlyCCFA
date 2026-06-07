@@ -77,6 +77,10 @@ scholar.inferVenueFromUrl = function (url) {
     return scholar.pmlrVolumeVenues[volume?.toLowerCase()] || "";
   }
 
+  if (/(^|\s)proceedings\s+neurips\s+cc(\s|$)/i.test(normalizedUrl)) {
+    return "Conference on Neural Information Processing Systems";
+  }
+
   return "";
 };
 

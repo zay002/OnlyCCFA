@@ -132,6 +132,18 @@ const openRankSources = {
       ],
     },
     {
+      title: "Journal of Mechanisms and Robotics",
+      aliases: [
+        "Journal of Mechanisms and Robotics-Transactions of the ASME",
+        "ASME Journal of Mechanisms and Robotics",
+      ],
+      tags: [
+        { source: "sci" },
+        { source: "jcr", value: "Q2" },
+        { source: "casUpgraded", value: "4区" },
+      ],
+    },
+    {
       title: "The International Journal of Robotics Research",
       aliases: ["IJRR", "INTERNATIONAL JOURNAL OF ROBOTICS RESEARCH"],
       tags: [

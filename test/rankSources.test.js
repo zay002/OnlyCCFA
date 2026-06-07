@@ -118,6 +118,21 @@ assert.ok(
   ),
 );
 
+const mechanismsRoboticsTags = rankSources.resolveVenueText(
+  "Journal of Mechanisms and Robotics",
+);
+assert.ok(mechanismsRoboticsTags.some((tag) => tag.source === "sci"));
+assert.ok(
+  mechanismsRoboticsTags.some(
+    (tag) => tag.source === "jcr" && tag.value === "Q2",
+  ),
+);
+assert.ok(
+  mechanismsRoboticsTags.some(
+    (tag) => tag.source === "casUpgraded" && tag.value === "4区",
+  ),
+);
+
 const cvprTags = rankSources.resolveVenueText(
   "IEEE/CVF Conference on Computer Vision and Pattern Recognition",
 );
