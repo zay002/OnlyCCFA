@@ -61,6 +61,39 @@ const candidateRankSources = vm.runInNewContext(
   },
 );
 
+const suffixAliasRankSources = vm.runInNewContext(
+  `
+  const journalRankSources = {
+    sources: { sci: { label: "SCI" }, jcr: { label: "JCR" } },
+    records: [
+      {
+        title: "Journal of Mechanisms and Robotics-Transactions of the ASME",
+        tags: [{ source: "sci" }, { source: "jcr", value: "Q2" }]
+      }
+    ]
+  };
+  ${source};
+  rankSources;
+  `,
+  {
+    console,
+    $() {
+      return {
+        addClass() {
+          return this;
+        },
+        attr() {
+          return this;
+        },
+        text(value) {
+          this.value = value;
+          return this;
+        },
+      };
+    },
+  },
+);
+
 const visitedCandidateRecords = [];
 const originalGetRecordMatch = candidateRankSources.getRecordMatch;
 candidateRankSources.getRecordMatch = function (venueText, record) {
@@ -72,6 +105,14 @@ const candidateTags = candidateRankSources.resolveVenueText(
 );
 assert.ok(candidateTags.some((tag) => tag.source === "test"));
 assert.deepStrictEqual(visitedCandidateRecords, ["Quantum Frobnication Forum"]);
+
+const suffixAliasTags = suffixAliasRankSources.resolveVenueText(
+  "Journal of Mechanisms and Robotics",
+);
+assert.ok(suffixAliasTags.some((tag) => tag.source === "sci"));
+assert.ok(
+  suffixAliasTags.some((tag) => tag.source === "jcr" && tag.value === "Q2"),
+);
 
 assert.strictEqual(
   rankSources.normalizeText("IEEE/CVF Conference on Computer Vision, 2024"),

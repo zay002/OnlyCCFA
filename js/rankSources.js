@@ -19,8 +19,30 @@ rankSources.normalizeText = function (text) {
     .trim();
 };
 
+rankSources.getDerivedRecordNames = function (record) {
+  const title = record.title || "";
+  const match = title.match(/^(.+?)\s*-\s*(Transactions of\b.+)$/i);
+  if (!match) {
+    return [];
+  }
+
+  const baseTitle = match[1].trim();
+  const baseTokenCount = rankSources.getNormalizedTokens(
+    rankSources.normalizeText(baseTitle),
+  ).length;
+
+  return baseTokenCount >= 3 ? [baseTitle] : [];
+};
+
 rankSources.getRecordNames = function (record) {
-  return [record.title].concat(record.aliases || []).filter(Boolean);
+  return Array.from(
+    new Set(
+      [record.title]
+        .concat(record.aliases || [])
+        .concat(rankSources.getDerivedRecordNames(record))
+        .filter(Boolean),
+    ),
+  );
 };
 
 rankSources.getRecordNormalizedNames = function (record) {
