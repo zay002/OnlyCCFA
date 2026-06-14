@@ -5,9 +5,10 @@ const vm = require("vm");
 const i18nSource = fs.readFileSync("js/i18n.js", "utf8");
 const source = fs.readFileSync("js/filter.js", "utf8");
 const storage = {};
+const testDocument = {};
 const filter = vm.runInNewContext(`${i18nSource}; ${source}; filter;`, {
   console,
-  document: {},
+  document: testDocument,
   localStorage: {
     getItem(key) {
       return storage[key] || null;
@@ -34,6 +35,21 @@ function fakeEntry(rankTexts, isVisible = true) {
         return [];
       }
       return rankTexts.map((text) => ({ textContent: text }));
+    },
+  };
+}
+
+function fakeBadgeEntry(rankTexts, sourceNodes = []) {
+  return {
+    style: { display: "" },
+    querySelectorAll(selector) {
+      if (selector === ".ccf-rank") {
+        return rankTexts.map((text) => ({ textContent: text }));
+      }
+      if (selector === ".rank-source") {
+        return sourceNodes;
+      }
+      return [];
     },
   };
 }
@@ -88,6 +104,30 @@ assert.strictEqual(
   true,
 );
 assert.strictEqual(
+  filter.shouldShowEntry(fakeEntry(["CCF B"]), {
+    siteConfig: scholarConfig,
+    selectedRanks: [],
+    selectedSignals: [],
+  }),
+  true,
+);
+assert.strictEqual(
+  filter.shouldShowEntry(fakeEntry(["CCF B"]), {
+    siteConfig: scholarConfig,
+    selectedRanks: ["A", "B"],
+    selectedSignals: [],
+  }),
+  true,
+);
+assert.strictEqual(
+  filter.shouldShowEntry(fakeEntry(["CCF C"]), {
+    siteConfig: scholarConfig,
+    selectedRanks: ["A", "B"],
+    selectedSignals: [],
+  }),
+  false,
+);
+assert.strictEqual(
   filter.shouldShowEntry(fakeEntry([]), "ALL", semanticScholarConfig),
   true,
 );
@@ -124,20 +164,90 @@ assert.strictEqual(stats.unmatched, 1);
 const defaultSettings = filter.loadSettings(scholarConfig);
 assert.strictEqual(defaultSettings.defaultFilter, "A");
 assert.strictEqual(defaultSettings.hideUnranked, true);
+assert.strictEqual(JSON.stringify(defaultSettings.selectedRanks), "[]");
+assert.strictEqual(defaultSettings.panelCollapsed, false);
+assert.strictEqual(defaultSettings.showSelectedTagsOnly, true);
 
 filter.siteConfig = scholarConfig;
-filter.saveSettings({ defaultFilter: "B", hideUnranked: false });
+filter.saveSettings({
+  defaultFilter: "B",
+  hideUnranked: false,
+  selectedRanks: ["A", "C"],
+  panelCollapsed: true,
+});
 const storedSettings = filter.loadSettings(scholarConfig);
 assert.strictEqual(storedSettings.defaultFilter, "B");
 assert.strictEqual(storedSettings.hideUnranked, false);
+assert.strictEqual(JSON.stringify(storedSettings.selectedRanks), '["A","C"]');
+assert.strictEqual(storedSettings.panelCollapsed, true);
 
 storage["onlyccfa:filter:scholar"] = JSON.stringify({
   defaultFilter: "Z",
   hideUnranked: "yes",
+  selectedRanks: ["A", "Z"],
+  panelCollapsed: "yes",
 });
 const invalidSettings = filter.loadSettings(scholarConfig);
 assert.strictEqual(invalidSettings.defaultFilter, "A");
 assert.strictEqual(invalidSettings.hideUnranked, true);
+assert.strictEqual(JSON.stringify(invalidSettings.selectedRanks), '["A"]');
+assert.strictEqual(invalidSettings.panelCollapsed, false);
+
+storage["onlyccfa:filter:scholar"] = JSON.stringify({
+  defaultFilter: "C",
+});
+const legacySettings = filter.loadSettings(scholarConfig);
+assert.strictEqual(JSON.stringify(legacySettings.selectedRanks), "[]");
+
+const thcplNode = {
+  textContent: "THCPL A",
+  dataset: { rankSource: "thcpl", rankValue: "A" },
+};
+assert.strictEqual(
+  JSON.stringify(filter.getRankSourceSignalIds(thcplNode)),
+  '["thcpl"]',
+);
+assert.ok(
+  filter.getEntrySignalIds(fakeBadgeEntry([], [thcplNode])).includes("thcpl"),
+);
+
+const ccfBadge = {
+  className: "ccf-rank ccf-a",
+  textContent: "CCF A",
+  style: {},
+};
+const hiddenCcfBadge = {
+  className: "ccf-rank ccf-b",
+  textContent: "CCF B",
+  style: {},
+};
+const selectedSourceBadge = {
+  className: "rank-source rank-source-thcpl",
+  textContent: "THCPL A",
+  dataset: { rankSource: "thcpl", rankValue: "A" },
+  style: {},
+};
+const hiddenSourceBadge = {
+  className: "rank-source rank-source-sci",
+  textContent: "SCI",
+  dataset: { rankSource: "sci", rankValue: "" },
+  style: {},
+};
+testDocument.querySelectorAll = (selector) =>
+  selector ===
+  ".onlyccfa-rank-badges .ccf-rank, .onlyccfa-rank-badges .rank-source"
+    ? [ccfBadge, hiddenCcfBadge, selectedSourceBadge, hiddenSourceBadge]
+    : [];
+filter.settings = {
+  selectedRanks: ["A"],
+  selectedSignals: ["thcpl"],
+  showSelectedTagsOnly: true,
+};
+filter.applyBadgeVisibility();
+assert.strictEqual(ccfBadge.style.display, "");
+assert.strictEqual(hiddenCcfBadge.style.display, "none");
+assert.strictEqual(selectedSourceBadge.style.display, "");
+assert.strictEqual(hiddenSourceBadge.style.display, "none");
 
 assert.strictEqual(
   JSON.stringify(

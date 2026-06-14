@@ -24,6 +24,7 @@ const filter = {
     { id: "casTop", zh: "中科院 TOP", en: "CAS TOP" },
     { id: "ei", zh: "EI", en: "EI" },
     { id: "cnCore", zh: "中文核心", en: "CN Core" },
+    { id: "thcpl", zh: "THCPL", en: "THCPL" },
     { id: "roboticsTop", zh: "机器人TOP", en: "Robotics TOP" },
     { id: "commTop", zh: "通信TOP", en: "Comm TOP" },
     { id: "eeTop", zh: "电气TOP", en: "EE TOP" },
@@ -48,7 +49,7 @@ const filter = {
     }
 
     this.settings = this.loadSettings(this.siteConfig);
-    this.currentFilter = this.settings.defaultFilter;
+    this.currentFilter = this.settings.selectedRanks[0] || "ALL";
     this.siteConfig.hideUnranked = this.settings.hideUnranked;
     this.createFilterButtons();
     this.bindEvents();
@@ -116,6 +117,7 @@ const filter = {
 
     const filterDiv = document.createElement("div");
     filterDiv.className = "ccf-filter";
+    filterDiv.classList.toggle("collapsed", this.settings.panelCollapsed);
     filterDiv.dataset.site = this.siteConfig.site;
     const language = this.settings.language;
     const t = (key, params) => onlyccfaI18n.t(language, key, params);
@@ -165,9 +167,21 @@ const filter = {
           <div class="ccf-filter-title">${t("title")}</div>
           <div class="ccf-filter-subtitle">${t("subtitle")}</div>
         </div>
-        <button type="button" class="ccf-filter-language" data-action="toggle-language">${t(
-          "language",
-        )}</button>
+        <div class="ccf-filter-header-actions">
+          <button
+            type="button"
+            class="ccf-filter-collapse"
+            data-action="toggle-collapse"
+            aria-expanded="${this.settings.panelCollapsed ? "false" : "true"}"
+          >${t(this.settings.panelCollapsed ? "expandPanel" : "collapsePanel")}</button>
+          ${
+            this.settings.panelCollapsed
+              ? ""
+              : `<button type="button" class="ccf-filter-language" data-action="toggle-language">${t(
+                  "language",
+                )}</button>`
+          }
+        </div>
       </div>
       <div class="ccf-filter-section-title">${t("ccfSection")}</div>
       <div class="ccf-filter-ranks">
@@ -177,15 +191,6 @@ const filter = {
         <button data-rank="C">CCF C</button>
       </div>
       <div class="ccf-filter-settings">
-        <label class="ccf-filter-row">
-          <span>${t("defaultFilter")}</span>
-          <select data-setting="defaultFilter">
-            <option value="ALL">ALL</option>
-            <option value="A">CCF A</option>
-            <option value="B">CCF B</option>
-            <option value="C">CCF C</option>
-          </select>
-        </label>
         <label class="ccf-filter-check">
           <input type="checkbox" data-setting="hideUnranked">
           <span>${t("hideUnranked")}</span>
@@ -212,20 +217,27 @@ const filter = {
             <option value="all">${t("all")}</option>
           </select>
         </label>
+        <label class="ccf-filter-check">
+          <input type="checkbox" data-setting="showSelectedTagsOnly">
+          <span>${t("showSelectedTagsOnly")}</span>
+        </label>
       </div>
       <div class="ccf-filter-stats" aria-live="polite"></div>
       ${deepSearchControls}
       ${exportControls}
     `;
-    filterDiv
-      .querySelector(`[data-rank="${this.currentFilter}"]`)
-      ?.classList.add("active");
-    filterDiv.querySelector('[data-setting="defaultFilter"]').value =
-      this.settings.defaultFilter;
+    filterDiv.querySelectorAll("[data-rank]").forEach((button) => {
+      button.classList.toggle(
+        "active",
+        this.settings.selectedRanks.includes(button.dataset.rank),
+      );
+    });
     filterDiv.querySelector('[data-setting="hideUnranked"]').checked =
       this.settings.hideUnranked;
     filterDiv.querySelector('[data-setting="signalMode"]').value =
       this.settings.signalMode;
+    filterDiv.querySelector('[data-setting="showSelectedTagsOnly"]').checked =
+      this.settings.showSelectedTagsOnly;
     filterDiv.querySelectorAll("[data-signal]").forEach((input) => {
       input.checked = this.settings.selectedSignals.includes(
         input.dataset.signal,
@@ -302,6 +314,7 @@ const filter = {
       });
     }
     this.updateStats(this.calculateStats(entries));
+    this.applyBadgeVisibility();
   },
 
   getFilterEntries() {
@@ -432,6 +445,7 @@ const filter = {
     return {
       currentFilter: this.currentFilter,
       siteConfig: this.siteConfig,
+      selectedRanks: this.settings?.selectedRanks || [],
       selectedSignals: this.settings?.selectedSignals || [],
       signalMode: this.settings?.signalMode || "any",
     };
@@ -444,15 +458,25 @@ const filter = {
         : {
             currentFilter: stateOrFilter,
             siteConfig: maybeSiteConfig,
+            selectedRanks:
+              stateOrFilter && stateOrFilter !== "ALL" ? [stateOrFilter] : [],
             selectedSignals: [],
             signalMode: "any",
           };
     const currentFilter = state.currentFilter;
     const siteConfig = state.siteConfig;
+    const selectedRanks =
+      Array.isArray(state.selectedRanks) && state.selectedRanks.length > 0
+        ? state.selectedRanks
+        : currentFilter && currentFilter !== "ALL"
+          ? [currentFilter]
+          : [];
     const selectedSignals = state.selectedSignals || [];
     const signalMode = state.signalMode || "any";
+    const rankFilterActive =
+      selectedRanks.length > 0 && !selectedRanks.includes("ALL");
 
-    if (currentFilter === "ALL") {
+    if (!rankFilterActive) {
       return this.matchesSelectedSignals(entry, selectedSignals, signalMode);
     }
 
@@ -469,7 +493,7 @@ const filter = {
     }
 
     return (
-      ranks.includes(currentFilter) &&
+      ranks.some((rank) => selectedRanks.includes(rank)) &&
       this.matchesSelectedSignals(entry, selectedSignals, signalMode)
     );
   },
@@ -501,54 +525,112 @@ const filter = {
     });
 
     Array.from(entry.querySelectorAll(".rank-source")).forEach((node) => {
-      const source = node.dataset?.rankSource || "";
-      const value = node.dataset?.rankValue || "";
-      const text = node.textContent || "";
-
-      if (source === "sci" || text === "SCI") {
-        signals.add("sci");
-      }
-      if (source === "jcr" && value === "Q1") {
-        signals.add("jcrQ1");
-      }
-      if (source === "jcr" && value === "Q2") {
-        signals.add("jcrQ2");
-      }
-      if (source === "casTop" || text.includes("中科院TOP")) {
-        signals.add("casTop");
-      }
-      if (text.includes("中科院") && text.includes("1区")) {
-        signals.add("cas1");
-      }
-      if (text.includes("中科院") && text.includes("2区")) {
-        signals.add("cas2");
-      }
-      if (source === "ei" || text === "EI") {
-        signals.add("ei");
-      }
-      if (["pkuCore", "cscd", "cssci"].includes(source)) {
-        signals.add("cnCore");
-      }
-      [
-        "roboticsTop",
-        "commTop",
-        "eeTop",
-        "controlTop",
-        "mechTop",
-        "distinguishedYoungScholar",
-        "casAcademician",
-        "caeAcademician",
-        "swjtuJournal",
-        "swjtuScai",
-        "swjtuTransport",
-      ].forEach((id) => {
-        if (source === id) {
-          signals.add(id);
-        }
+      this.getRankSourceSignalIds(node).forEach((signal) => {
+        signals.add(signal);
       });
     });
 
     return Array.from(signals);
+  },
+
+  getRankSourceSignalIds(node) {
+    const signals = [];
+    const source = node.dataset?.rankSource || "";
+    const value = node.dataset?.rankValue || "";
+    const text = node.textContent || "";
+
+    if (source === "sci" || text === "SCI") {
+      signals.push("sci");
+    }
+    if (source === "jcr" && value === "Q1") {
+      signals.push("jcrQ1");
+    }
+    if (source === "jcr" && value === "Q2") {
+      signals.push("jcrQ2");
+    }
+    if (source === "casTop" || text.includes("中科院TOP")) {
+      signals.push("casTop");
+    }
+    if (text.includes("中科院") && text.includes("1区")) {
+      signals.push("cas1");
+    }
+    if (text.includes("中科院") && text.includes("2区")) {
+      signals.push("cas2");
+    }
+    if (source === "ei" || text === "EI") {
+      signals.push("ei");
+    }
+    if (["pkuCore", "cscd", "cssci"].includes(source)) {
+      signals.push("cnCore");
+    }
+    if (source === "thcpl") {
+      signals.push("thcpl");
+    }
+    [
+      "roboticsTop",
+      "commTop",
+      "eeTop",
+      "controlTop",
+      "mechTop",
+      "distinguishedYoungScholar",
+      "casAcademician",
+      "caeAcademician",
+      "swjtuJournal",
+      "swjtuScai",
+      "swjtuTransport",
+    ].forEach((id) => {
+      if (source === id) {
+        signals.push(id);
+      }
+    });
+
+    return signals;
+  },
+
+  getBadgeSignalIds(badge) {
+    const className =
+      typeof badge.className === "string" ? badge.className : "";
+    if (className.split(/\s+/).includes("ccf-rank")) {
+      return this.getEntryRanks({
+        querySelectorAll: () => [badge],
+      }).map((rank) => `ccf${rank}`);
+    }
+
+    if (className.split(/\s+/).includes("rank-source")) {
+      return this.getRankSourceSignalIds(badge);
+    }
+
+    return [];
+  },
+
+  applyBadgeVisibility() {
+    const badgeSelector =
+      ".onlyccfa-rank-badges .ccf-rank, .onlyccfa-rank-badges .rank-source";
+    const selectedRanks = (this.settings?.selectedRanks || []).filter(
+      (rank) => rank !== "ALL",
+    );
+    const selectedSignals = this.settings?.selectedSignals || [];
+
+    if (!this.settings?.showSelectedTagsOnly) {
+      document.querySelectorAll(badgeSelector).forEach((badge) => {
+        badge.style.display = "";
+      });
+      return;
+    }
+
+    const visibleSignals = new Set([
+      ...selectedRanks.map((rank) => `ccf${rank}`),
+      ...selectedSignals,
+    ]);
+
+    document.querySelectorAll(badgeSelector).forEach((badge) => {
+      const badgeSignals = this.getBadgeSignalIds(badge);
+      badge.style.display = badgeSignals.some((signal) =>
+        visibleSignals.has(signal),
+      )
+        ? ""
+        : "none";
+    });
   },
 
   matchesSelectedSignals(entry, selectedSignals, signalMode) {
@@ -605,10 +687,13 @@ const filter = {
       defaultFilter: siteConfig.defaultFilter,
       hideUnranked: siteConfig.hideUnranked,
       language: "zh",
+      selectedRanks: [],
       selectedSignals: [],
       signalMode: "any",
       deepTargetCount: 60,
       panelPosition: null,
+      panelCollapsed: false,
+      showSelectedTagsOnly: true,
     };
 
     try {
@@ -629,6 +714,11 @@ const filter = {
         language: this.validLanguages.includes(parsed.language)
           ? parsed.language
           : defaults.language,
+        selectedRanks: Array.isArray(parsed.selectedRanks)
+          ? parsed.selectedRanks.filter((rank) =>
+              this.validFilters.includes(rank),
+            )
+          : defaults.selectedRanks,
         selectedSignals: Array.isArray(parsed.selectedSignals)
           ? parsed.selectedSignals.filter((signal) =>
               this.signalOptions.some((option) => option.id === signal),
@@ -645,6 +735,14 @@ const filter = {
         panelPosition: parsed.panelPosition
           ? this.clampPanelPosition(parsed.panelPosition)
           : defaults.panelPosition,
+        panelCollapsed:
+          typeof parsed.panelCollapsed === "boolean"
+            ? parsed.panelCollapsed
+            : defaults.panelCollapsed,
+        showSelectedTagsOnly:
+          typeof parsed.showSelectedTagsOnly === "boolean"
+            ? parsed.showSelectedTagsOnly
+            : defaults.showSelectedTagsOnly,
       };
     } catch (error) {
       return defaults;
@@ -667,6 +765,11 @@ const filter = {
           language: this.validLanguages.includes(settings.language)
             ? settings.language
             : "zh",
+          selectedRanks: Array.isArray(settings.selectedRanks)
+            ? settings.selectedRanks.filter((rank) =>
+                this.validFilters.includes(rank),
+              )
+            : [],
           selectedSignals: Array.isArray(settings.selectedSignals)
             ? settings.selectedSignals.filter((signal) =>
                 this.signalOptions.some((option) => option.id === signal),
@@ -683,6 +786,8 @@ const filter = {
           panelPosition: settings.panelPosition
             ? this.clampPanelPosition(settings.panelPosition)
             : null,
+          panelCollapsed: Boolean(settings.panelCollapsed),
+          showSelectedTagsOnly: Boolean(settings.showSelectedTagsOnly),
         }),
       );
     } catch (error) {
@@ -832,7 +937,10 @@ const filter = {
 
   refreshActiveButton() {
     document.querySelectorAll(".ccf-filter button").forEach((btn) => {
-      btn.classList.toggle("active", btn.dataset.rank === this.currentFilter);
+      btn.classList.toggle(
+        "active",
+        this.settings.selectedRanks.includes(btn.dataset.rank),
+      );
     });
   },
 
@@ -855,6 +963,13 @@ const filter = {
     }
 
     filterElement.addEventListener("click", (e) => {
+      if (e.target.dataset.action === "toggle-collapse") {
+        this.settings.panelCollapsed = !this.settings.panelCollapsed;
+        this.saveSettings(this.settings);
+        this.rerenderPanel();
+        return;
+      }
+
       if (e.target.dataset.action === "toggle-language") {
         this.settings.language = this.settings.language === "zh" ? "en" : "zh";
         this.saveSettings(this.settings);
@@ -901,8 +1016,25 @@ const filter = {
       }
 
       if (e.target.tagName === "BUTTON" && e.target.dataset.rank) {
-        this.currentFilter = e.target.dataset.rank;
+        const rank = e.target.dataset.rank;
+        if (rank === "ALL") {
+          this.settings.selectedRanks = this.settings.selectedRanks.includes(
+            "ALL",
+          )
+            ? []
+            : ["ALL"];
+        } else if (this.settings.selectedRanks.includes(rank)) {
+          this.settings.selectedRanks = this.settings.selectedRanks.filter(
+            (item) => item !== rank,
+          );
+        } else {
+          this.settings.selectedRanks = this.settings.selectedRanks
+            .filter((item) => item !== "ALL")
+            .concat(rank);
+        }
+        this.currentFilter = this.settings.selectedRanks[0] || "ALL";
         this.refreshActiveButton();
+        this.saveSettings(this.settings);
         this.applyFilter();
       }
     });
@@ -923,9 +1055,19 @@ const filter = {
         this.applyFilter();
       }
 
+      if (e.target.dataset.setting === "showSelectedTagsOnly") {
+        this.settings.showSelectedTagsOnly = e.target.checked;
+        this.saveSettings(this.settings);
+        this.applyBadgeVisibility();
+      }
+
       if (e.target.dataset.setting === "defaultFilter") {
         this.settings.defaultFilter = e.target.value;
-        this.currentFilter = this.settings.defaultFilter;
+        this.settings.selectedRanks =
+          this.settings.defaultFilter === "ALL"
+            ? []
+            : [this.settings.defaultFilter];
+        this.currentFilter = this.settings.selectedRanks[0] || "ALL";
         this.refreshActiveButton();
         this.saveSettings(this.settings);
         this.applyFilter();

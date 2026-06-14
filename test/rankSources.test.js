@@ -4,12 +4,13 @@ const vm = require("vm");
 
 const dataSource = fs.readFileSync("data/openRankSources.js", "utf8");
 const journalSource = fs.readFileSync("data/journalRankSources.js", "utf8");
+const thcplSource = fs.readFileSync("data/thcplRankSources.js", "utf8");
 const swjtuSource = fs.readFileSync("data/swjtuRankSources.js", "utf8");
 const source = fs.readFileSync("js/rankSources.js", "utf8");
 const swjtuData = vm.runInNewContext(`${swjtuSource}; swjtuRankSources;`);
 
 const rankSources = vm.runInNewContext(
-  `${dataSource}; ${journalSource}; ${swjtuSource}; ${source}; rankSources;`,
+  `${dataSource}; ${journalSource}; ${thcplSource}; ${swjtuSource}; ${source}; rankSources;`,
   {
     console,
     $() {
@@ -127,6 +128,15 @@ assert.ok(ieeeTags.some((tag) => tag.source === "casTop"));
 assert.strictEqual(
   rankSources.getTagText({ source: "casTop", value: "TOP" }),
   "中科院TOP",
+);
+
+const thcplTags = rankSources.resolveVenueText(
+  "International Conference on Machine Learning",
+);
+assert.ok(thcplTags.some((tag) => tag.source === "thcpl" && tag.value === "A"));
+assert.strictEqual(
+  rankSources.getTagText({ source: "thcpl", value: "A" }),
+  "THCPL A",
 );
 assert.strictEqual(
   rankSources.getTagText({ source: "jcr", value: "Q1" }),

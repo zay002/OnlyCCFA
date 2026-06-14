@@ -122,6 +122,7 @@
         "js/connectedpapers.js",
         "data/openRankSources.js",
         "data/journalRankSources.js",
+        "data/thcplRankSources.js",
         "data/swjtuRankSources.js",
         "data/authorRankSources.js",
         "js/rankSources.js",
