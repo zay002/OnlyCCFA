@@ -1,6 +1,6 @@
 {
   "name": "onlyccfa",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "private": true,
   "description": "Chrome extension that filters Google Scholar and Semantic Scholar results, exports reliable BibTeX, and makes Zotero Connector respect filters.",
   "license": "MIT",
@@ -20,7 +20,7 @@
   },
   "scripts": {
     "prepare": "husky",
-    "format:check": "prettier --check README.md README_en.md PrivacyPolicy.md manifest.json package.json package-lock.json _locales/**/*.json css/filter.css css/style.css data/openRankSources.js data/authorRankSources.js data/swjtuRankSources.js js/apiCache.js js/authorSources.js js/background.js js/bibtex.js js/ccf.js js/fetchRank.js js/filter.js js/i18n.js js/rankSources.js js/scholar.js js/semanticscholar.js scripts/check-release-health.js scripts/package-release.js scripts/track-cws-users.mjs test/**/*.js .github/workflows/*.yaml",
+    "format:check": "prettier --check README.md README_en.md PrivacyPolicy.md manifest.json package.json package-lock.json _locales/**/*.json css/filter.css css/style.css data/openRankSources.js data/authorRankSources.js data/swjtuRankSources.js data/thcplRankSources.js js/apiCache.js js/authorSources.js js/background.js js/bibtex.js js/ccf.js js/fetchRank.js js/filter.js js/i18n.js js/rankSources.js js/scholar.js js/semanticscholar.js scripts/check-release-health.js scripts/package-release.js scripts/track-cws-users.mjs test/**/*.js .github/workflows/*.yaml",
     "stats:cws": "node scripts/track-cws-users.mjs",
     "package": "node scripts/package-release.js",
     "check:release": "node scripts/check-release-health.js",

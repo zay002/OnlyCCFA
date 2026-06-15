@@ -113,6 +113,15 @@ OnlyCCFA 当前由 [Zhaoyang Li](https://github.com/zay002) 维护。
         <br />
         Code, documentation, tests, maintenance
       </td>
+      <td align="center" valign="top" width="14.28%">
+        <a href="https://github.com/dongyangli-del">
+          <img src="https://avatars.githubusercontent.com/dongyangli-del?s=100" width="100px;" alt="dongyangli-del"/>
+          <br />
+          <sub><b>dongyangli-del</b></sub>
+        </a>
+        <br />
+        Filter panel, TH-CPL badges, tests
+      </td>
     </tr>
   </tbody>
 </table>

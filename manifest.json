@@ -1,7 +1,7 @@
 {
   "name": "__MSG_extName__",
   "short_name": "OnlyCCFA",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "__MSG_extDesc__",
   "manifest_version": 3,
   "default_locale": "en",
@@ -122,6 +122,7 @@
         "js/connectedpapers.js",
         "data/openRankSources.js",
         "data/journalRankSources.js",
+        "data/thcplRankSources.js",
         "data/swjtuRankSources.js",
         "data/authorRankSources.js",
         "js/rankSources.js",

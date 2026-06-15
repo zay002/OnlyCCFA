@@ -3,21 +3,40 @@ const fs = require("fs");
 const vm = require("vm");
 
 const source = fs.readFileSync("js/scholar.js", "utf8");
+let fallbackCopied = false;
 const fakeDocument = {
   addEventListener() {},
+  body: {
+    appendChild(child) {
+      child.parentNode = this;
+    },
+  },
   createElement(tagName) {
     return {
       tagName,
       className: "",
       children: [],
+      select() {},
+      remove() {},
       appendChild(child) {
         this.children.push(child);
         child.parentNode = this;
       },
     };
   },
+  execCommand(command) {
+    fallbackCopied = command === "copy";
+    return fallbackCopied;
+  },
   querySelectorAll() {
     return [];
+  },
+};
+const fakeNavigator = {
+  clipboard: {
+    writeText() {
+      return Promise.reject(new Error("Document is not focused."));
+    },
   },
 };
 const scholar = vm.runInNewContext(`${source}; scholar;`, {
@@ -26,6 +45,7 @@ const scholar = vm.runInNewContext(`${source}; scholar;`, {
   URLSearchParams,
   setTimeout,
   document: fakeDocument,
+  navigator: fakeNavigator,
   authorSources: {
     resolveAuthors(authors) {
       return authors.includes("姚期智")
@@ -151,6 +171,10 @@ assert.strictEqual(
   ),
   "International Conference on Machine Learning",
 );
+
+scholar.copyText("fallback BibTeX").then(() => {
+  assert.strictEqual(fallbackCopied, true);
+});
 
 assert.strictEqual(
   scholar.inferVenueFromUrl(

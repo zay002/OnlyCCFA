@@ -1472,16 +1472,22 @@ scholar.downloadText = function (filename, content) {
 };
 
 scholar.copyText = function (content) {
+  const copyWithTextarea = () => {
+    const textarea = document.createElement("textarea");
+    textarea.value = content;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    textarea.remove();
+  };
+
   if (navigator.clipboard?.writeText) {
-    return navigator.clipboard.writeText(content);
+    return navigator.clipboard.writeText(content).catch(() => {
+      copyWithTextarea();
+    });
   }
 
-  const textarea = document.createElement("textarea");
-  textarea.value = content;
-  document.body.appendChild(textarea);
-  textarea.select();
-  document.execCommand("copy");
-  textarea.remove();
+  copyWithTextarea();
   return Promise.resolve();
 };
 
