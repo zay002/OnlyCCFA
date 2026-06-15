@@ -70,3 +70,25 @@ assert.strictEqual(
   ccf.resolveVenueText("Mechanical Systems and Signal Processing"),
   null,
 );
+
+let ccfLookupCount = 0;
+const originalFindAbbrInVenue = ccf.findAbbrInVenue;
+const originalFindFullNameInVenue = ccf.findFullNameInVenue;
+ccf.findAbbrInVenue = function (...args) {
+  ccfLookupCount += 1;
+  return originalFindAbbrInVenue.apply(this, args);
+};
+ccf.findFullNameInVenue = function (...args) {
+  ccfLookupCount += 1;
+  return originalFindFullNameInVenue.apply(this, args);
+};
+
+const firstCachedMatch = ccf.resolveVenueText(
+  "IEEE International Conference on Data Mining",
+);
+const lookupCountAfterFirstResolve = ccfLookupCount;
+const secondCachedMatch = ccf.resolveVenueText(
+  "IEEE International Conference on Data Mining",
+);
+assert.deepStrictEqual(secondCachedMatch, firstCachedMatch);
+assert.strictEqual(ccfLookupCount, lookupCountAfterFirstResolve);

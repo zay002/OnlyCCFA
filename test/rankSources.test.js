@@ -105,6 +105,10 @@ const candidateTags = candidateRankSources.resolveVenueText(
 );
 assert.ok(candidateTags.some((tag) => tag.source === "test"));
 assert.deepStrictEqual(visitedCandidateRecords, ["Quantum Frobnication Forum"]);
+candidateRankSources.resolveVenueText(
+  "Proceedings of Quantum Frobnication Forum 2026",
+);
+assert.deepStrictEqual(visitedCandidateRecords, ["Quantum Frobnication Forum"]);
 
 const suffixAliasTags = suffixAliasRankSources.resolveVenueText(
   "Journal of Mechanisms and Robotics",

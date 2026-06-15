@@ -310,6 +310,41 @@ assert.deepStrictEqual(
   ["Workshop (not main)", "CCF A"],
 );
 
+const semanticConflictEntry = fakeRankedSemanticEntry();
+semanticscholar.appendRankBadge(
+  {},
+  {
+    className: "ccf-rank",
+    dataset: { rankSource: "ccf", rankValue: "CCF C" },
+    textContent: "CCF C",
+  },
+  semanticConflictEntry.entry,
+);
+semanticscholar.appendRankBadge(
+  {},
+  {
+    className: "ccf-rank",
+    dataset: { rankSource: "ccf", rankValue: "CCF A" },
+    textContent: "CCF A",
+  },
+  semanticConflictEntry.entry,
+);
+semanticscholar.appendRankBadge(
+  {},
+  {
+    className: "ccf-rank",
+    dataset: { rankSource: "ccf", rankValue: "CCF C" },
+    textContent: "CCF C",
+  },
+  semanticConflictEntry.entry,
+);
+assert.deepStrictEqual(
+  semanticConflictEntry.entry.rankHost.children.map(
+    (child) => child.textContent,
+  ),
+  ["CCF A"],
+);
+
 async function runAsyncTests() {
   let googleFetchCount = 0;
   let crossrefTitle = "";

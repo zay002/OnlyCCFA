@@ -211,6 +211,10 @@ semanticscholar.appendRankBadge = function (anchor, badge, entry) {
   const targetEntry = entry || semanticscholar.getEntryFromNode(anchor);
   const host = semanticscholar.getRankBadgeHost(targetEntry);
   if (host) {
+    if (semanticscholar.shouldSkipCcfRankBadge(host, badge)) {
+      targetEntry?.classList?.add("ccf-ranked");
+      return;
+    }
     $(host).append(badge);
     targetEntry?.classList?.add("ccf-ranked");
     return;
@@ -218,6 +222,88 @@ semanticscholar.appendRankBadge = function (anchor, badge, entry) {
 
   $(anchor).after(badge);
   targetEntry?.classList?.add("ccf-ranked");
+};
+
+semanticscholar.getBadgeNode = function (badge) {
+  return badge?.jquery ? badge[0] : badge;
+};
+
+semanticscholar.getNodeClassName = function (node) {
+  const className = node?.className || "";
+  return typeof className === "string" ? className : className.baseVal || "";
+};
+
+semanticscholar.getBadgeRankSource = function (badge) {
+  const node = semanticscholar.getBadgeNode(badge);
+  return (
+    node?.dataset?.rankSource || node?.getAttribute?.("data-rank-source") || ""
+  );
+};
+
+semanticscholar.getBadgeRankValue = function (badge) {
+  const node = semanticscholar.getBadgeNode(badge);
+  return (
+    node?.dataset?.rankValue ||
+    node?.getAttribute?.("data-rank-value") ||
+    String(node?.textContent || "")
+      .replace(/\s+/g, " ")
+      .trim()
+  );
+};
+
+semanticscholar.isCcfRankBadge = function (badge) {
+  const node = semanticscholar.getBadgeNode(badge);
+  return (
+    semanticscholar.getBadgeRankSource(node) === "ccf" ||
+    semanticscholar.getNodeClassName(node).split(/\s+/).includes("ccf-rank")
+  );
+};
+
+semanticscholar.getCcfRankPriority = function (badge) {
+  const value = semanticscholar.getBadgeRankValue(badge);
+  const text = String(
+    value || semanticscholar.getBadgeNode(badge)?.textContent || "",
+  );
+  const rank = (text.match(/\bCCF\s+([ABC])\b/i) || [])[1]?.toUpperCase();
+  return { A: 300, B: 200, C: 100 }[rank] || 0;
+};
+
+semanticscholar.removeBadgeNode = function (node) {
+  if (!node) {
+    return;
+  }
+
+  if (typeof node.remove === "function") {
+    node.remove();
+    return;
+  }
+
+  if (Array.isArray(node.parentNode?.children)) {
+    const index = node.parentNode.children.indexOf(node);
+    if (index >= 0) {
+      node.parentNode.children.splice(index, 1);
+    }
+  }
+};
+
+semanticscholar.shouldSkipCcfRankBadge = function (host, badge) {
+  if (!host?.querySelectorAll || !semanticscholar.isCcfRankBadge(badge)) {
+    return false;
+  }
+
+  const incomingPriority = semanticscholar.getCcfRankPriority(badge);
+  const existingBadges = Array.from(host.querySelectorAll(".ccf-rank"));
+  const strongestExisting = existingBadges.reduce(
+    (best, node) => Math.max(best, semanticscholar.getCcfRankPriority(node)),
+    0,
+  );
+
+  if (strongestExisting >= incomingPriority) {
+    return strongestExisting > 0;
+  }
+
+  existingBadges.forEach(semanticscholar.removeBadgeNode);
+  return false;
 };
 
 semanticscholar.t = function (key, params) {

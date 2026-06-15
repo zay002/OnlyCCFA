@@ -1585,6 +1585,80 @@ scholar.isCcfRankBadge = function (badge) {
   );
 };
 
+scholar.getCcfRankPriority = function (badge) {
+  const value = scholar.getBadgeRankValue(badge);
+  const text = String(value || scholar.getBadgeNode(badge)?.textContent || "");
+  const rank = (text.match(/\bCCF\s+([ABC])\b/i) || [])[1]?.toUpperCase();
+  return { A: 300, B: 200, C: 100 }[rank] || 0;
+};
+
+scholar.removeBadgeNode = function (node) {
+  if (!node) {
+    return;
+  }
+
+  if (typeof node.remove === "function") {
+    node.remove();
+    return;
+  }
+
+  if (Array.isArray(node.parentNode?.children)) {
+    const index = node.parentNode.children.indexOf(node);
+    if (index >= 0) {
+      node.parentNode.children.splice(index, 1);
+    }
+  }
+};
+
+scholar.insertBadgeBefore = function (host, badge, referenceNode) {
+  const node = scholar.getBadgeNode(badge);
+  if (!host || !node || !referenceNode) {
+    return false;
+  }
+
+  if (typeof host.insertBefore === "function" && node.nodeType) {
+    host.insertBefore(node, referenceNode);
+    return true;
+  }
+
+  if (Array.isArray(host.children)) {
+    const index = host.children.indexOf(referenceNode);
+    if (index >= 0) {
+      host.children.splice(index, 0, node);
+      node.parentNode = host;
+      return true;
+    }
+  }
+
+  return false;
+};
+
+scholar.reconcileCcfRankBadge = function (host, badge) {
+  if (!host?.querySelectorAll || !scholar.isCcfRankBadge(badge)) {
+    return false;
+  }
+
+  const incomingPriority = scholar.getCcfRankPriority(badge);
+  const existingBadges = Array.from(host.querySelectorAll(".ccf-rank"));
+  const strongestExisting = existingBadges.reduce(
+    (best, node) => Math.max(best, scholar.getCcfRankPriority(node)),
+    0,
+  );
+
+  if (strongestExisting >= incomingPriority) {
+    return strongestExisting > 0;
+  }
+
+  const firstExisting = existingBadges[0];
+  if (scholar.insertBadgeBefore(host, badge, firstExisting)) {
+    existingBadges.forEach(scholar.removeBadgeNode);
+    return true;
+  }
+
+  existingBadges.forEach(scholar.removeBadgeNode);
+  return false;
+};
+
 scholar.isRankSourceBadge = function (badge) {
   const node = scholar.getBadgeNode(badge);
   return scholar.getNodeClassName(node).split(/\s+/).includes("rank-source");
@@ -1631,6 +1705,9 @@ scholar.appendRankBadge = function (anchor, badge, entry) {
     entry || scholar.getEntryFromRankAnchor(anchor),
   );
   if (host) {
+    if (scholar.reconcileCcfRankBadge(host, badge)) {
+      return;
+    }
     if (scholar.hasDuplicateRankBadge(host, badge)) {
       return;
     }
@@ -1783,10 +1860,14 @@ scholar.appendResolvedSearchResultVenueRank = async function (
   node,
   entry,
   data,
+  fallback,
 ) {
   try {
     const resolvedVenue = await scholar.fetchSearchResultVenue(data);
     if (!resolvedVenue) {
+      if (typeof fallback === "function") {
+        fallback();
+      }
       return false;
     }
     scholar.setVenueName(entry, resolvedVenue);
@@ -1794,11 +1875,14 @@ scholar.appendResolvedSearchResultVenueRank = async function (
       url: data.url,
     });
   } catch (error) {
+    if (typeof fallback === "function") {
+      fallback();
+    }
     return false;
   }
 };
 
-scholar.scheduleSearchResultVenueRank = function (node, entry, data) {
+scholar.scheduleSearchResultVenueRank = function (node, entry, data, fallback) {
   if (
     !scholar.shouldFetchSearchResultVenue(data) ||
     entry.dataset?.onlyccfaSearchVenueLookupStarted === "true"
@@ -1807,7 +1891,7 @@ scholar.scheduleSearchResultVenueRank = function (node, entry, data) {
   }
 
   entry.dataset.onlyccfaSearchVenueLookupStarted = "true";
-  scholar.appendResolvedSearchResultVenueRank(node, entry, data);
+  scholar.appendResolvedSearchResultVenueRank(node, entry, data, fallback);
   return true;
 };
 
@@ -1834,11 +1918,6 @@ scholar.appendRank = function () {
       ) {
         return;
       }
-      scholar.scheduleSearchResultVenueRank(node, this, {
-        title,
-        year: (metadata.match(/\b(19|20)\d{2}\b/g) || []).slice(-1)[0] || "",
-        venue,
-      });
       let data = $(this)
         .find("div.gs_a")
         .text()
@@ -1846,9 +1925,27 @@ scholar.appendRank = function () {
         .split(" ");
       let author = data[1];
       let year = data.slice(-3)[0];
-      setTimeout(function () {
+      const fetchFallbackRank = function () {
         fetchRank(node, title, author, year, scholar);
-      }, 100 * index);
+      };
+      if (
+        scholar.scheduleSearchResultVenueRank(
+          node,
+          this,
+          {
+            title,
+            year:
+              (metadata.match(/\b(19|20)\d{2}\b/g) || []).slice(-1)[0] || "",
+            venue,
+          },
+          function () {
+            setTimeout(fetchFallbackRank, 100 * index);
+          },
+        )
+      ) {
+        return;
+      }
+      setTimeout(fetchFallbackRank, 100 * index);
     }
   });
 };

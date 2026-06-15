@@ -1,5 +1,6 @@
 const rankSources = {};
 rankSources.databaseIndexCache = new WeakMap();
+rankSources.resolveCache = new Map();
 rankSources.VENUE_SERIES_TOKENS = new Set([
   "CONFERENCE",
   "CONGRESS",
@@ -54,6 +55,25 @@ rankSources.getRecordNormalizedNames = function (record) {
   }
 
   return record.__onlyccfaNormalizedNames;
+};
+
+rankSources.getRecordNameEntries = function (record) {
+  if (!record.__onlyccfaNameEntries) {
+    const names = rankSources.getRecordNames(record);
+    Object.defineProperty(record, "__onlyccfaNameEntries", {
+      value: names.map(function (name) {
+        return {
+          name,
+          normalizedName: rankSources.normalizeText(name),
+          isSingleWordTitle: rankSources.isSingleWordTitle(name),
+          isShortAcronymName: rankSources.isShortAcronymName(name),
+        };
+      }),
+      enumerable: false,
+    });
+  }
+
+  return record.__onlyccfaNameEntries;
 };
 
 rankSources.getNormalizedTokens = function (normalizedText) {
@@ -148,13 +168,19 @@ rankSources.canReverseMatch = function (text) {
   return tokens.length > 1 && text.length >= 8;
 };
 
-rankSources.getNameMatchScore = function (venueText, name, record) {
-  const normalizedVenue = rankSources.normalizeText(venueText);
+rankSources.getNameMatchScore = function (
+  venueText,
+  name,
+  record,
+  normalizedVenue = rankSources.normalizeText(venueText),
+  nameEntry = null,
+) {
   if (!normalizedVenue) {
     return 0;
   }
 
-  const normalizedName = rankSources.normalizeText(name);
+  const normalizedName =
+    nameEntry?.normalizedName || rankSources.normalizeText(name);
   if (!normalizedName) {
     return 0;
   }
@@ -163,13 +189,13 @@ rankSources.getNameMatchScore = function (venueText, name, record) {
     return 100000 + normalizedName.length;
   }
 
-  if (rankSources.isSingleWordTitle(name)) {
+  if (nameEntry?.isSingleWordTitle ?? rankSources.isSingleWordTitle(name)) {
     return 0;
   }
 
   if (
     rankSources.containsNormalizedPhrase(normalizedVenue, normalizedName) &&
-    (!rankSources.isShortAcronymName(name) ||
+    (!(nameEntry?.isShortAcronymName ?? rankSources.isShortAcronymName(name)) ||
       rankSources.hasOriginalAcronymToken(venueText, name)) &&
     !rankSources.isUnsafeSeriesSubstringMatch(
       normalizedVenue,
@@ -184,12 +210,26 @@ rankSources.getNameMatchScore = function (venueText, name, record) {
   return 0;
 };
 
-rankSources.getRecordMatch = function (venueText, record) {
-  return rankSources.getRecordNames(record).reduce(
-    (best, name) => {
-      const score = rankSources.getNameMatchScore(venueText, name, record);
+rankSources.getRecordMatch = function (
+  venueText,
+  record,
+  normalizedVenue = rankSources.normalizeText(venueText),
+) {
+  return rankSources.getRecordNameEntries(record).reduce(
+    (best, nameEntry) => {
+      const score = rankSources.getNameMatchScore(
+        venueText,
+        nameEntry.name,
+        record,
+        normalizedVenue,
+        nameEntry,
+      );
       if (score > best.score) {
-        return { score, matchedTitle: record.title, matchedName: name };
+        return {
+          score,
+          matchedTitle: record.title,
+          matchedName: nameEntry.name,
+        };
       }
       return best;
     },
@@ -317,8 +357,17 @@ rankSources.getSources = function () {
 };
 
 rankSources.resolveVenueText = function (venueText) {
-  const candidates = new Map();
   const normalizedVenue = rankSources.normalizeText(venueText);
+  if (!normalizedVenue) {
+    return [];
+  }
+  if (rankSources.resolveCache.has(normalizedVenue)) {
+    return rankSources.resolveCache.get(normalizedVenue).map((tag) => ({
+      ...tag,
+    }));
+  }
+
+  const candidates = new Map();
 
   rankSources.getDatabases().forEach(function (db) {
     const exactRecords = rankSources
@@ -326,7 +375,11 @@ rankSources.resolveVenueText = function (venueText) {
       .exact.get(normalizedVenue);
     if (exactRecords) {
       exactRecords.forEach(function (record) {
-        const match = rankSources.getRecordMatch(venueText, record);
+        const match = rankSources.getRecordMatch(
+          venueText,
+          record,
+          normalizedVenue,
+        );
         if (match.score > 0) {
           rankSources.addTagCandidates(candidates, record.tags, match);
         }
@@ -341,7 +394,11 @@ rankSources.resolveVenueText = function (venueText) {
     rankSources
       .getCandidateRecords(db, normalizedVenue)
       .forEach(function (record) {
-        const match = rankSources.getRecordMatch(venueText, record);
+        const match = rankSources.getRecordMatch(
+          venueText,
+          record,
+          normalizedVenue,
+        );
         if (match.score === 0) {
           return;
         }
@@ -350,7 +407,12 @@ rankSources.resolveVenueText = function (venueText) {
       });
   });
 
-  return Array.from(candidates.values());
+  const tags = Array.from(candidates.values());
+  rankSources.resolveCache.set(
+    normalizedVenue,
+    tags.map((tag) => ({ ...tag })),
+  );
+  return tags;
 };
 
 rankSources.getTagText = function (tag) {

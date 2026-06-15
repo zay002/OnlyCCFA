@@ -543,6 +543,33 @@ assert.deepStrictEqual(
   ["CCF C", "西南交大计算机C类", "SCI"],
 );
 
+scholar.appendRankBadge(
+  {},
+  {
+    className: "ccf-rank ccf-a",
+    dataset: { rankSource: "ccf", rankValue: "CCF A" },
+    textContent: "CCF A",
+  },
+  rankHostEntry,
+);
+assert.deepStrictEqual(
+  rankHost.children.map((child) => child.textContent),
+  ["CCF A", "西南交大计算机C类", "SCI"],
+);
+scholar.appendRankBadge(
+  {},
+  {
+    className: "ccf-rank ccf-c",
+    dataset: { rankSource: "ccf", rankValue: "CCF C" },
+    textContent: "CCF C",
+  },
+  rankHostEntry,
+);
+assert.deepStrictEqual(
+  rankHost.children.map((child) => child.textContent),
+  ["CCF A", "西南交大计算机C类", "SCI"],
+);
+
 const workshopEntry = fakeScholarEntry();
 scholar.rankSpanList = [
   function () {
@@ -876,6 +903,61 @@ async function runAsyncTests() {
   assert.deepStrictEqual(displayedVenues, [
     "International Journal of Computer Vision",
   ]);
+
+  let fallbackCount = 0;
+  const scheduledResolvedEntry = fakeScholarEntry();
+  scholar.setVenueName = function () {};
+  scholar.fetchSearchResultVenue = async function () {
+    return "ACM International Conference on Mobile Computing and Networking";
+  };
+  scholar.appendVenueRank = function (_node, venue, entry) {
+    assert.strictEqual(entry, scheduledResolvedEntry);
+    assert.strictEqual(
+      venue,
+      "ACM International Conference on Mobile Computing and Networking",
+    );
+    return true;
+  };
+  assert.strictEqual(
+    scholar.scheduleSearchResultVenueRank(
+      {},
+      scheduledResolvedEntry,
+      {
+        title:
+          "Deep learning based wireless localization for indoor navigation",
+        year: "2020",
+        venue: "Proceedings of the 26th ...",
+      },
+      function () {
+        fallbackCount += 1;
+      },
+    ),
+    true,
+  );
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.strictEqual(fallbackCount, 0);
+
+  const scheduledFallbackEntry = fakeScholarEntry();
+  scholar.fetchSearchResultVenue = async function () {
+    return "";
+  };
+  assert.strictEqual(
+    scholar.scheduleSearchResultVenueRank(
+      {},
+      scheduledFallbackEntry,
+      {
+        title: "An unresolved truncated venue",
+        year: "2026",
+        venue: "Proceedings of the 1st ...",
+      },
+      function () {
+        fallbackCount += 1;
+      },
+    ),
+    true,
+  );
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.strictEqual(fallbackCount, 1);
 
   scholar.fetchText = originalFetchText;
   scholar.appendVenueRank = originalAppendVenueRank;
