@@ -36,6 +36,16 @@ const scholar = vm.runInNewContext(`${source}; scholar;`, {
       return { className: "rank-source", textContent: tag.source };
     },
   },
+  ccf: {
+    resolveVenueText(venue) {
+      return /Computer Vision and Pattern Recognition/.test(venue)
+        ? { refine: "CVPR", type: "abbr" }
+        : null;
+    },
+    getVenueDisplayName() {
+      return "IEEE/CVF Conference on Computer Vision and Pattern Recognition";
+    },
+  },
   $(target) {
     return {
       append(child) {
@@ -90,6 +100,49 @@ assert.strictEqual(
     "https://openaccess.thecvf.com/content/CVPR2023W/NTIRE/html/Li_NTIRE_2023_Challenge_on_Efficient_Super-Resolution_CVPRW_2023_paper.html",
   ),
   "IEEE/CVF Conference on Computer Vision and Pattern Recognition",
+);
+assert.strictEqual(
+  scholar.isWorkshopVenue(
+    "",
+    "https://openaccess.thecvf.com/content/CVPR2023W/NTIRE/html/Li_NTIRE_2023_Challenge_on_Efficient_Super-Resolution_CVPRW_2023_paper.html",
+  ),
+  true,
+);
+assert.strictEqual(
+  scholar.isWorkshopVenue(
+    "IEEE/CVF Conference on Computer Vision and Pattern Recognition",
+    "https://openaccess.thecvf.com/content/CVPR2023/html/Li_Regular_CVPR_2023_paper.html",
+  ),
+  false,
+);
+assert.strictEqual(
+  scholar.isWorkshopVenue(
+    "International Conference on Machine Learning Workshops",
+    "",
+  ),
+  true,
+);
+assert.strictEqual(
+  scholar.isWorkshopVenue(
+    "International Conference on Machine Learning",
+    "https://icml.cc/virtual/2026/workshop/12345",
+  ),
+  true,
+);
+assert.strictEqual(
+  scholar.isWorkshopVenue(
+    "International Conference on Learning Representations",
+    "ICLR2026W",
+  ),
+  true,
+);
+assert.strictEqual(
+  scholar.isWorkshopVenue("International Conference on Machine Learning", ""),
+  false,
+);
+assert.strictEqual(
+  scholar.isWorkshopVenue("The Web Conference (WWW)", ""),
+  false,
 );
 
 assert.strictEqual(
@@ -489,6 +542,33 @@ assert.deepStrictEqual(
   rankHost.children.map((child) => child.textContent),
   ["CCF C", "西南交大计算机C类", "SCI"],
 );
+
+const workshopEntry = fakeScholarEntry();
+scholar.rankSpanList = [
+  function () {
+    return {
+      className: "ccf-rank ccf-a",
+      dataset: { rankSource: "ccf", rankValue: "CCF A" },
+      textContent: "CCF A",
+    };
+  },
+];
+assert.strictEqual(
+  scholar.appendVenueRank(
+    {},
+    "IEEE/CVF Conference on Computer Vision and Pattern Recognition",
+    workshopEntry,
+    {
+      url: "https://openaccess.thecvf.com/content/CVPR2023W/NTIRE/html/Li_NTIRE_2023_Challenge_on_Efficient_Super-Resolution_CVPRW_2023_paper.html",
+    },
+  ),
+  true,
+);
+assert.deepStrictEqual(
+  workshopEntry.rankHost.children.map((child) => child.textContent),
+  ["Workshop (not main)", "CCF A"],
+);
+scholar.rankSpanList = [];
 
 assert.strictEqual(typeof scholar.appendAuthorBadges, "function");
 

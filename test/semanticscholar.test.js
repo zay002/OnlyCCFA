@@ -56,7 +56,9 @@ context.document = {
 };
 context.ccf = {
   resolveVenueText(venue) {
-    return venue === "CVPR" ? { refine: "CVPR", type: "abbr" } : null;
+    return /CVPR|Computer Vision and Pattern Recognition/.test(venue)
+      ? { refine: "CVPR", type: "abbr" }
+      : null;
   },
   getVenueDisplayName() {
     return "IEEE/CVF Conference on Computer Vision and Pattern Recognition";
@@ -81,6 +83,40 @@ assert.strictEqual(
     "IEEE International Conference on Robotics and Automation '24",
   ),
   "IEEE International Conference on Robotics and Automation",
+);
+assert.strictEqual(
+  semanticscholar.isWorkshopVenue(
+    "Computer Vision and Pattern Recognition Workshops (CVPRW) 2024",
+  ),
+  true,
+);
+assert.strictEqual(
+  semanticscholar.isWorkshopVenue(
+    "Computer Vision and Pattern Recognition (CVPR) 2024",
+  ),
+  false,
+);
+assert.strictEqual(
+  semanticscholar.isWorkshopVenue(
+    "International Conference on Machine Learning Workshops",
+  ),
+  true,
+);
+assert.strictEqual(
+  semanticscholar.isWorkshopVenue(
+    "International Conference on Learning Representations ICLR2026W",
+  ),
+  true,
+);
+assert.strictEqual(
+  semanticscholar.isWorkshopVenue(
+    "International Conference on Machine Learning",
+  ),
+  false,
+);
+assert.strictEqual(
+  semanticscholar.isWorkshopVenue("The Web Conference (WWW)"),
+  false,
 );
 
 function fakeNode(textContent, href = "") {
@@ -247,6 +283,31 @@ assert.strictEqual(
 assert.strictEqual(
   dynamicVenueEntry.entry.querySelectorAll(".ccf-rank")[0].textContent,
   "CCF A",
+);
+
+const workshopSemanticEntry = fakeRankedSemanticEntry();
+semanticscholar.rankSpanList = [
+  function () {
+    return {
+      className: "ccf-rank",
+      dataset: { rankSource: "ccf", rankValue: "CCF A" },
+      textContent: "CCF A",
+    };
+  },
+];
+assert.strictEqual(
+  semanticscholar.appendVenueRank(
+    {},
+    "Computer Vision and Pattern Recognition Workshops (CVPRW)",
+    workshopSemanticEntry.entry,
+  ),
+  true,
+);
+assert.deepStrictEqual(
+  workshopSemanticEntry.entry.rankHost.children.map(
+    (child) => child.textContent,
+  ),
+  ["Workshop (not main)", "CCF A"],
 );
 
 async function runAsyncTests() {

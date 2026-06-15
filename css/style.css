@@ -95,6 +95,13 @@
   background-color: #d9534f;
 }
 
+.rank-source-workshop {
+  background-color: #dc2626;
+  border: 1px solid #7f1d1d;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.16);
+  text-transform: uppercase;
+}
+
 .rank-source-cn {
   background-color: #d8c878;
 }

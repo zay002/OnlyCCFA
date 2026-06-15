@@ -13,6 +13,10 @@
 </p>
 
 <p align="center">
+  <img alt="Chrome Web Store user trend" src="./assets/cws-users.svg">
+</p>
+
+<p align="center">
   中文 | <a href="./README_en.md">English</a>
 </p>
 

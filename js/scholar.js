@@ -63,6 +63,58 @@ scholar.normalizeUrlForVenueHint = function (url) {
     .trim();
 };
 
+scholar.isWorkshopVenue = function (venue, url) {
+  const normalizedText = `${scholar.normalizeUrlForVenueHint(
+    venue,
+  )} ${scholar.normalizeUrlForVenueHint(url)}`;
+  return (
+    /\bworkshops?\b/i.test(normalizedText) ||
+    /\b[A-Z][A-Z0-9]{2,12}W(?:\d{2,4})?\b/.test(normalizedText) ||
+    /\b[A-Z][A-Z0-9]{1,12}(?:\d{2,4}W|W\d{2,4})\b/.test(normalizedText)
+  );
+};
+
+scholar.getRegularVenueForRank = function (venue) {
+  return String(venue || "")
+    .replace(/\b([A-Z][A-Z0-9]{2,12})W(?:\d{2,4})?\b/g, "$1")
+    .replace(/\b([A-Z][A-Z0-9]{1,12})(\d{2,4})W\b/g, "$1 $2")
+    .replace(/\bworkshops?\b/gi, "")
+    .replace(/\s+/g, " ")
+    .trim();
+};
+
+scholar.getWorkshopBadge = function (
+  doc = typeof document === "undefined" ? null : document,
+) {
+  if (!doc?.createElement) {
+    return null;
+  }
+
+  const badge = doc.createElement("span");
+  badge.className = "rank-source rank-source-workshop";
+  badge.textContent = "Workshop (not main)";
+  badge.dataset = badge.dataset || {};
+  badge.dataset.rankSource = "venueKind";
+  badge.dataset.rankValue = "Workshop (not main)";
+  if (badge.setAttribute) {
+    badge.setAttribute("data-rank-source", "venueKind");
+    badge.setAttribute("data-rank-value", "Workshop (not main)");
+    badge.setAttribute(
+      "title",
+      "Workshop paper, not the main conference track",
+    );
+  }
+  return badge;
+};
+
+scholar.appendWorkshopBadge = function (node, entry) {
+  const badge = scholar.getWorkshopBadge();
+  if (!badge) {
+    return;
+  }
+  scholar.appendRankBadge(node, badge, entry);
+};
+
 scholar.inferVenueFromUrl = function (url) {
   const normalizedUrl = scholar.normalizeUrlForVenueHint(url);
   if (/(^|\s)openaccess\s+thecvf\s+com(\s|$)/i.test(normalizedUrl)) {
@@ -1623,7 +1675,7 @@ scholar.setVenueName = function (entry, venueName) {
     entry.querySelector(".onlyccfa-rank-badges") ||
     entry.querySelector("h3") ||
     entry.querySelector("a.gsc_a_at");
-  if (!anchor) {
+  if (!anchor?.insertAdjacentElement) {
     return;
   }
 
@@ -1675,15 +1727,24 @@ scholar.appendAuthorBadges = function (entry) {
   return true;
 };
 
-scholar.appendVenueRank = function (node, venue, entry) {
+scholar.appendVenueRank = function (node, venue, entry, context = {}) {
   if (!venue) {
     return false;
   }
 
   let matched = false;
+  const isWorkshop = scholar.isWorkshopVenue(
+    venue,
+    context.url || node?.href || node?.[0]?.href || "",
+  );
+  const rankVenue = scholar.getRegularVenueForRank(venue);
+
+  if (isWorkshop) {
+    scholar.appendWorkshopBadge(node, entry);
+  }
 
   if (ccf.resolveVenueText) {
-    let venueMatch = ccf.resolveVenueText(venue);
+    let venueMatch = ccf.resolveVenueText(rankVenue);
     if (venueMatch) {
       for (let getRankSpan of scholar.rankSpanList) {
         scholar.appendRankBadge(
@@ -1702,7 +1763,7 @@ scholar.appendVenueRank = function (node, venue, entry) {
   }
 
   if (typeof rankSources != "undefined" && rankSources.resolveVenueText) {
-    const tags = rankSources.resolveVenueText(venue);
+    const tags = rankSources.resolveVenueText(rankVenue);
     if (tags.length > 0) {
       tags.forEach((tag) => {
         scholar.appendRankBadge(node, rankSources.getTagSpan(tag), entry);
@@ -1729,7 +1790,9 @@ scholar.appendResolvedSearchResultVenueRank = async function (
       return false;
     }
     scholar.setVenueName(entry, resolvedVenue);
-    return scholar.appendVenueRank(node, resolvedVenue, entry);
+    return scholar.appendVenueRank(node, resolvedVenue, entry, {
+      url: data.url,
+    });
   } catch (error) {
     return false;
   }
@@ -1764,7 +1827,11 @@ scholar.appendRank = function () {
       let metadata = $(this).find("div.gs_a").text();
       let venue = scholar.extractVenue(metadata, node[0]?.href || "");
       $(this).addClass("ccf-ranked");
-      if (scholar.appendVenueRank(node, venue, this)) {
+      if (
+        scholar.appendVenueRank(node, venue, this, {
+          url: node[0]?.href || "",
+        })
+      ) {
         return;
       }
       scholar.scheduleSearchResultVenueRank(node, this, {
@@ -1860,7 +1927,11 @@ scholar.appendRanks = function () {
     };
 
     $(entry).addClass("ccf-ranked");
-    if (scholar.appendVenueRank(node, data.venue, entry)) {
+    if (
+      scholar.appendVenueRank(node, data.venue, entry, {
+        url: data.url,
+      })
+    ) {
       return;
     }
 
@@ -1869,7 +1940,12 @@ scholar.appendRanks = function () {
       scholar.getCitationDetailUrl(entry)
     ) {
       scholar.fetchCitationDetailVenue(entry).then(function (detailVenue) {
-        if (detailVenue && scholar.appendVenueRank(node, detailVenue, entry)) {
+        if (
+          detailVenue &&
+          scholar.appendVenueRank(node, detailVenue, entry, {
+            url: data.url,
+          })
+        ) {
           if (typeof filter !== "undefined") {
             filter.applyFilter();
           }

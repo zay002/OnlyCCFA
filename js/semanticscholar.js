@@ -120,6 +120,56 @@ semanticscholar.normalizeVenueText = function (text) {
     .trim();
 };
 
+semanticscholar.isWorkshopVenue = function (venue) {
+  const normalizedText = semanticscholar.cleanText(venue);
+  return (
+    /\bworkshops?\b/i.test(normalizedText) ||
+    /\b[A-Z][A-Z0-9]{2,12}W(?:\d{2,4})?\b/.test(normalizedText) ||
+    /\b[A-Z][A-Z0-9]{1,12}(?:\d{2,4}W|W\d{2,4})\b/.test(normalizedText)
+  );
+};
+
+semanticscholar.getRegularVenueForRank = function (venue) {
+  return String(venue || "")
+    .replace(/\b([A-Z][A-Z0-9]{2,12})W(?:\d{2,4})?\b/g, "$1")
+    .replace(/\b([A-Z][A-Z0-9]{1,12})(\d{2,4})W\b/g, "$1 $2")
+    .replace(/\bworkshops?\b/gi, "")
+    .replace(/\s+/g, " ")
+    .trim();
+};
+
+semanticscholar.getWorkshopBadge = function (
+  doc = typeof document === "undefined" ? null : document,
+) {
+  if (!doc?.createElement) {
+    return null;
+  }
+
+  const badge = doc.createElement("span");
+  badge.className = "rank-source rank-source-workshop";
+  badge.textContent = "Workshop (not main)";
+  badge.dataset = badge.dataset || {};
+  badge.dataset.rankSource = "venueKind";
+  badge.dataset.rankValue = "Workshop (not main)";
+  if (badge.setAttribute) {
+    badge.setAttribute("data-rank-source", "venueKind");
+    badge.setAttribute("data-rank-value", "Workshop (not main)");
+    badge.setAttribute(
+      "title",
+      "Workshop paper, not the main conference track",
+    );
+  }
+  return badge;
+};
+
+semanticscholar.appendWorkshopBadge = function (node, entry) {
+  const badge = semanticscholar.getWorkshopBadge();
+  if (!badge) {
+    return;
+  }
+  semanticscholar.appendRankBadge(node, badge, entry);
+};
+
 semanticscholar.extractYear = function (...texts) {
   const match = texts
     .map((text) => String(text || ""))
@@ -273,9 +323,13 @@ semanticscholar.appendVenueRank = function (node, venue, entry) {
   }
 
   let matched = false;
+  const rankVenue = semanticscholar.getRegularVenueForRank(venue);
+  if (semanticscholar.isWorkshopVenue(venue)) {
+    semanticscholar.appendWorkshopBadge(node, entry);
+  }
 
   if (typeof ccf !== "undefined" && ccf.resolveVenueText) {
-    const venueMatch = ccf.resolveVenueText(venue);
+    const venueMatch = ccf.resolveVenueText(rankVenue);
     if (venueMatch) {
       for (let getRankSpan of semanticscholar.rankSpanList) {
         semanticscholar.appendRankBadge(
@@ -294,7 +348,7 @@ semanticscholar.appendVenueRank = function (node, venue, entry) {
   }
 
   if (typeof rankSources !== "undefined" && rankSources.resolveVenueText) {
-    const tags = rankSources.resolveVenueText(venue);
+    const tags = rankSources.resolveVenueText(rankVenue);
     if (tags.length > 0) {
       tags.forEach((tag) => {
         semanticscholar.appendRankBadge(
