@@ -20,76 +20,98 @@
   中文 | <a href="./README_en.md">English</a>
 </p>
 
-OnlyCCFA 是基于 [CCFrank](https://github.com/WenyanLiu/CCFrank4dblp) 的独立 Chrome 扩展。它保留原有 CCF 等级标签能力，并把 Google 学术和 Semantic Scholar 搜索进一步变成“更适合筛论文”的工作流：在 Google 学术中深度加载多页结果，在 Google 学术个人主页中筛选作者论文表，在两个搜索站点中按 CCF、SCI/JCR、中科院分区、EI、中文核心、杰青/院士作者身份以及各方向 TOP venue 标签降噪筛选，再把结果导出为 BibTeX，或让 Zotero Connector 只识别当前筛选后的 Google 学术结果。
+OnlyCCFA 是一个面向科研检索场景的 Chrome 扩展，帮助用户在 Google Scholar、Semantic Scholar、dblp、Connected Papers 和 Web of Science 等页面上直接查看论文 venue 与作者相关的质量标签，并基于这些标签进行筛选、整理和 BibTeX 导出。
 
-这个项目的目标很直接：面向计算机、机器人、机械、电气、通信等方向的学生和研究者，把常用论文搜索结果里的 venue 质量信息尽可能公开、透明、免费地展示出来。
+项目源自 [CCFrank / CCFrank4dblp](https://github.com/WenyanLiu/CCFrank4dblp)，目前已经发展为独立维护的科研检索辅助工具。OnlyCCFA 坚持使用可解释、可审计的数据结构，不把不同来源的评价体系合并成含糊的综合分数，而是明确展示 CCF、JCR、中科院分区、SCI、EI、TH-CPL、中文核心、方向 TOP、作者身份等具体标签。
 
 ## 项目定位
 
-OnlyCCFA 面向中文科研用户，聚焦 Google Scholar / Semantic Scholar 的搜索结果降噪：标注 CCF、JCR、中科院、SCI、EI、中文核心、方向 TOP 等开放标签，支持深度筛选、组合过滤和可靠 BibTeX 导出，帮助学生和研究者更快整理候选文献。
+OnlyCCFA 适合需要高频检索、筛选和整理论文的学生与研究者，尤其是计算机、人工智能、机器人、机械、电气、通信、交通等方向的中文科研用户。它的目标不是替代人工判断，也不是给论文质量下最终结论，而是在日常搜索页面中尽可能透明地暴露可验证的 venue 与来源信息，减少低效翻页和重复整理。
 
-## 功能亮点
+## 核心能力
 
-- 在 Google 学术、dblp、Connected Papers、Semantic Scholar 和 Web of Science 搜索结果中显示 CCF 推荐等级。
-- Google 学术默认筛选为 `CCF A`，页面上可随时切换 `ALL`、`CCF A`、`CCF B`、`CCF C`。
-- Google 学术个人主页（`/citations?user=...`）现在支持论文表标注、组合筛选、单篇复制 BibTeX 和批量导出；默认显示 `ALL`，避免打开作者主页时直接隐藏论文。
-- Semantic Scholar 现在支持右侧筛选面板、CCF/开放多源标签、单篇复制 BibTeX、批量导出勾选或当前可见结果。
-- 新增可调深筛：每批可扫描 `20 / 40 / 60 / 80 / 100` 条 Google 学术结果；第一次建立结果池，之后可继续下一批，也可清空重来。
-- 新版右侧控制台支持中文 / English 切换，语言、默认等级、深筛数量和筛选偏好都会保存在本地。
-- 支持组合筛选 SCI、JCR Q1/Q2、中科院 1区/2区/TOP、EI、中文核心、国家杰青、中科院院士、工程院院士、西南交大 / 西南交大计算机 C 类 / 交通运输专项目录、机器人/通信/电气/控制/机械方向 TOP，并可选择“任一匹配”或“同时满足”。
-- 支持单篇复制 BibTeX、批量导出勾选论文、导出当前可见论文、导出深筛结果池；BibTeX 现在优先使用 DOI、arXiv ID 或严格标题匹配请求 Crossref / arXiv，Google 学术原生引用链接仅作为低频兜底，不再用页面摘要拼接引用字段。
-- 为 Zotero Connector 做兼容：筛选时会把未命中的 Google 学术结果临时移出结果列表，因此点击 Zotero Connector 时，它看到的是当前筛选后的候选论文，而不是原始 ALL 结果。
-- 支持保存默认筛选等级，并可选择是否隐藏未识别结果。
-- 显示当前页面可见、隐藏、未识别论文数量，方便判断筛选强度。
-- 在 Google 学术中优先进行本地 venue 匹配，再回退到 DBLP 查询，提高 NeurIPS、CVPR、SIGMOD、AAAI、ICLR 等 venue 的识别率。
-- 增加开放多源标签框架，覆盖 SCI、JCR 分区、中科院分区、SCI TOP、EI、北大核心、CSCD、CSSCI、西南交大校级 / 学院级 / 交通运输专项清单、国家杰青和两院院士作者身份等。
-- 对 CCF/JCR/中科院覆盖不足但在领域内声誉很高的会议或期刊，使用明确的手工补充标签，例如 `机器人方向TOP`、`通信方向TOP`、`电气方向TOP`。
+- 在 Google Scholar、Semantic Scholar、dblp、Connected Papers 和 Web of Science 中显示 CCF 推荐等级。
+- 在 Google Scholar 和 Semantic Scholar 中提供右侧筛选面板，支持多选 CCF A/B/C、开放标签组合筛选、结果统计和本地偏好保存。
+- 支持 SCI、JCR Q1/Q2、中科院 1区/2区/TOP、EI、TH-CPL A/B、中文核心、国家杰青、中科院院士、工程院院士、西南交大相关目录，以及机器人/通信/电气/控制/机械等方向 TOP 标签。
+- Google Scholar 支持深度筛选，可按批次扫描多页搜索结果，构建本地候选结果池，并继续下一批或清空重来。
+- Google Scholar 个人主页支持论文表标注、组合筛选、单篇复制 BibTeX 和批量导出，默认显示 ALL，避免打开作者主页时隐藏论文。
+- BibTeX 导出优先使用 DOI、arXiv ID 或严格标题匹配请求 Crossref / arXiv；Google Scholar 原生引用链接只作为低频兜底，不从页面摘要臆造引用字段。
+- 与 Zotero Connector 兼容：筛选 Google Scholar 时，未命中结果会临时移出列表，使 Zotero Connector 只看到当前筛选后的候选论文。
+- 对 workshop 论文给出独立标记，避免把 workshop 结果误认为主会论文。
+- 对同一结果的 CCF badge 做去重与强等级保护，降低异步回退匹配带来的错误叠加风险。
 
 ## 效果示意
 
-这些截图按 OnlyCCFA 的核心工作流组织：先深度扫描多页 Google 学术结果，再组合筛选，再批量导出。普通分区标签只是基础能力，真正目标是把冗长搜索结果变成更干净的候选文献池。
-
-| 深筛结果池：从单页扩展到多页筛选                                                                                 | 多条件筛选：CCF/JCR/CAS/方向 TOP 组合                                                                                    |
+| 深筛结果池                                                                                                       | 多来源组合筛选                                                                                                           |
 | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | <img src="./img/demo-deep-filter-workflow.png" alt="OnlyCCFA deep filtering Google Scholar results" width="420"> | <img src="./img/demo-advanced-source-filters.png" alt="OnlyCCFA advanced source filters for Google Scholar" width="420"> |
 
-| 方向 TOP：覆盖 CCF/JCR/CAS 之外的高声誉 venue                                                             | 继续下一批：可调数量、可续扫、可清空                                                                            |
+| 方向 TOP 标签                                                                                             | 继续下一批                                                                                                      |
 | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
 | <img src="./img/demo-field-top-venues.png" alt="OnlyCCFA field top venue filters beyond CCF" width="420"> | <img src="./img/demo-continue-next-batch.png" alt="OnlyCCFA continuing the next deep-filter batch" width="420"> |
 
-| 多行 BibTeX：并发、缓存、可读格式                                                                        | Zotero Connector：只识别筛选后的干净结果                                                                                    |
+| 干净 BibTeX 导出                                                                                         | Zotero Connector 只识别筛选后结果                                                                                           |
 | -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | <img src="./img/demo-clean-bibtex-format.png" alt="OnlyCCFA clean multi-line BibTeX export" width="420"> | <img src="./img/demo-zotero-filtered-connector.png" alt="OnlyCCFA filtered Zotero Connector import candidates" width="420"> |
 
 ## 安装
 
-推荐直接从 Chrome Web Store 安装：
+推荐从 Chrome Web Store 安装稳定版本：
 
 [OnlyCCFA - Chrome Web Store](https://chromewebstore.google.com/detail/onlyccfa/cgbjdimlhdcjinagiacapnkmhpjkeabh)
 
-GitHub Release 的更新通常会比 Chrome Web Store 更快。Web Store 版本需要经过审核，可能会比 GitHub 上的最新版本晚一些；如果你想第一时间测试新功能，可以从 Release 下载 zip 后以开发者模式加载。
+GitHub Release 通常会比 Chrome Web Store 更快更新。Chrome Web Store 版本需要经过审核，可能晚于 GitHub 上的最新版本；如果希望第一时间测试新功能，可以从 Release 下载 zip 后以开发者模式加载。
 
-也可以从源码以开发者模式加载：
+从源码加载：
 
 1. 打开 `chrome://extensions`。
 2. 开启 `Developer mode`。
 3. 点击 `Load unpacked`。
 4. 选择本仓库目录。
-5. 打开 Google 学术并正常搜索。
+5. 修改代码后，在扩展管理页点击 reload，再刷新目标检索页面。
 
-本地调试时，修改代码后需要先在 `chrome://extensions` 中点击扩展卡片的 reload，再刷新 Google 学术页面。
+## 数据与匹配原则
 
-温和提醒：BibTeX 批量导出会访问 Crossref、arXiv、Google 学术或 Semantic Scholar 等站点的公开元数据入口。OnlyCCFA 已尽量减少不必要请求，但仍建议不要在短时间内反复、大批量触发导出，否则可能触发目标网站的防爬虫或访问限制策略。
+OnlyCCFA 的数据按来源拆分维护，便于审计和回滚：
 
-## 数据源
+- `data/openRankSources.js`：通用开放 venue、方向 TOP、中文核心等种子数据。
+- `data/journalRankSources.js`：JCR 2024 与中科院升级版 2025 期刊分区数据。
+- `data/thcplRankSources.js`：TH-CPL 推荐目录数据。
+- `data/swjtuRankSources.js`：西南交大相关公开目录派生标签。
+- `data/authorRankSources.js`：公开作者身份标签，包括两院院士名单和国家杰青公开整理种子。
 
-OnlyCCFA 使用透明的数据结构维护开放标签，通用开放种子数据入口在 `data/openRankSources.js`，JCR / 中科院期刊分区入口在 `data/journalRankSources.js`，作者身份入口在 `data/authorRankSources.js`，西南交大相关公开目录派生数据入口在 `data/swjtuRankSources.js`。
+匹配逻辑遵循以下原则：
 
-当前内置期刊数据扩展到 JCR 2024 与中科院升级版 2025 的 2.2 万余条期刊记录，Google Scholar 的 DBLP 回退命中标准 venue 后也会继续追加 JCR / 中科院 / SCI 等开放标签。作者身份数据包含中国科学院院士、中国工程院院士官网公开中英文全体名单，以及国家杰青公开整理种子名单；杰青数据不是官方 NSFC 全量数据库，后续会继续从可验证来源补齐。作者身份匹配只使用中文名、官方英文名或完整全拼别名，不使用 `X Wang` 这类缩写；如果同一个英文全名映射到不同身份来源组合，会跳过该作者标签以降低误标风险。
+- 优先使用完整 venue 名称、明确简称和可解释的归一化规则。
+- 不把 CCF、JCR、中科院、TH-CPL、方向 TOP 等来源合并成单一分数。
+- 不复制来源不明或授权不清的数据包。
+- 对作者身份只使用中文名、官方英文名或完整全拼别名，不使用 `X Wang` 这类高歧义缩写。
+- 对同名或简称歧义保持保守；完整标题优先，无法可靠区分时不强行推断。
 
-项目还覆盖一批常见国际 venue、中文核心期刊、方向 TOP venue，以及西南交通大学学术期刊分级目录、计算机与人工智能学院高水平期刊 C 类目录、交通运输工程专项期刊目录的派生标签。西南交通大学校级期刊分级仅保留 `T类`、`A类`、`B类`；计算机学院补充目录以 `西南交大计算机C类` 独立显示，不混入校级分级。例如 CoRL、RSS、ICRA、IROS、TRO、IJRR、RA-L、Automatica、IEEE TAC、IEEE TPEL、IEEE TWC、IEEE JSAC 等。
+## 隐私与限制
 
-项目后续应优先从官方公开清单、明确授权的开放数据集或可验证的公开来源扩展。JCR、中科院分区和方向 TOP 标签会保持独立，不会合并成含糊的“综合等级”。OnlyCCFA 不复制 EasyScholar 的打包数据。
+OnlyCCFA 在浏览器本地运行，不需要账户登录，也不会收集个人检索记录。筛选偏好、语言、面板位置等设置保存在浏览器本地存储中。
+
+批量 BibTeX 导出可能访问 Crossref、arXiv、Google Scholar 或 Semantic Scholar 等公开元数据入口。OnlyCCFA 已尽量减少请求次数并使用缓存，但短时间内反复大批量导出仍可能触发目标网站的访问限制。
+
+所有标签只作为检索辅助信息。不同机构、学科和评价场景可能采用不同标准，请以目标单位或官方文件为准。
+
+## 开发与发布
+
+常用命令：
+
+```bash
+npm test
+npm run format:check
+npm run check:release
+npm run package
+```
+
+发布前应至少通过测试、格式检查、release health 检查和本地打包。GitHub Release 的 zip 由 `npm run package` 生成。
+
+## 贡献
+
+欢迎通过 issue 或 pull request 提交问题、数据修正和功能改进。数据贡献请尽量提供官方公开链接、版本日期和可复核来源；功能贡献请附带必要测试，尤其是 venue 匹配、badge 去重、BibTeX 导出和筛选状态相关逻辑。
 
 ## 致谢
 

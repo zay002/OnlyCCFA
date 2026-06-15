@@ -138,6 +138,10 @@ const thcplTags = rankSources.resolveVenueText(
   "International Conference on Machine Learning",
 );
 assert.ok(thcplTags.some((tag) => tag.source === "thcpl" && tag.value === "A"));
+const tpamiTags = rankSources.resolveVenueText(
+  "IEEE Transactions on Pattern Analysis and Machine Intelligence",
+);
+assert.ok(tpamiTags.some((tag) => tag.source === "thcpl" && tag.value === "A"));
 assert.strictEqual(
   rankSources.getTagText({ source: "thcpl", value: "A" }),
   "THCPL A",

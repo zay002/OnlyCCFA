@@ -14,6 +14,7 @@ rankSources.normalizeText = function (text) {
     .toUpperCase()
     .replace(/&/g, " AND ")
     .replace(/[‐‑‒–—]/g, "-")
+    .replace(/\bTRANS\b/g, " TRANSACTIONS ")
     .replace(/[^A-Z0-9\u4E00-\u9FFF]+/g, " ")
     .replace(/\b(19|20)\d{2}\b/g, " ")
     .replace(/\s+/g, " ")

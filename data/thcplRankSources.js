@@ -7,7 +7,7 @@ const thcplRankSources = {
   },
   records: [
     {
-      title: "ACM Transactlons on Computer Systems",
+      title: "ACM Transactions on Computer Systems",
       aliases: ["TOCS"],
       tags: [
         {
@@ -27,7 +27,7 @@ const thcplRankSources = {
       ],
     },
     {
-      title: "IEEE Transactlons on Computers",
+      title: "IEEE Transactions on Computers",
       aliases: ["TC"],
       tags: [
         {
@@ -38,7 +38,7 @@ const thcplRankSources = {
     },
     {
       title:
-        "IEEE Transactions On Computer-Aided Design Of Integrated Circults And Systems",
+        "IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems",
       aliases: ["TCAD"],
       tags: [
         {
@@ -48,7 +48,7 @@ const thcplRankSources = {
       ],
     },
     {
-      title: "ACM Transactlons on Storage",
+      title: "ACM Transactions on Storage",
       aliases: ["TOS"],
       tags: [
         {
@@ -149,7 +149,7 @@ const thcplRankSources = {
     },
     {
       title:
-        "International Conference on Archltectural Support for Programming Languages and Operating Systems",
+        "International Conference on Architectural Support for Programming Languages and Operating Systems",
       aliases: ["ASPLOS"],
       tags: [
         {
@@ -202,7 +202,7 @@ const thcplRankSources = {
       ],
     },
     {
-      title: "USENIX Annul Technical Conference",
+      title: "USENIX Annual Technical Conference",
       aliases: ["USENIX ATC"],
       tags: [
         {
@@ -1376,7 +1376,7 @@ const thcplRankSources = {
       ],
     },
     {
-      title: "Journal Of Grid Computlng",
+      title: "Journal of Grid Computing",
       aliases: ["JGC"],
       tags: [
         {
@@ -1648,7 +1648,7 @@ const thcplRankSources = {
       ],
     },
     {
-      title: "IEEE Transactlons on Servlce Computlng",
+      title: "IEEE Transactions on Service Computing",
       aliases: ["TSC"],
       tags: [
         {
@@ -1821,7 +1821,7 @@ const thcplRankSources = {
       ],
     },
     {
-      title: "International Symposium on Software Testing and Analysls",
+      title: "International Symposium on Software Testing and Analysis",
       aliases: ["ISSTA"],
       tags: [
         {
@@ -2534,7 +2534,7 @@ const thcplRankSources = {
       ],
     },
     {
-      title: "IEEE Transactlons on Fuzzy Systems",
+      title: "IEEE Transactions on Fuzzy Systems",
       aliases: ["TFS"],
       tags: [
         {
@@ -2654,7 +2654,7 @@ const thcplRankSources = {
       ],
     },
     {
-      title: "IEEE Transactlons on Games",
+      title: "IEEE Transactions on Games",
       aliases: ["TG"],
       tags: [
         {

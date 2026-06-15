@@ -20,72 +20,98 @@
   <a href="./README.md">中文</a> | English
 </p>
 
-OnlyCCFA is an independent Chrome extension based on [CCFrank](https://github.com/WenyanLiu/CCFrank4dblp). It keeps the original CCF rank labels and turns Google Scholar and Semantic Scholar into stricter paper-search workflows: deep-load multiple Google Scholar pages, filter author publication tables on Google Scholar profiles, filter search results by CCF, SCI/JCR, CAS partition, EI, Chinese core journal, NSFC Distinguished Young Scholar / academician author badges, and field TOP venue badges, then export clean candidates to BibTeX or let Zotero Connector see only the filtered Google Scholar results.
+OnlyCCFA is a Chrome extension for research search workflows. It adds venue and author-quality badges directly to Google Scholar, Semantic Scholar, dblp, Connected Papers and Web of Science, then helps users filter, organize and export cleaner paper candidates.
 
-The goal is simple: help students and researchers in computer science, robotics, mechanical engineering, electrical engineering and communications see venue-quality signals directly in their daily paper search results, with data that is transparent, extensible and free.
+The project began from [CCFrank / CCFrank4dblp](https://github.com/WenyanLiu/CCFrank4dblp) and is now maintained as an independent research-search assistant. OnlyCCFA keeps its data explainable and auditable: CCF, JCR, CAS, SCI, EI, TH-CPL, Chinese core journals, field TOP venues and author-identity badges are shown as explicit sources rather than being collapsed into a vague aggregate score.
 
-## Features
+## Project Scope
 
-- Shows CCF recommended ranks for papers on Google Scholar, dblp, Connected Papers, Semantic Scholar and Web of Science.
-- Filters Google Scholar search results to `CCF A` by default, with an on-page switcher for `ALL`, `CCF A`, `CCF B` and `CCF C`.
-- Supports Google Scholar profile pages (`/citations?user=...`) with publication-table badges, combined filters, single-paper BibTeX copy and batch export; profile pages default to `ALL` so opening an author page does not immediately hide papers.
-- Adds Semantic Scholar filtering with the side panel, CCF/open-source badges, single-paper BibTeX copy and batch export for selected or visible results.
-- Adds configurable deep filtering: scan `20 / 40 / 60 / 80 / 100` Google Scholar results per batch, continue to the next batch, or clear the local result pool.
-- Adds a redesigned bilingual side panel with local settings for language, default rank, deep-filter count and filter preferences.
-- Combines SCI, JCR Q1/Q2, CAS 1/2/TOP, EI, Chinese core journals, NSFC Distinguished Young Scholar, CAS Academician, CAE Academician, SWJTU / SWJTU CS C-level / transportation lists and field TOP filters with `any` or `all` matching.
-- Exports single papers, selected papers, visible papers or the whole deep-filter pool to BibTeX. BibTeX now prefers DOI, arXiv ID or strict-title Crossref/arXiv matches; Google Scholar's native import links are used only as a low-frequency fallback, and fields are never fabricated from result snippets.
-- Makes the filtered Google Scholar DOM compatible with Zotero Connector: filtered-out results are temporarily moved out of the result list, so Zotero Connector sees the current candidate set instead of the original ALL results.
-- Saves the default Google Scholar filter and lets you choose whether unmatched results should stay visible.
-- Shows how many results are visible, hidden and unmatched after filtering.
-- Adds local Google Scholar venue matching before falling back to DBLP lookup, improving matches for venues such as NeurIPS, CVPR, SIGMOD, AAAI and ICLR.
-- Adds an open multi-source rank badge framework for SCI, JCR quartile, CAS partition, SCI TOP, EI, PKU Core, CSCD, CSSCI, SWJTU university / school / transportation lists, field TOP venues, NSFC Distinguished Young Scholars and Chinese academicians.
-- Marks high-reputation venues that are not well covered by CCF/JCR/CAS with explicit hand-curated field TOP badges such as `机器人方向TOP`, `通信方向TOP` and `电气方向TOP`.
+OnlyCCFA is built for students and researchers who repeatedly search, filter and collect papers, especially Chinese-speaking users in computer science, AI, robotics, mechanical engineering, electrical engineering, communications and transportation. It does not replace academic judgment. Its job is to expose verifiable venue and source signals inside everyday search pages so users can spend less time on repetitive screening.
+
+## Capabilities
+
+- Shows CCF recommended ranks on Google Scholar, Semantic Scholar, dblp, Connected Papers and Web of Science.
+- Provides a side filter panel on Google Scholar and Semantic Scholar with multi-select CCF A/B/C filters, open badge filters, result statistics and local preferences.
+- Supports SCI, JCR Q1/Q2, CAS 1/2/TOP, EI, TH-CPL A/B, Chinese core journals, NSFC Distinguished Young Scholars, CAS Academicians, CAE Academicians, SWJTU-derived lists and field TOP badges for robotics, communications, electrical engineering, control and mechanical engineering.
+- Deep-filters Google Scholar by scanning multiple pages in batches, building a local candidate pool that can be continued or cleared.
+- Supports Google Scholar profile pages with publication-table badges, combined filters, single-paper BibTeX copy and batch export. Profile pages default to ALL so opening an author page does not hide papers immediately.
+- Exports BibTeX using DOI, arXiv ID or strict-title Crossref/arXiv matches first; Google Scholar native citation links are used only as a low-frequency fallback, and result snippets are never used to fabricate citation fields.
+- Works with Zotero Connector by temporarily moving filtered-out Google Scholar results out of the visible result list, so Zotero sees the current filtered candidate set.
+- Marks workshop papers separately to avoid confusing workshop results with main-conference papers.
+- Deduplicates CCF badges on the same result and keeps the strongest resolved rank when asynchronous fallback sources return later.
 
 ## Screenshots
-
-OnlyCCFA screenshots are organized around the core workflow: deep-scan multiple Google Scholar pages, combine filters, then export the cleaner candidate set. Rank badges are still there, but the product is now a search-noise reducer.
 
 | Deep result pool                                                                                                 | Advanced multi-source filters                                                                                            |
 | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | <img src="./img/demo-deep-filter-workflow.png" alt="OnlyCCFA deep filtering Google Scholar results" width="420"> | <img src="./img/demo-advanced-source-filters.png" alt="OnlyCCFA advanced source filters for Google Scholar" width="420"> |
 
-| Field TOP venues beyond CCF/JCR/CAS                                                                       | Continue the next batch                                                                                         |
+| Field TOP venues                                                                                          | Continue the next batch                                                                                         |
 | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
 | <img src="./img/demo-field-top-venues.png" alt="OnlyCCFA field top venue filters beyond CCF" width="420"> | <img src="./img/demo-continue-next-batch.png" alt="OnlyCCFA continuing the next deep-filter batch" width="420"> |
 
-| Clean multi-line BibTeX                                                                                  | Zotero Connector sees only filtered clean results                                                                           |
+| Clean BibTeX export                                                                                      | Zotero Connector sees filtered results                                                                                      |
 | -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | <img src="./img/demo-clean-bibtex-format.png" alt="OnlyCCFA clean multi-line BibTeX export" width="420"> | <img src="./img/demo-zotero-filtered-connector.png" alt="OnlyCCFA filtered Zotero Connector import candidates" width="420"> |
 
-## Install
+## Installation
 
-Install OnlyCCFA from the Chrome Web Store:
+Install the stable version from the Chrome Web Store:
 
 [OnlyCCFA - Chrome Web Store](https://chromewebstore.google.com/detail/onlyccfa/cgbjdimlhdcjinagiacapnkmhpjkeabh)
 
-GitHub Releases are usually updated faster than the Chrome Web Store. Web Store releases need review, so they may lag behind the newest GitHub version; for early testing, download the release zip and load it as an unpacked extension.
+GitHub Releases are usually updated before the Chrome Web Store version. Chrome Web Store releases require review and may lag behind the latest GitHub release; for early testing, download the release zip and load it as an unpacked extension.
 
-You can also load OnlyCCFA from source as an unpacked Chrome extension for development.
+Load from source:
 
 1. Open `chrome://extensions`.
 2. Enable `Developer mode`.
 3. Click `Load unpacked`.
 4. Select this repository directory.
-5. Open Google Scholar and search as usual.
+5. After changing code, reload the extension card and refresh the target search page.
 
-When testing local changes, click the extension card's reload button in `chrome://extensions` before refreshing Google Scholar.
+## Data and Matching
 
-Gentle reminder: batch BibTeX export may access public metadata endpoints from Crossref, arXiv, Google Scholar or Semantic Scholar. OnlyCCFA tries to keep requests conservative, but repeated large exports in a short time may still trigger anti-crawling or access-limit policies on those sites.
+OnlyCCFA keeps source data split by origin so changes can be audited and reverted:
 
-## Data Sources
+- `data/openRankSources.js`: general open venue seeds, field TOP venues and Chinese core journals.
+- `data/journalRankSources.js`: JCR 2024 and CAS upgraded partition 2025 journal data.
+- `data/thcplRankSources.js`: TH-CPL recommended venue list.
+- `data/swjtuRankSources.js`: SWJTU-related derived public-list badges.
+- `data/authorRankSources.js`: public author-identity badges, including Chinese academicians and a best-effort NSFC Distinguished Young Scholar seed list.
 
-OnlyCCFA uses transparent data-source structures: general open seed data lives in `data/openRankSources.js`, JCR / CAS journal partitions live in `data/journalRankSources.js`, author identity data lives in `data/authorRankSources.js`, and SWJTU-related derived public-list data lives in `data/swjtuRankSources.js`.
+The matching policy is intentionally conservative:
 
-The built-in journal data now covers more than 22,000 journals from JCR 2024 and the CAS upgraded partition table 2025. When a Google Scholar result falls back to DBLP and resolves a standard venue, OnlyCCFA now also adds matching JCR / CAS / SCI badges instead of showing only CCF. Author identity data includes the public Chinese and English full lists from the Chinese Academy of Sciences and Chinese Academy of Engineering, plus a best-effort public seed list for NSFC Distinguished Young Scholars; the NSFC list is not an official complete NSFC database and will continue to be expanded from verifiable sources. Author matching only uses Chinese names, official English names or full pinyin aliases; abbreviated names such as `X Wang` are intentionally ignored, and ambiguous English full-name mappings are skipped to reduce false positives.
+- Prefer full venue names, explicit aliases and explainable normalization rules.
+- Keep CCF, JCR, CAS, TH-CPL and field TOP signals separate instead of merging them into a single score.
+- Do not copy opaque or unclearly licensed packaged datasets.
+- Match author identities only by Chinese names, official English names or full pinyin aliases; high-ambiguity abbreviations such as `X Wang` are ignored.
+- Treat ambiguous titles and aliases carefully. Full titles take priority, and unreliable guesses are avoided.
 
-The project also keeps seed data for common venues, Chinese core journals, field TOP venues, and derived badges from SWJTU's academic journal list, the School of Computing and Artificial Intelligence C-level journal list, and the transportation engineering special journal list. The SWJTU university-level journal list is limited to `T`, `A` and `B`; the computing C-level list is shown separately as `西南交大计算机C类` instead of being merged into the university-level ranks. Examples include CoRL, RSS, ICRA, IROS, TRO, IJRR, RA-L, Automatica, IEEE TAC, IEEE TPEL, IEEE TWC and IEEE JSAC.
+## Privacy and Limits
 
-It is designed to be expanded from official public lists, clearly licensed open datasets or verifiable public sources. JCR, CAS and field TOP tags are kept explicit instead of being merged into one vague badge. OnlyCCFA does not copy EasyScholar's packaged data.
+OnlyCCFA runs locally in the browser. It does not require an account and does not collect search history. Language, filter preferences and panel position are stored in browser local storage.
+
+Batch BibTeX export may access public metadata endpoints from Crossref, arXiv, Google Scholar or Semantic Scholar. OnlyCCFA uses conservative requests and caching, but repeated large exports in a short time may still trigger rate limits or anti-crawling rules on those sites.
+
+All badges are search aids, not final academic judgments. Institutional and disciplinary standards differ; always follow the relevant official document for formal evaluation.
+
+## Development and Release
+
+Common commands:
+
+```bash
+npm test
+npm run format:check
+npm run check:release
+npm run package
+```
+
+Before release, tests, formatting, release health checks and local packaging should pass. The GitHub Release zip is generated by `npm run package`.
+
+## Contributing
+
+Issues and pull requests are welcome. Data contributions should include official public links, dates or versions, and reproducible sources whenever possible. Code contributions should include focused tests, especially for venue matching, badge deduplication, BibTeX export and filter-state behavior.
 
 ## Credits
 
