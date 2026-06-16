@@ -143,7 +143,9 @@ function generateSvg(stats) {
   const chartHeight = height - pad.top - pad.bottom;
   const values = stats.map((item) => item.users);
   const minValue = Math.min(...values, 0);
-  const maxValue = Math.max(...values, 1);
+  const rawMaxValue = Math.max(...values, 1);
+  const yHeadroom = Math.max(1, Math.ceil((rawMaxValue - minValue) * 0.15));
+  const maxValue = rawMaxValue + yHeadroom;
   const latest = stats[stats.length - 1] || { date: "", users: 0 };
   const points = stats.map((item, index) => {
     const x =
