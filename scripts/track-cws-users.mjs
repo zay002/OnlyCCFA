@@ -6,9 +6,24 @@ const extensionUrl =
   "https://chromewebstore.google.com/detail/onlyccfa/cgbjdimlhdcjinagiacapnkmhpjkeabh";
 const statsFile = process.env.CWS_STATS_FILE || "stats/cws-users.json";
 const svgFile = process.env.CWS_SVG_FILE || "assets/cws-users.svg";
+const statsTimeZone = process.env.CWS_STATS_TIME_ZONE || "Asia/Shanghai";
 
-function todayIsoDate() {
-  return new Date().toISOString().slice(0, 10);
+function todayIsoDate(date = new Date(), timeZone = statsTimeZone) {
+  if (process.env.CWS_STATS_DATE) {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(process.env.CWS_STATS_DATE)) {
+      return process.env.CWS_STATS_DATE;
+    }
+    throw new Error("CWS_STATS_DATE must use YYYY-MM-DD format.");
+  }
+
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date);
+  const getPart = (type) => parts.find((part) => part.type === type)?.value;
+  return `${getPart("year")}-${getPart("month")}-${getPart("day")}`;
 }
 
 function escapeXml(value) {
@@ -237,11 +252,12 @@ function generateSvg(stats) {
 }
 
 const users = await fetchUserCount();
-const stats = upsertToday(readStats(statsFile), users);
+const statsDate = todayIsoDate();
+const stats = upsertToday(readStats(statsFile), users, statsDate);
 
 fs.mkdirSync(path.dirname(statsFile), { recursive: true });
 fs.mkdirSync(path.dirname(svgFile), { recursive: true });
 fs.writeFileSync(statsFile, JSON.stringify(stats, null, 2) + "\n");
 fs.writeFileSync(svgFile, generateSvg(stats));
 
-console.log(`Tracked ${users} Chrome Web Store users.`);
+console.log(`Tracked ${users} Chrome Web Store users for ${statsDate}.`);
