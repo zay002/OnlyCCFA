@@ -212,6 +212,14 @@ assert.strictEqual(
   rankSources.getTagText({ source: "coreRank", value: "A*" }),
   "CORE A*",
 );
+const neuripsCoreTags = rankSources.resolveVenueText(
+  "Conference on Neural Information Processing Systems",
+);
+assert.ok(
+  neuripsCoreTags.some(
+    (tag) => tag.source === "coreRank" && tag.value === "A*",
+  ),
+);
 
 const truncatedCvprProceedingsTags = rankSources.resolveVenueText(
   "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern ...",

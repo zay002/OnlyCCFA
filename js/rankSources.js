@@ -1,6 +1,7 @@
 const rankSources = {};
 rankSources.databaseIndexCache = new WeakMap();
 rankSources.resolveCache = new Map();
+rankSources.MAX_CANDIDATE_TOKEN_COUNT = 3;
 rankSources.VENUE_SERIES_TOKENS = new Set([
   "CONFERENCE",
   "CONGRESS",
@@ -361,15 +362,25 @@ rankSources.getDatabaseIndex = function (db) {
 rankSources.getCandidateRecords = function (db, normalizedVenue) {
   const index = rankSources.getDatabaseIndex(db);
   const candidates = new Set();
-  rankSources.getNormalizedTokens(normalizedVenue).forEach(function (token) {
-    const records = index.byToken.get(token);
-    if (!records) {
-      return;
-    }
-    records.forEach(function (record) {
-      candidates.add(record);
+
+  rankSources
+    .getNormalizedTokens(normalizedVenue)
+    .map(function (token) {
+      return { token, records: index.byToken.get(token) };
+    })
+    .filter(function (entry) {
+      return entry.records && !rankSources.VENUE_SERIES_TOKENS.has(entry.token);
+    })
+    .sort(function (left, right) {
+      return left.records.size - right.records.size;
+    })
+    .slice(0, rankSources.MAX_CANDIDATE_TOKEN_COUNT)
+    .forEach(function ({ records }) {
+      records.forEach(function (record) {
+        candidates.add(record);
+      });
     });
-  });
+
   return Array.from(candidates);
 };
 

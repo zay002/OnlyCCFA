@@ -5,7 +5,7 @@
 
 <p align="center">
   <a href="https://github.com/zay002/OnlyCCFA">
-    <img alt="OnlyCCFA version" src="https://img.shields.io/badge/OnlyCCFA-v0.6.8-EA4AAA?logo=github&logoColor=%23EA4AAA">
+    <img alt="OnlyCCFA version" src="https://img.shields.io/badge/OnlyCCFA-v0.7.0-EA4AAA?logo=github&logoColor=%23EA4AAA">
   </a>
   <a href="https://chromewebstore.google.com/detail/onlyccfa/cgbjdimlhdcjinagiacapnkmhpjkeabh">
     <img alt="Chrome Web Store" src="https://img.shields.io/badge/Chrome%20Web%20Store-OnlyCCFA-4285F4?logo=googlechrome&logoColor=white">
@@ -20,9 +20,9 @@
   中文 | <a href="./README_en.md">English</a>
 </p>
 
-OnlyCCFA 是一个面向科研检索场景的 Chrome 扩展，帮助用户在 Google Scholar、Semantic Scholar、dblp、Connected Papers 和 Web of Science 等页面上直接查看论文 venue 与作者相关的质量标签，并基于这些标签进行筛选、整理和 BibTeX 导出。
+OnlyCCFA 是一个面向科研检索场景的 Chrome 扩展，帮助用户在 Google Scholar、Semantic Scholar、IEEE Xplore、dblp、Connected Papers 和 Web of Science 等页面上直接查看论文 venue 与作者相关的质量标签，并基于这些标签进行筛选、整理和 BibTeX 导出。
 
-项目源自 [CCFrank / CCFrank4dblp](https://github.com/WenyanLiu/CCFrank4dblp)，目前已经发展为独立维护的科研检索辅助工具。OnlyCCFA 坚持使用可解释、可审计的数据结构，不把不同来源的评价体系合并成含糊的综合分数，而是明确展示 CCF、JCR、中科院分区、SCI、EI、TH-CPL、中文核心、方向 TOP、作者身份等具体标签。
+项目源自 [CCFrank / CCFrank4dblp](https://github.com/WenyanLiu/CCFrank4dblp)，目前已经发展为独立维护的科研检索辅助工具。OnlyCCFA 坚持使用可解释、可审计的数据结构，不把不同来源的评价体系合并成含糊的综合分数，而是明确展示 CCF、CORE/ICORE、JCR、中科院分区、SCI、EI、TH-CPL、中文核心、方向 TOP、作者身份等具体标签。
 
 ## 项目定位
 
@@ -30,9 +30,9 @@ OnlyCCFA 适合需要高频检索、筛选和整理论文的学生与研究者�
 
 ## 核心能力
 
-- 在 Google Scholar、Semantic Scholar、dblp、Connected Papers 和 Web of Science 中显示 CCF 推荐等级。
-- 在 Google Scholar 和 Semantic Scholar 中提供右侧筛选面板，支持多选 CCF A/B/C、开放标签组合筛选、结果统计和本地偏好保存。
-- 支持 SCI、JCR Q1/Q2、中科院 1区/2区/TOP、EI、TH-CPL A/B、中文核心、国家杰青、中科院院士、工程院院士、西南交大相关目录，以及机器人/通信/电气/控制/机械等方向 TOP 标签。
+- 在 Google Scholar、Semantic Scholar、IEEE Xplore、dblp、Connected Papers 和 Web of Science 中显示 CCF 推荐等级。
+- 在 Google Scholar、Semantic Scholar 和 IEEE Xplore 中提供右侧筛选面板，支持多选 CCF A/B/C、开放标签组合筛选、结果统计和本地偏好保存。
+- 支持 CORE/ICORE、SCI、JCR Q1/Q2、中科院 1区/2区/TOP、EI、TH-CPL A/B、中文核心、国家杰青、中科院院士、工程院院士、西南交大相关目录，以及机器人/通信/电气/控制/机械等方向 TOP 标签。
 - Google Scholar 支持深度筛选，可按批次扫描多页搜索结果，构建本地候选结果池，并继续下一批或清空重来。
 - Google Scholar 个人主页支持论文表标注、组合筛选、单篇复制 BibTeX 和批量导出，默认显示 ALL，避免打开作者主页时隐藏论文。
 - BibTeX 导出优先使用 DOI、arXiv ID 或严格标题匹配请求 Crossref / arXiv；Google Scholar 原生引用链接只作为低频兜底，不从页面摘要臆造引用字段。
@@ -105,6 +105,7 @@ OnlyCCFA 在浏览器本地运行，不需要账户登录，也不会收集个�
 npm test
 npm run format:check
 npm run check:release
+npm run benchmark:rank
 npm run package
 ```
 

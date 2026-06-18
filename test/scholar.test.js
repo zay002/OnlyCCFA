@@ -39,6 +39,7 @@ const fakeNavigator = {
     },
   },
 };
+const apiCacheStore = new Map();
 const scholar = vm.runInNewContext(`${source}; scholar;`, {
   console,
   URL,
@@ -46,6 +47,14 @@ const scholar = vm.runInNewContext(`${source}; scholar;`, {
   setTimeout,
   document: fakeDocument,
   navigator: fakeNavigator,
+  apiCache: {
+    getItem(key) {
+      return apiCacheStore.has(key) ? apiCacheStore.get(key) : null;
+    },
+    setItem(key, value) {
+      apiCacheStore.set(key, value);
+    },
+  },
   authorSources: {
     resolveAuthors(authors) {
       return authors.includes("姚期智")
@@ -845,7 +854,9 @@ async function runAsyncTests() {
     "Deep learning-based point cloud registration: A comprehensive survey and taxonomy";
   const tpamiTitle = "PathNet: Path-selective point cloud denoising";
   scholar.searchResultVenueCache = new Map();
-  scholar.searchResultVenueQueue = Promise.resolve();
+  scholar.searchResultVenueInflight = new Map();
+  scholar.searchResultVenueQueue = [];
+  scholar.searchResultVenueActiveCount = 0;
   scholar.fetchText = async function (url) {
     assert.ok(String(url).startsWith("https://api.crossref.org/works?"));
     const parsed = new URL(url);
@@ -905,6 +916,76 @@ async function runAsyncTests() {
     }),
     "European Conference on Computer Vision",
   );
+  assert.strictEqual(
+    await scholar.fetchSearchResultVenue({
+      title: "A CVPR paper from URL",
+      year: "2024",
+      venue: "Proceedings of ...",
+      url: "https://openaccess.thecvf.com/content/CVPR2024/html/example.html",
+    }),
+    "IEEE/CVF Conference on Computer Vision and Pattern Recognition",
+  );
+  assert.strictEqual(
+    await scholar.fetchSearchResultVenue({
+      title: "A CVPR workshop paper from URL",
+      year: "2024",
+      venue: "Proceedings of ...",
+      url: "https://openaccess.thecvf.com/content/CVPR2024W/html/example.html",
+    }),
+    "",
+  );
+
+  const originalFetchCrossrefVenueByTitle = scholar.fetchCrossrefVenueByTitle;
+  const originalSearchVenueConcurrency = scholar.searchResultVenueConcurrency;
+  let activeVenueLookups = 0;
+  let maxActiveVenueLookups = 0;
+  scholar.searchResultVenueCache = new Map();
+  scholar.searchResultVenueInflight = new Map();
+  scholar.searchResultVenueQueue = [];
+  scholar.searchResultVenueActiveCount = 0;
+  scholar.searchResultVenueConcurrency = 4;
+  scholar.fetchCrossrefVenueByTitle = async function (title) {
+    activeVenueLookups += 1;
+    maxActiveVenueLookups = Math.max(maxActiveVenueLookups, activeVenueLookups);
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    activeVenueLookups -= 1;
+    return `${title} venue`;
+  };
+  await Promise.all(
+    ["Lookup A", "Lookup B", "Lookup C", "Lookup D"].map((title, index) =>
+      scholar.fetchSearchResultVenue({
+        title,
+        year: `202${index}`,
+        venue: "Proceedings of ...",
+      }),
+    ),
+  );
+  assert.ok(maxActiveVenueLookups > 1);
+
+  let timeoutLookupFinished = false;
+  scholar.searchResultVenueCache = new Map();
+  scholar.searchResultVenueInflight = new Map();
+  scholar.searchResultVenueQueue = [];
+  scholar.searchResultVenueActiveCount = 0;
+  scholar.searchResultVenueTimeout = 1;
+  scholar.fetchCrossrefVenueByTitle = async function () {
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    timeoutLookupFinished = true;
+    return "Slow Venue";
+  };
+  assert.strictEqual(
+    await scholar.fetchSearchResultVenue({
+      title: "Slow lookup title",
+      year: "2026",
+      venue: "Proceedings of ...",
+    }),
+    "",
+  );
+  assert.strictEqual(timeoutLookupFinished, false);
+  scholar.searchResultVenueTimeout = 2500;
+
+  scholar.fetchCrossrefVenueByTitle = originalFetchCrossrefVenueByTitle;
+  scholar.searchResultVenueConcurrency = originalSearchVenueConcurrency;
 
   const resolvedEntry = fakeScholarEntry();
   const resolvedVenues = [];

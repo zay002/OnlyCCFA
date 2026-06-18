@@ -1,7 +1,7 @@
 {
   "name": "__MSG_extName__",
   "short_name": "OnlyCCFA",
-  "version": "0.6.8",
+  "version": "0.7.0",
   "description": "__MSG_extDesc__",
   "manifest_version": 3,
   "default_locale": "en",
@@ -110,6 +110,7 @@
         "https://scholar.google.si/*",
         "https://scholar.google.sk/*",
         "https://www.connectedpapers.com/main/*",
+        "https://ieeexplore.ieee.org/*",
         "https://www.webofscience.com/*",
         "https://www.semanticscholar.org/*"
       ],
@@ -130,6 +131,7 @@
         "js/authorSources.js",
         "js/scholar.js",
         "js/semanticscholar.js",
+        "js/ieeexplore.js",
         "js/wos.js",
         "js/apiCache.js",
         "js/ccf.js",

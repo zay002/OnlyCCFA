@@ -102,6 +102,18 @@ const rankOrder = new Map([
   ["Australasian", 4],
 ]);
 
+const manualAliases = new Map([
+  [
+    "Advances in Neural Information Processing Systems (was NIPS)",
+    [
+      "Neural Information Processing Systems",
+      "Conference on Neural Information Processing Systems",
+      "Annual Conference on Neural Information Processing Systems",
+      "NIPS",
+    ],
+  ],
+]);
+
 function toRecord(row) {
   const title = row[1];
   const acronym = row[2];
@@ -110,7 +122,17 @@ function toRecord(row) {
 
   return {
     title,
-    ...(acronym && acronym !== title ? { aliases: [acronym] } : {}),
+    ...((acronym && acronym !== title) || manualAliases.has(title)
+      ? {
+          aliases: Array.from(
+            new Set(
+              [acronym]
+                .concat(manualAliases.get(title) || [])
+                .filter((alias) => alias && alias !== title),
+            ),
+          ),
+        }
+      : {}),
     tags: [{ source: "coreRank", value: rank }],
   };
 }

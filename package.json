@@ -1,6 +1,6 @@
 {
   "name": "onlyccfa",
-  "version": "0.6.8",
+  "version": "0.7.0",
   "private": true,
   "description": "Chrome extension that filters Google Scholar and Semantic Scholar results, exports reliable BibTeX, and makes Zotero Connector respect filters.",
   "license": "MIT",
@@ -20,11 +20,12 @@
   },
   "scripts": {
     "prepare": "husky",
-    "format:check": "prettier --check README.md README_en.md PrivacyPolicy.md manifest.json package.json package-lock.json _locales/**/*.json css/filter.css css/style.css data/openRankSources.js data/coreRankSources.js data/authorRankSources.js data/swjtuRankSources.js data/thcplRankSources.js js/apiCache.js js/authorSources.js js/background.js js/bibtex.js js/ccf.js js/fetchRank.js js/filter.js js/i18n.js js/rankSources.js js/scholar.js js/semanticscholar.js scripts/check-release-health.js scripts/generate-core-rank-sources.mjs scripts/package-release.js scripts/track-cws-users.mjs test/**/*.js .github/workflows/*.yaml",
+    "format:check": "prettier --check README.md README_en.md PrivacyPolicy.md manifest.json package.json package-lock.json _locales/**/*.json css/filter.css css/style.css data/openRankSources.js data/coreRankSources.js data/authorRankSources.js data/swjtuRankSources.js data/thcplRankSources.js js/apiCache.js js/authorSources.js js/background.js js/bibtex.js js/ccf.js js/fetchRank.js js/filter.js js/i18n.js js/ieeexplore.js js/rankSources.js js/scholar.js js/semanticscholar.js scripts/benchmark-rank-matching.mjs scripts/check-release-health.js scripts/generate-core-rank-sources.mjs scripts/package-release.js scripts/track-cws-users.mjs test/**/*.js .github/workflows/*.yaml",
+    "benchmark:rank": "node scripts/benchmark-rank-matching.mjs",
     "stats:cws": "node scripts/track-cws-users.mjs",
     "package": "node scripts/package-release.js",
     "check:release": "node scripts/check-release-health.js",
-    "test": "node test/filter.test.js && node test/filterSignals.test.js && node test/scholar.test.js && node test/semanticscholar.test.js && node test/bibtex.test.js && node test/ccf.test.js && node test/rankSources.test.js && node test/authorSources.test.js && node test/fetchRank.test.js && node test/releaseHealth.test.js"
+    "test": "node test/filter.test.js && node test/filterSignals.test.js && node test/scholar.test.js && node test/semanticscholar.test.js && node test/ieeexplore.test.js && node test/bibtex.test.js && node test/ccf.test.js && node test/rankSources.test.js && node test/venueRegression.test.js && node test/authorSources.test.js && node test/fetchRank.test.js && node test/releaseHealth.test.js"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"

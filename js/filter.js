@@ -114,6 +114,19 @@ const filter = {
       };
     }
 
+    if (hostname === "ieeexplore.ieee.org") {
+      return {
+        site: "ieeexplore",
+        defaultFilter: "ALL",
+        entrySelector:
+          "xpl-results-item, .List-results-items, .result-item, article",
+        triggerSelector: "body",
+        hideUnranked: false,
+        observeMutations: true,
+        strictRankFilter: true,
+      };
+    }
+
     return null;
   },
 

@@ -225,7 +225,13 @@ const coreRankSources = {
     },
     {
       title: "Advances in Neural Information Processing Systems (was NIPS)",
-      aliases: ["NeurIPS"],
+      aliases: [
+        "NeurIPS",
+        "Neural Information Processing Systems",
+        "Conference on Neural Information Processing Systems",
+        "Annual Conference on Neural Information Processing Systems",
+        "NIPS",
+      ],
       tags: [
         {
           source: "coreRank",

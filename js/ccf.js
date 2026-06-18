@@ -32,7 +32,7 @@ ccf.normalizeVenueText = function (text) {
     .toUpperCase()
     .replace(/&/g, " AND ")
     .replace(/[‐‑‒–—]/g, "-")
-    .replace(/[^A-Z0-9+]+/g, " ")
+    .replace(/[^A-Z0-9+-]+/g, " ")
     .replace(/\b(19|20)\d{2}\b/g, " ")
     .replace(/\s+/g, " ")
     .trim();
@@ -48,6 +48,7 @@ ccf.getVenueTokens = function (text) {
 };
 
 ccf.getVenueAlias = function (normalizedVenue) {
+  const aliasVenue = normalizedVenue.replace(/-/g, " ");
   const aliases = {
     "ADVANCES IN NEURAL INFORMATION PROCESSING SYSTEMS": "NeurIPS",
     "CONFERENCE AND WORKSHOP ON NEURAL INFORMATION PROCESSING SYSTEMS":
@@ -64,7 +65,7 @@ ccf.getVenueAlias = function (normalizedVenue) {
   };
 
   for (let alias in aliases) {
-    if (normalizedVenue.includes(alias)) {
+    if (aliasVenue.includes(alias)) {
       return aliases[alias];
     }
   }
@@ -72,14 +73,19 @@ ccf.getVenueAlias = function (normalizedVenue) {
   return null;
 };
 
+ccf.escapeRegExp = function (text) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+};
+
 ccf.findAbbrInVenue = function (normalizedVenue) {
   const abbrs = ccf.getAbbrCandidates();
+  const searchableVenue = ` ${normalizedVenue} `;
 
   for (let candidate of abbrs) {
-    if (
-      candidate.normalized.length > 1 &&
-      (" " + normalizedVenue + " ").includes(" " + candidate.normalized + " ")
-    ) {
+    const pattern = new RegExp(
+      `(^|[^A-Z0-9-])${candidate.escaped}(?=$|[^A-Z0-9-]|-$|-(?:19|20)?\\d{2}\\b)`,
+    );
+    if (candidate.normalized.length > 1 && pattern.test(searchableVenue)) {
       return candidate.abbr;
     }
   }
@@ -97,6 +103,7 @@ ccf.getAbbrCandidates = function () {
         return {
           abbr,
           normalized: ccf.normalizeVenueText(abbr),
+          escaped: ccf.escapeRegExp(ccf.normalizeVenueText(abbr)),
         };
       })
       .sort(function (left, right) {

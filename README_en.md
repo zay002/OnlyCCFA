@@ -5,7 +5,7 @@
 
 <p align="center">
   <a href="https://github.com/zay002/OnlyCCFA">
-    <img alt="OnlyCCFA version" src="https://img.shields.io/badge/OnlyCCFA-v0.6.8-EA4AAA?logo=github&logoColor=%23EA4AAA">
+    <img alt="OnlyCCFA version" src="https://img.shields.io/badge/OnlyCCFA-v0.7.0-EA4AAA?logo=github&logoColor=%23EA4AAA">
   </a>
   <a href="https://chromewebstore.google.com/detail/onlyccfa/cgbjdimlhdcjinagiacapnkmhpjkeabh">
     <img alt="Chrome Web Store" src="https://img.shields.io/badge/Chrome%20Web%20Store-OnlyCCFA-4285F4?logo=googlechrome&logoColor=white">
@@ -20,9 +20,9 @@
   <a href="./README.md">中文</a> | English
 </p>
 
-OnlyCCFA is a Chrome extension for research search workflows. It adds venue and author-quality badges directly to Google Scholar, Semantic Scholar, dblp, Connected Papers and Web of Science, then helps users filter, organize and export cleaner paper candidates.
+OnlyCCFA is a Chrome extension for research search workflows. It adds venue and author-quality badges directly to Google Scholar, Semantic Scholar, IEEE Xplore, dblp, Connected Papers and Web of Science, then helps users filter, organize and export cleaner paper candidates.
 
-The project began from [CCFrank / CCFrank4dblp](https://github.com/WenyanLiu/CCFrank4dblp) and is now maintained as an independent research-search assistant. OnlyCCFA keeps its data explainable and auditable: CCF, JCR, CAS, SCI, EI, TH-CPL, Chinese core journals, field TOP venues and author-identity badges are shown as explicit sources rather than being collapsed into a vague aggregate score.
+The project began from [CCFrank / CCFrank4dblp](https://github.com/WenyanLiu/CCFrank4dblp) and is now maintained as an independent research-search assistant. OnlyCCFA keeps its data explainable and auditable: CCF, CORE/ICORE, JCR, CAS, SCI, EI, TH-CPL, Chinese core journals, field TOP venues and author-identity badges are shown as explicit sources rather than being collapsed into a vague aggregate score.
 
 ## Project Scope
 
@@ -30,9 +30,9 @@ OnlyCCFA is built for students and researchers who repeatedly search, filter and
 
 ## Capabilities
 
-- Shows CCF recommended ranks on Google Scholar, Semantic Scholar, dblp, Connected Papers and Web of Science.
-- Provides a side filter panel on Google Scholar and Semantic Scholar with multi-select CCF A/B/C filters, open badge filters, result statistics and local preferences.
-- Supports SCI, JCR Q1/Q2, CAS 1/2/TOP, EI, TH-CPL A/B, Chinese core journals, NSFC Distinguished Young Scholars, CAS Academicians, CAE Academicians, SWJTU-derived lists and field TOP badges for robotics, communications, electrical engineering, control and mechanical engineering.
+- Shows CCF recommended ranks on Google Scholar, Semantic Scholar, IEEE Xplore, dblp, Connected Papers and Web of Science.
+- Provides a side filter panel on Google Scholar, Semantic Scholar and IEEE Xplore with multi-select CCF A/B/C filters, open badge filters, result statistics and local preferences.
+- Supports CORE/ICORE, SCI, JCR Q1/Q2, CAS 1/2/TOP, EI, TH-CPL A/B, Chinese core journals, NSFC Distinguished Young Scholars, CAS Academicians, CAE Academicians, SWJTU-derived lists and field TOP badges for robotics, communications, electrical engineering, control and mechanical engineering.
 - Deep-filters Google Scholar by scanning multiple pages in batches, building a local candidate pool that can be continued or cleared.
 - Supports Google Scholar profile pages with publication-table badges, combined filters, single-paper BibTeX copy and batch export. Profile pages default to ALL so opening an author page does not hide papers immediately.
 - Exports BibTeX using DOI, arXiv ID or strict-title Crossref/arXiv matches first; Google Scholar native citation links are used only as a low-frequency fallback, and result snippets are never used to fabricate citation fields.
@@ -105,6 +105,7 @@ Common commands:
 npm test
 npm run format:check
 npm run check:release
+npm run benchmark:rank
 npm run package
 ```
 

@@ -16,8 +16,11 @@ scholar.bibtexConcurrency = 2;
 scholar.bibtexCache = new Map();
 scholar.citationDetailVenueCache = new Map();
 scholar.searchResultVenueCache = new Map();
-scholar.searchResultVenueQueue = Promise.resolve();
-scholar.searchResultVenueDelay = 120;
+scholar.searchResultVenueInflight = new Map();
+scholar.searchResultVenueConcurrency = 4;
+scholar.searchResultVenueActiveCount = 0;
+scholar.searchResultVenueQueue = [];
+scholar.searchResultVenueTimeout = 2500;
 scholar.googleCitationCooldownUntil = 0;
 scholar.cvfVenueHints = [
   {
@@ -147,6 +150,15 @@ scholar.isTruncatedVenue = function (venue) {
 scholar.isGenericSearchResultVenue = function (venue) {
   return /^lecture notes in computer science$/i.test(
     String(venue || "").trim(),
+  );
+};
+
+scholar.hasWorkshopSignal = function (...texts) {
+  const text = texts.map((value) => String(value || "")).join(" ");
+  return (
+    /\bworkshops?\b/i.test(text) ||
+    /\b[A-Z][A-Z0-9]{2,12}W(?:\d{2,4})?\b/.test(text) ||
+    /\b[A-Z][A-Z0-9]{1,12}(?:\d{2,4}W|W\d{2,4})\b/.test(text)
   );
 };
 
@@ -562,12 +574,72 @@ scholar.fetchCrossrefVenueByTitle = async function (title, year) {
   return match ? scholar.getCrossrefContainerTitle(match) : "";
 };
 
+scholar.withTimeout = function (promise, timeout, fallback = "") {
+  return Promise.race([
+    promise,
+    new Promise((resolve) => {
+      setTimeout(() => resolve(fallback), timeout);
+    }),
+  ]);
+};
+
+scholar.getSearchResultVenueCacheKey = function (title, year) {
+  return `searchVenue|${scholar.normalizeTitleForMatch(title)}|${year || ""}`;
+};
+
+scholar.getCachedSearchResultVenue = function (title, year) {
+  const key = scholar.getSearchResultVenueCacheKey(title, year);
+  if (scholar.searchResultVenueCache.has(key)) {
+    return scholar.searchResultVenueCache.get(key);
+  }
+
+  if (typeof apiCache !== "undefined" && apiCache.getItem) {
+    const cached = apiCache.getItem(key);
+    if (cached !== null && cached !== undefined) {
+      scholar.searchResultVenueCache.set(key, cached || "");
+      return cached || "";
+    }
+  }
+
+  return null;
+};
+
+scholar.setCachedSearchResultVenue = function (title, year, venue) {
+  const key = scholar.getSearchResultVenueCacheKey(title, year);
+  const value = venue || "";
+  scholar.searchResultVenueCache.set(key, value);
+  if (typeof apiCache !== "undefined" && apiCache.setItem) {
+    apiCache.setItem(key, value);
+  }
+};
+
+scholar.runNextSearchResultVenueLookup = function () {
+  if (
+    scholar.searchResultVenueActiveCount >= scholar.searchResultVenueConcurrency
+  ) {
+    return;
+  }
+
+  const next = scholar.searchResultVenueQueue.shift();
+  if (!next) {
+    return;
+  }
+
+  scholar.searchResultVenueActiveCount += 1;
+  Promise.resolve()
+    .then(next.lookup)
+    .then(next.resolve, next.reject)
+    .finally(function () {
+      scholar.searchResultVenueActiveCount -= 1;
+      scholar.runNextSearchResultVenueLookup();
+    });
+};
+
 scholar.enqueueSearchResultVenueLookup = function (lookup) {
-  const run = scholar.searchResultVenueQueue.catch(() => {}).then(lookup);
-  scholar.searchResultVenueQueue = run
-    .catch(() => {})
-    .then(() => scholar.wait(scholar.searchResultVenueDelay));
-  return run;
+  return new Promise((resolve, reject) => {
+    scholar.searchResultVenueQueue.push({ lookup, resolve, reject });
+    scholar.runNextSearchResultVenueLookup();
+  });
 };
 
 scholar.fetchSearchResultVenue = async function (data) {
@@ -575,23 +647,51 @@ scholar.fetchSearchResultVenue = async function (data) {
     return "";
   }
 
-  const key = `${scholar.normalizeTitleForMatch(data.title)}|${data.year}`;
-  if (scholar.searchResultVenueCache.has(key)) {
-    return scholar.searchResultVenueCache.get(key);
+  const key = scholar.getSearchResultVenueCacheKey(data.title, data.year);
+  const cachedVenue = scholar.getCachedSearchResultVenue(data.title, data.year);
+  if (cachedVenue !== null) {
+    return cachedVenue;
+  }
+  if (scholar.searchResultVenueInflight.has(key)) {
+    return scholar.searchResultVenueInflight.get(key);
+  }
+
+  const urlVenue =
+    data.url && !scholar.hasWorkshopSignal(data.url, data.venue, data.title)
+      ? scholar.inferVenueFromUrl(data.url)
+      : "";
+  if (urlVenue) {
+    scholar.setCachedSearchResultVenue(data.title, data.year, urlVenue);
+    return urlVenue;
   }
 
   const hintedVenue =
     scholar.knownTitleVenueHints[scholar.normalizeTitleForMatch(data.title)];
   if (hintedVenue) {
-    scholar.searchResultVenueCache.set(key, hintedVenue);
+    scholar.setCachedSearchResultVenue(data.title, data.year, hintedVenue);
     return hintedVenue;
   }
 
-  const venue = await scholar.enqueueSearchResultVenueLookup(() =>
-    scholar.fetchCrossrefVenueByTitle(data.title, data.year),
-  );
-  scholar.searchResultVenueCache.set(key, venue || "");
-  return venue || "";
+  const lookup = scholar
+    .enqueueSearchResultVenueLookup(() =>
+      scholar.withTimeout(
+        scholar.fetchCrossrefVenueByTitle(data.title, data.year),
+        scholar.searchResultVenueTimeout,
+        "",
+      ),
+    )
+    .then((venue) => {
+      scholar.setCachedSearchResultVenue(data.title, data.year, venue || "");
+      scholar.searchResultVenueInflight.delete(key);
+      return venue || "";
+    })
+    .catch((error) => {
+      scholar.searchResultVenueInflight.delete(key);
+      throw error;
+    });
+
+  scholar.searchResultVenueInflight.set(key, lookup);
+  return lookup;
 };
 
 scholar.mapWithConcurrency = async function (items, limit, mapper) {
@@ -1965,6 +2065,7 @@ scholar.appendRank = function () {
             year:
               (metadata.match(/\b(19|20)\d{2}\b/g) || []).slice(-1)[0] || "",
             venue,
+            url: node[0]?.href || "",
           },
           function () {
             setTimeout(fetchFallbackRank, 100 * index);

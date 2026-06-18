@@ -44,6 +44,16 @@ assertVenueRank(
   "Proceedings of the 28th ACM International Conference on Multimedia",
   "A",
 );
+assertVenueRank(
+  "IEEE International Conference on Systems, Man, and Cybernetics (SMC)",
+  "C",
+);
+assert.strictEqual(
+  ccf.resolveVenueText(
+    "International Conference on Space Mission Challenges for Information Technology (SMC-IT)",
+  ),
+  null,
+);
 
 const cvprMatch = ccf.resolveVenueText(
   "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition",
