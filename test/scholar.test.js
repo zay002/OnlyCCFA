@@ -897,6 +897,14 @@ async function runAsyncTests() {
     }),
     "IEEE Transactions on Pattern Analysis and Machine Intelligence",
   );
+  assert.strictEqual(
+    await scholar.fetchSearchResultVenue({
+      title: "See and think: Embodied agent in virtual environment",
+      year: "2024",
+      venue: "Lecture Notes in Computer Science",
+    }),
+    "European Conference on Computer Vision",
+  );
 
   const resolvedEntry = fakeScholarEntry();
   const resolvedVenues = [];

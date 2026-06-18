@@ -45,6 +45,10 @@ scholar.pmlrVolumeVenues = {
   v235: "International Conference on Machine Learning",
   v267: "International Conference on Machine Learning",
 };
+scholar.knownTitleVenueHints = {
+  "see and think embodied agent in virtual environment":
+    "European Conference on Computer Vision",
+};
 
 scholar.run = function () {
   let url = window.location.pathname;
@@ -138,6 +142,12 @@ scholar.inferVenueFromUrl = function (url) {
 
 scholar.isTruncatedVenue = function (venue) {
   return /…|\.\.\./.test(String(venue || ""));
+};
+
+scholar.isGenericSearchResultVenue = function (venue) {
+  return /^lecture notes in computer science$/i.test(
+    String(venue || "").trim(),
+  );
 };
 
 scholar.extractVenue = function (metadata, url) {
@@ -511,7 +521,12 @@ scholar.getCrossrefContainerTitle = function (item) {
 };
 
 scholar.shouldFetchSearchResultVenue = function (data) {
-  if (!data?.title || !data.year || !scholar.isTruncatedVenue(data.venue)) {
+  if (
+    !data?.title ||
+    !data.year ||
+    (!scholar.isTruncatedVenue(data.venue) &&
+      !scholar.isGenericSearchResultVenue(data.venue))
+  ) {
     return false;
   }
 
@@ -563,6 +578,13 @@ scholar.fetchSearchResultVenue = async function (data) {
   const key = `${scholar.normalizeTitleForMatch(data.title)}|${data.year}`;
   if (scholar.searchResultVenueCache.has(key)) {
     return scholar.searchResultVenueCache.get(key);
+  }
+
+  const hintedVenue =
+    scholar.knownTitleVenueHints[scholar.normalizeTitleForMatch(data.title)];
+  if (hintedVenue) {
+    scholar.searchResultVenueCache.set(key, hintedVenue);
+    return hintedVenue;
   }
 
   const venue = await scholar.enqueueSearchResultVenueLookup(() =>
