@@ -23,7 +23,13 @@ const dataSourceChecks = [
     globalName: "swjtuRankSources",
     relativePath: "data/swjtuRankSources.js",
     minRecords: 1000,
-    requiredSources: ["swjtuJournal", "swjtuScai", "swjtuTransport"],
+    requiredSources: [
+      "swjtuJournal",
+      "swjtuScai",
+      "swjtuTransport",
+      "swjtuCcfChinese",
+      "swjtuGraduateWarning",
+    ],
   },
 ];
 

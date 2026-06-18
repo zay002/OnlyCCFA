@@ -296,6 +296,37 @@ assert.ok(
   ),
 );
 
+assert.ok(
+  rankSources
+    .resolveVenueText("Finite Fields and Their Applications")
+    .some((tag) => tag.source === "jcr" && tag.value === "Q1"),
+);
+assert.ok(
+  rankSources
+    .resolveVenueText("Sci China Inf Sci")
+    .some((tag) => tag.source === "jcr" && tag.value === "Q1"),
+);
+assert.ok(
+  !rankSources
+    .resolveVenueText("Science China Information Sciences")
+    .some((tag) => tag.source === "ei" || tag.source === "swjtuJournal"),
+);
+assert.ok(
+  rankSources
+    .resolveVenueText("Applied Sciences")
+    .some((tag) => tag.source === "swjtuGraduateWarning"),
+);
+assert.ok(
+  rankSources
+    .resolveVenueText("中国科学：信息科学")
+    .some((tag) => tag.source === "swjtuCcfChinese" && tag.value === "T1"),
+);
+assert.ok(
+  rankSources
+    .resolveVenueText("US Patent App.")
+    .some((tag) => tag.source === "patent"),
+);
+
 assert.strictEqual(rankSources.resolveVenueText("Unknown Venue").length, 0);
 assert.strictEqual(
   rankSources.resolveVenueText("An attack on control systems").length,

@@ -75,7 +75,7 @@ Load from source:
 OnlyCCFA keeps source data split by origin so changes can be audited and reverted:
 
 - `data/openRankSources.js`: general open venue seeds, field TOP venues and Chinese core journals.
-- `data/journalRankSources.js`: JCR 2024 and CAS upgraded partition 2025 journal data.
+- `data/journalRankSources.js`: JCR 2025 and CAS upgraded partition 2025 journal data, with the JCR refresh informed by [hitfyd/ShowJCR](https://github.com/hitfyd/ShowJCR).
 - `data/thcplRankSources.js`: TH-CPL recommended venue list.
 - `data/swjtuRankSources.js`: SWJTU-related derived public-list badges.
 - `data/authorRankSources.js`: public author-identity badges, including Chinese academicians and a best-effort NSFC Distinguished Young Scholar seed list.
@@ -117,7 +117,7 @@ Issues and pull requests are welcome. Data contributions should include official
 
 OnlyCCFA is currently maintained by [Zhaoyang Li](https://github.com/zay002).
 
-This project is based on CCFrank / CCFrank4dblp. Many thanks to Wenyan Liu and all previous CCFrank contributors for the original extension, CCF data work, platform support, bug fixes and maintenance. Their work made OnlyCCFA possible.
+This project is based on CCFrank / CCFrank4dblp. Many thanks to Wenyan Liu and all previous CCFrank contributors for the original extension, CCF data work, platform support, bug fixes and maintenance. The JCR 2025 refresh was informed by the public data work in [hitfyd/ShowJCR](https://github.com/hitfyd/ShowJCR). Their work made OnlyCCFA possible.
 
 Original project: [WenyanLiu/CCFrank4dblp](https://github.com/WenyanLiu/CCFrank4dblp)
 

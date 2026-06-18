@@ -17,8 +17,14 @@ const openRankSources = {
     mechTop: { label: "机械方向TOP", className: "rank-source-mech" },
     eeTop: { label: "电气方向TOP", className: "rank-source-ee" },
     commTop: { label: "通信方向TOP", className: "rank-source-comm" },
+    patent: { label: "Patent", className: "rank-source-default" },
   },
   records: [
+    {
+      title: "US Patent Application",
+      aliases: ["US Patent App", "U.S. Patent Application", "U.S. Patent App"],
+      tags: [{ source: "patent" }],
+    },
     {
       title: "Proceedings of the IEEE",
       aliases: ["PROC IEEE", "PROCEEDINGS IEEE"],

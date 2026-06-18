@@ -95,6 +95,11 @@
   background-color: #d9534f;
 }
 
+.rank-source-graduate-warning {
+  background-color: #111111;
+  border: 1px solid #000000;
+}
+
 .rank-source-workshop {
   background-color: #dc2626;
   border: 1px solid #7f1d1d;

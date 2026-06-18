@@ -147,6 +147,25 @@ rankSources.isUnsafeSeriesSubstringMatch = function (
   );
 };
 
+rankSources.isUnsafeShortSuffixMatch = function (
+  normalizedVenue,
+  normalizedName,
+  name,
+) {
+  if (rankSources.isShortAcronymName(name)) {
+    return false;
+  }
+
+  const venueTokens = rankSources.getNormalizedTokens(normalizedVenue);
+  const nameTokens = rankSources.getNormalizedTokens(normalizedName);
+  return (
+    nameTokens.length <= 2 &&
+    venueTokens.length > nameTokens.length &&
+    normalizedVenue.endsWith(` ${normalizedName}`) &&
+    !rankSources.hasVenueSeriesToken(normalizedName)
+  );
+};
+
 rankSources.escapeRegExp = function (text) {
   return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 };
@@ -203,7 +222,8 @@ rankSources.getNameMatchScore = function (
       normalizedName,
       name,
       record,
-    )
+    ) &&
+    !rankSources.isUnsafeShortSuffixMatch(normalizedVenue, normalizedName, name)
   ) {
     return 50000 + normalizedName.length;
   }

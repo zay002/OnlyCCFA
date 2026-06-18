@@ -75,7 +75,7 @@ GitHub Release 通常会比 Chrome Web Store 更快更新。Chrome Web Store 版
 OnlyCCFA 的数据按来源拆分维护，便于审计和回滚：
 
 - `data/openRankSources.js`：通用开放 venue、方向 TOP、中文核心等种子数据。
-- `data/journalRankSources.js`：JCR 2024 与中科院升级版 2025 期刊分区数据。
+- `data/journalRankSources.js`：JCR 2025 与中科院升级版 2025 期刊分区数据，JCR 更新参考 [hitfyd/ShowJCR](https://github.com/hitfyd/ShowJCR)。
 - `data/thcplRankSources.js`：TH-CPL 推荐目录数据。
 - `data/swjtuRankSources.js`：西南交大相关公开目录派生标签。
 - `data/authorRankSources.js`：公开作者身份标签，包括两院院士名单和国家杰青公开整理种子。
@@ -117,7 +117,7 @@ npm run package
 
 OnlyCCFA 当前由 [Zhaoyang Li](https://github.com/zay002) 维护。
 
-本项目基于 CCFrank / CCFrank4dblp。感谢 Wenyan Liu 以及所有 CCFrank 贡献者在原始扩展、CCF 数据、平台支持、问题修复和长期维护上的工作。没有这些基础，OnlyCCFA 不会这么快站起来。
+本项目基于 CCFrank / CCFrank4dblp。感谢 Wenyan Liu 以及所有 CCFrank 贡献者在原始扩展、CCF 数据、平台支持、问题修复和长期维护上的工作。JCR 2025 更新参考了 [hitfyd/ShowJCR](https://github.com/hitfyd/ShowJCR) 的公开整理数据。没有这些基础，OnlyCCFA 不会这么快站起来。
 
 原项目：[WenyanLiu/CCFrank4dblp](https://github.com/WenyanLiu/CCFrank4dblp)
 

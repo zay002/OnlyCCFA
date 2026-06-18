@@ -36,6 +36,12 @@ const filter = {
     { id: "swjtuJournal", zh: "西南交大", en: "SWJTU" },
     { id: "swjtuScai", zh: "交大计算机C类", en: "SWJTU CS C" },
     { id: "swjtuTransport", zh: "交大交通", en: "SWJTU Transport" },
+    { id: "swjtuCcfChinese", zh: "CCF中文T类", en: "CCF CN T" },
+    {
+      id: "swjtuGraduateWarning",
+      zh: "毕业成果预警",
+      en: "Graduation warning",
+    },
   ],
 
   init() {
@@ -578,6 +584,8 @@ const filter = {
       "swjtuJournal",
       "swjtuScai",
       "swjtuTransport",
+      "swjtuCcfChinese",
+      "swjtuGraduateWarning",
     ].forEach((id) => {
       if (source === id) {
         signals.push(id);

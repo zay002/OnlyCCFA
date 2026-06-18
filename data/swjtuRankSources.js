@@ -3,6 +3,11 @@ const swjtuRankSources = {
     swjtuJournal: { label: "西南交大·", className: "rank-source-school" },
     swjtuScai: { label: "西南交大计算机C类", className: "rank-source-school" },
     swjtuTransport: { label: "西南交大交通·", className: "rank-source-school" },
+    swjtuCcfChinese: { label: "CCF中文", className: "rank-source-school" },
+    swjtuGraduateWarning: {
+      label: "WARNING",
+      className: "rank-source-graduate-warning",
+    },
   },
   records: [
     {
@@ -13292,6 +13297,485 @@ const swjtuRankSources = {
       title: "高电压技术",
       aliases: [],
       tags: [{ source: "swjtuJournal", value: "B类" }],
+    },
+    ,
+    {
+      title: "大数据挖掘与分析（英文）",
+      aliases: ["Big Data Mining and Analytics"],
+      tags: [{ source: "swjtuCcfChinese", value: "T1" }],
+    },
+    {
+      title: "电子学报（英文）",
+      aliases: ["Chinese Journal of Electronics"],
+      tags: [{ source: "swjtuCcfChinese", value: "T1" }],
+    },
+    {
+      title: "网络空间安全科学与技术（英文）",
+      aliases: ["Cybersecurity"],
+      tags: [{ source: "swjtuCcfChinese", value: "T1" }],
+    },
+    {
+      title: "计算机科学前沿（英文版）",
+      aliases: ["Frontiers of Computer Science"],
+      tags: [{ source: "swjtuCcfChinese", value: "T1" }],
+    },
+    {
+      title: "信息与电子工程前沿（英文）",
+      aliases: ["Frontiers of Information Technology & Electronic Engineering"],
+      tags: [{ source: "swjtuCcfChinese", value: "T1" }],
+    },
+    {
+      title: "自动化学报（英文版）",
+      aliases: ["Journal of Automatica Sinica"],
+      tags: [{ source: "swjtuCcfChinese", value: "T1" }],
+    },
+    {
+      title: "计算机科学技术学报（英文）",
+      aliases: ["Journal of Computer Science and Technology"],
+      tags: [{ source: "swjtuCcfChinese", value: "T1" }],
+    },
+    {
+      title: "中国科学：信息科学（英文版）",
+      aliases: ["SCIENTIA SINICA Informationis"],
+      tags: [{ source: "swjtuCcfChinese", value: "T1" }],
+    },
+    {
+      title: "电子与信息学报",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T1" }],
+    },
+    {
+      title: "电子学报",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T1" }],
+    },
+    {
+      title: "科学通报",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T1" }],
+    },
+    {
+      title: "计算机辅助设计与图形学学报",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T1" }],
+    },
+    {
+      title: "计算机学报",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T1" }],
+    },
+    {
+      title: "计算机研究与发展",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T1" }],
+    },
+    {
+      title: "软件学报",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T1" }],
+    },
+    {
+      title: "通信学报",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T1" }],
+    },
+    {
+      title: "自动化学报",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T1" }],
+    },
+    {
+      title: "中国科学：信息科学",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T1" }],
+    },
+    {
+      title: "中文信息学报",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T1" }],
+    },
+    {
+      title: "中国通信（英文）",
+      aliases: ["China Communications"],
+      tags: [{ source: "swjtuCcfChinese", value: "T2" }],
+    },
+    {
+      title: "计算数学(英文)",
+      aliases: ["Journal of Computational Mathematics"],
+      tags: [{ source: "swjtuCcfChinese", value: "T2" }],
+    },
+    {
+      title: "虚拟现实与智能硬件（英文）",
+      aliases: ["Virtual Reality & Intelligent Hardware"],
+      tags: [{ source: "swjtuCcfChinese", value: "T2" }],
+    },
+    {
+      title: "中兴通讯技术（英文）",
+      aliases: ["ZTE Communications"],
+      tags: [{ source: "swjtuCcfChinese", value: "T2" }],
+    },
+    {
+      title: "大数据",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T2" }],
+    },
+    {
+      title: "计算机教育",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T2" }],
+    },
+    {
+      title: "计算机科学",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T2" }],
+    },
+    {
+      title: "计算机科学与探索",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T2" }],
+    },
+    {
+      title: "计算机工程",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T2" }],
+    },
+    {
+      title: "计算机工程与科学",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T2" }],
+    },
+    {
+      title: "计算机工程与应用",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T2" }],
+    },
+    {
+      title: "计算机系统应用",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T2" }],
+    },
+    {
+      title: "计算机应用",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T2" }],
+    },
+    {
+      title: "密码学报",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T2" }],
+    },
+    {
+      title: "模式识别与人工智能",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T2" }],
+    },
+    {
+      title: "物联网学报",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T2" }],
+    },
+    {
+      title: "网络与信息安全学报",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T2" }],
+    },
+    {
+      title: "小型微型计算机系统",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T2" }],
+    },
+    {
+      title: "系统仿真学报",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T2" }],
+    },
+    {
+      title: "信息安全学报",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T2" }],
+    },
+    {
+      title: "智能系统学报",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T2" }],
+    },
+    {
+      title: "中国图象图形学报",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T2" }],
+    },
+    {
+      title: "光电子快报（英文）",
+      aliases: ["Optoelectronics Letters"],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "定量生物学（英文）",
+      aliases: ["Quantitative Biology"],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "工医艺的可视计算（英文）",
+      aliases: ["Visual Computing for Industry, Biomedicine, and Art"],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "保密科学技术",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "高性能计算机技术",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "航空计算技术",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "集成电路与嵌入式系统",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "计算机仿真",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "计算机工程与设计",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "计算机集成制造系统",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "计算机技术与发展",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "机器人",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "计算机应用研究",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "密码与信息安全学报",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "软件导刊",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "软件和集成电路",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "数据与计算发展前沿",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "生物信息学",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "数值计算与计算机应用",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "图学学报",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "微电子学与计算机",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "网络空间安全",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "信号处理",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "信息安全研究",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "信息网络安全",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "应用科学学报",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "中兴通讯技术",
+      aliases: [],
+      tags: [{ source: "swjtuCcfChinese", value: "T3" }],
+    },
+    {
+      title: "Advanced Science Letters",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title: "Advances in Materials Science And Engineering",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title: "Advances in Mechanical Engineering",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title: "Applied Sciences-Basel",
+      aliases: ["Applied Sciences"],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title: "Complexity",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title: "IEEE Access",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title: "Information-An International Interdisciplinary Journal",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title:
+        "International Journal of Nonlinear Sciences and Numerical Simulation",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title: "Journal of Applied Mathematics",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title: "Journal of Fuel Cell Science And Technology",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title: "Journal of Function Spaces",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title: "Journal of The Society Of Leather Technologists and Chemists",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title: "Journal of Theoretical & Computational Chemistry",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title: "Lasers in Engineering",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title: "Mathematical Problems in Engineering",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title: "Plos One",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title: "Przeglad Elektrotechniczny",
+      aliases: ["Electrical Review"],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title:
+        "Revista Tecnica De La Facultad De Ingenieria Universidad Del Zulia",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title:
+        "South African Journal of Chemistry-Suid-Afrikaanse Tydskrif Vir Chemie",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title: "Sustainability",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title: "Symmetry-Basel",
+      aliases: ["Symmetry"],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title: "Advanced Materials Research",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title: "Applied Mechanics and Materials",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title: "Key Engineering Materials",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title: "Material Research Innovations",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title: "Materials Research Forum",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
+    },
+    {
+      title: "Materials Research Proceedings",
+      aliases: [],
+      tags: [{ source: "swjtuGraduateWarning", value: "WARNING" }],
     },
   ],
 };
