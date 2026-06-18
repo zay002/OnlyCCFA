@@ -5,7 +5,7 @@
 
 <p align="center">
   <a href="https://github.com/zay002/OnlyCCFA">
-    <img alt="OnlyCCFA version" src="https://img.shields.io/badge/OnlyCCFA-v0.6.5-EA4AAA?logo=github&logoColor=%23EA4AAA">
+    <img alt="OnlyCCFA version" src="https://img.shields.io/badge/OnlyCCFA-v0.6.7-EA4AAA?logo=github&logoColor=%23EA4AAA">
   </a>
   <a href="https://chromewebstore.google.com/detail/onlyccfa/cgbjdimlhdcjinagiacapnkmhpjkeabh">
     <img alt="Chrome Web Store" src="https://img.shields.io/badge/Chrome%20Web%20Store-OnlyCCFA-4285F4?logo=googlechrome&logoColor=white">
@@ -76,6 +76,7 @@ OnlyCCFA keeps source data split by origin so changes can be audited and reverte
 
 - `data/openRankSources.js`: general open venue seeds, field TOP venues and Chinese core journals.
 - `data/journalRankSources.js`: JCR 2025 and CAS upgraded partition 2025 journal data, with the JCR refresh informed by [hitfyd/ShowJCR](https://github.com/hitfyd/ShowJCR).
+- `data/coreRankSources.js`: CORE/ICORE 2026 conference ratings from the [official CORE portal](https://portal.core.edu.au/conf-ranks), with the collection approach informed by [benkeks/icore-ranks](https://github.com/benkeks/icore-ranks).
 - `data/thcplRankSources.js`: TH-CPL recommended venue list.
 - `data/swjtuRankSources.js`: SWJTU-related derived public-list badges.
 - `data/authorRankSources.js`: public author-identity badges, including Chinese academicians and a best-effort NSFC Distinguished Young Scholar seed list.

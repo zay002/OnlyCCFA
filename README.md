@@ -5,7 +5,7 @@
 
 <p align="center">
   <a href="https://github.com/zay002/OnlyCCFA">
-    <img alt="OnlyCCFA version" src="https://img.shields.io/badge/OnlyCCFA-v0.6.5-EA4AAA?logo=github&logoColor=%23EA4AAA">
+    <img alt="OnlyCCFA version" src="https://img.shields.io/badge/OnlyCCFA-v0.6.7-EA4AAA?logo=github&logoColor=%23EA4AAA">
   </a>
   <a href="https://chromewebstore.google.com/detail/onlyccfa/cgbjdimlhdcjinagiacapnkmhpjkeabh">
     <img alt="Chrome Web Store" src="https://img.shields.io/badge/Chrome%20Web%20Store-OnlyCCFA-4285F4?logo=googlechrome&logoColor=white">
@@ -76,6 +76,7 @@ OnlyCCFA 的数据按来源拆分维护，便于审计和回滚：
 
 - `data/openRankSources.js`：通用开放 venue、方向 TOP、中文核心等种子数据。
 - `data/journalRankSources.js`：JCR 2025 与中科院升级版 2025 期刊分区数据，JCR 更新参考 [hitfyd/ShowJCR](https://github.com/hitfyd/ShowJCR)。
+- `data/coreRankSources.js`：CORE/ICORE 2026 会议评级数据，来自 [CORE 官方 portal](https://portal.core.edu.au/conf-ranks)，采集方式参考 [benkeks/icore-ranks](https://github.com/benkeks/icore-ranks)。
 - `data/thcplRankSources.js`：TH-CPL 推荐目录数据。
 - `data/swjtuRankSources.js`：西南交大相关公开目录派生标签。
 - `data/authorRankSources.js`：公开作者身份标签，包括两院院士名单和国家杰青公开整理种子。

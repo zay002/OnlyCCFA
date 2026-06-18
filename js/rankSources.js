@@ -321,6 +321,7 @@ rankSources.getDatabases = function () {
   return [
     typeof openRankSources === "undefined" ? null : openRankSources,
     typeof journalRankSources === "undefined" ? null : journalRankSources,
+    typeof coreRankSources === "undefined" ? null : coreRankSources,
     typeof thcplRankSources === "undefined" ? null : thcplRankSources,
     typeof swjtuRankSources === "undefined" ? null : swjtuRankSources,
   ].filter((db) => db && Array.isArray(db.records));

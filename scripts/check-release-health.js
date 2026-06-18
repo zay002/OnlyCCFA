@@ -10,6 +10,12 @@ const dataSourceChecks = [
     minRecords: 20000,
   },
   {
+    globalName: "coreRankSources",
+    relativePath: "data/coreRankSources.js",
+    minRecords: 700,
+    requiredSources: ["coreRank"],
+  },
+  {
     globalName: "authorRankSources",
     relativePath: "data/authorRankSources.js",
     minRecords: 4000,

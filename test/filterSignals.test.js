@@ -66,6 +66,12 @@ const richEntry = entry([
   },
   {
     kind: "source",
+    node: node("CORE A*", {
+      dataset: { rankSource: "coreRank", rankValue: "A*" },
+    }),
+  },
+  {
+    kind: "source",
     node: node("西南交大SCAI·C类", {
       dataset: { rankSource: "swjtuScai", rankValue: "C类" },
     }),
@@ -91,6 +97,7 @@ assert.strictEqual(
 assert.ok(filter.getEntrySignalIds(richEntry).includes("ccfA"));
 assert.ok(filter.getEntrySignalIds(richEntry).includes("jcrQ1"));
 assert.ok(filter.getEntrySignalIds(richEntry).includes("roboticsTop"));
+assert.ok(filter.getEntrySignalIds(richEntry).includes("coreRank"));
 assert.ok(filter.getEntrySignalIds(richEntry).includes("swjtuScai"));
 assert.ok(
   filter.getEntrySignalIds(richEntry).includes("distinguishedYoungScholar"),

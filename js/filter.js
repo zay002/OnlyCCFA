@@ -24,6 +24,7 @@ const filter = {
     { id: "casTop", zh: "中科院 TOP", en: "CAS TOP" },
     { id: "ei", zh: "EI", en: "EI" },
     { id: "cnCore", zh: "中文核心", en: "CN Core" },
+    { id: "coreRank", zh: "CORE", en: "CORE" },
     { id: "thcpl", zh: "THCPL", en: "THCPL" },
     { id: "roboticsTop", zh: "机器人TOP", en: "Robotics TOP" },
     { id: "commTop", zh: "通信TOP", en: "Comm TOP" },
@@ -571,6 +572,9 @@ const filter = {
     }
     if (source === "thcpl") {
       signals.push("thcpl");
+    }
+    if (source === "coreRank") {
+      signals.push("coreRank");
     }
     [
       "roboticsTop",

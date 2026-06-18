@@ -4,13 +4,14 @@ const vm = require("vm");
 
 const dataSource = fs.readFileSync("data/openRankSources.js", "utf8");
 const journalSource = fs.readFileSync("data/journalRankSources.js", "utf8");
+const coreSource = fs.readFileSync("data/coreRankSources.js", "utf8");
 const thcplSource = fs.readFileSync("data/thcplRankSources.js", "utf8");
 const swjtuSource = fs.readFileSync("data/swjtuRankSources.js", "utf8");
 const source = fs.readFileSync("js/rankSources.js", "utf8");
 const swjtuData = vm.runInNewContext(`${swjtuSource}; swjtuRankSources;`);
 
 const rankSources = vm.runInNewContext(
-  `${dataSource}; ${journalSource}; ${thcplSource}; ${swjtuSource}; ${source}; rankSources;`,
+  `${dataSource}; ${journalSource}; ${coreSource}; ${thcplSource}; ${swjtuSource}; ${source}; rankSources;`,
   {
     console,
     $() {
@@ -200,6 +201,17 @@ assert.ok(!cvprTags.some((tag) => tag.source === "sci"));
 assert.ok(!cvprTags.some((tag) => tag.source === "jcr"));
 assert.ok(!cvprTags.some((tag) => tag.source === "casUpgraded"));
 assert.ok(!cvprTags.some((tag) => tag.source === "swjtuJournal"));
+
+const sigcommTags = rankSources.resolveVenueText(
+  "ACM Conference on Applications, Technologies, Architectures, and Protocols for Computer Communication",
+);
+assert.ok(
+  sigcommTags.some((tag) => tag.source === "coreRank" && tag.value === "A*"),
+);
+assert.strictEqual(
+  rankSources.getTagText({ source: "coreRank", value: "A*" }),
+  "CORE A*",
+);
 
 const truncatedCvprProceedingsTags = rankSources.resolveVenueText(
   "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern ...",
