@@ -5,7 +5,7 @@
 
 <p align="center">
   <a href="https://github.com/zay002/OnlyCCFA">
-    <img alt="OnlyCCFA version" src="https://img.shields.io/badge/OnlyCCFA-v0.6.4-EA4AAA?logo=github&logoColor=%23EA4AAA">
+    <img alt="OnlyCCFA version" src="https://img.shields.io/badge/OnlyCCFA-v0.6.5-EA4AAA?logo=github&logoColor=%23EA4AAA">
   </a>
   <a href="https://chromewebstore.google.com/detail/onlyccfa/cgbjdimlhdcjinagiacapnkmhpjkeabh">
     <img alt="Chrome Web Store" src="https://img.shields.io/badge/Chrome%20Web%20Store-OnlyCCFA-4285F4?logo=googlechrome&logoColor=white">
