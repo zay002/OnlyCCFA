@@ -39,6 +39,7 @@ const fakeNavigator = {
     },
   },
 };
+const fakeFilter = { managedEntries: [] };
 const apiCacheStore = new Map();
 const scholar = vm.runInNewContext(`${source}; scholar;`, {
   console,
@@ -47,6 +48,7 @@ const scholar = vm.runInNewContext(`${source}; scholar;`, {
   setTimeout,
   document: fakeDocument,
   navigator: fakeNavigator,
+  filter: fakeFilter,
   apiCache: {
     getItem(key) {
       return apiCacheStore.has(key) ? apiCacheStore.get(key) : null;
@@ -240,6 +242,69 @@ assert.strictEqual(
   JSON.stringify(scholar.getDeepPageStarts(20, 10, 55)),
   JSON.stringify([30, 40, 50, 60, 70]),
 );
+assert.strictEqual(
+  scholar.getCitationCount({
+    textContent: "保存 引用 被引用次数：1,234 相关文章",
+  }),
+  1234,
+);
+assert.strictEqual(
+  scholar.getCitationCount({ textContent: "Save Cite Cited by 56 Related" }),
+  56,
+);
+{
+  const originalQuerySelector = fakeDocument.querySelector;
+  const originalQuerySelectorAll = fakeDocument.querySelectorAll;
+  const entries = [
+    { id: "low", textContent: "Cited by 3", querySelector: () => ({}) },
+    { id: "zero", textContent: "No citations", querySelector: () => ({}) },
+    { id: "high", textContent: "被引用次数：12", querySelector: () => ({}) },
+  ];
+  const container = {
+    children: entries.slice(),
+    appendChild(entry) {
+      this.children = this.children.filter((child) => child !== entry);
+      this.children.push(entry);
+    },
+  };
+  fakeDocument.querySelector = (selector) =>
+    selector === "#gs_res_ccl_mid" ? container : null;
+  fakeDocument.querySelectorAll = (selector) =>
+    selector === "#gs_res_ccl_mid > div" ? container.children : [];
+  fakeFilter.managedEntries = entries.slice();
+
+  assert.strictEqual(scholar.sortCurrentPageByCitations("desc"), true);
+  assert.deepStrictEqual(
+    container.children.map((entry) => entry.id),
+    ["high", "low", "zero"],
+  );
+  assert.strictEqual(
+    JSON.stringify(fakeFilter.managedEntries.map((entry) => entry.id)),
+    JSON.stringify(["high", "low", "zero"]),
+  );
+  assert.strictEqual(scholar.sortCurrentPageByCitations("asc"), true);
+  assert.deepStrictEqual(
+    container.children.map((entry) => entry.id),
+    ["zero", "low", "high"],
+  );
+  assert.strictEqual(
+    JSON.stringify(fakeFilter.managedEntries.map((entry) => entry.id)),
+    JSON.stringify(["zero", "low", "high"]),
+  );
+  assert.strictEqual(scholar.sortCurrentPageByCitations("default"), true);
+  assert.deepStrictEqual(
+    container.children.map((entry) => entry.id),
+    ["low", "zero", "high"],
+  );
+  assert.strictEqual(
+    JSON.stringify(fakeFilter.managedEntries.map((entry) => entry.id)),
+    JSON.stringify(["low", "zero", "high"]),
+  );
+
+  fakeDocument.querySelector = originalQuerySelector;
+  fakeDocument.querySelectorAll = originalQuerySelectorAll;
+  fakeFilter.managedEntries = [];
+}
 assert.strictEqual(
   scholar.getCurrentStart(
     "https://scholar.google.com/scholar?q=robot+learning",

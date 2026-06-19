@@ -162,6 +162,22 @@ const filter = {
       </div>
     `
         : "";
+    const sortControls =
+      this.siteConfig.site === "scholar"
+        ? `
+      <div class="ccf-filter-sort">
+        <div class="ccf-filter-section-title">${t("sortSection")}</div>
+        <label class="ccf-filter-row">
+          <span>${t("sortSection")}</span>
+          <select data-setting="citationSort">
+            <option value="default">${t("sortDefault")}</option>
+            <option value="desc">${t("sortCitationsDesc")}</option>
+            <option value="asc">${t("sortCitationsAsc")}</option>
+          </select>
+        </label>
+      </div>
+    `
+        : "";
     const exportControls =
       this.siteConfig.site === "scholar" || this.siteConfig.supportsExport
         ? `
@@ -243,6 +259,7 @@ const filter = {
         </label>
       </div>
       <div class="ccf-filter-stats" aria-live="polite"></div>
+      ${sortControls}
       ${deepSearchControls}
       ${exportControls}
     `;
@@ -1121,6 +1138,15 @@ const filter = {
       if (e.target.dataset.setting === "deepTargetCount") {
         this.settings.deepTargetCount = Number(e.target.value);
         this.saveSettings(this.settings);
+      }
+
+      if (e.target.dataset.setting === "citationSort") {
+        if (
+          typeof scholar !== "undefined" &&
+          scholar.sortCurrentPageByCitations
+        ) {
+          scholar.sortCurrentPageByCitations(e.target.value);
+        }
       }
     });
   },

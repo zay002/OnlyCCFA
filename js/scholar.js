@@ -12,6 +12,7 @@ scholar.deepPageSize = 20;
 scholar.deepRequestDelay = 800;
 scholar.deepLoading = false;
 scholar.deepState = null;
+scholar.defaultResultOrder = null;
 scholar.bibtexConcurrency = 2;
 scholar.bibtexCache = new Map();
 scholar.citationDetailVenueCache = new Map();
@@ -242,6 +243,66 @@ scholar.collectResultEntries = function (doc) {
   return Array.from(doc.querySelectorAll("#gs_res_ccl_mid > div")).filter(
     (entry) => entry.querySelector("h3 a"),
   );
+};
+
+scholar.getCitationCount = function (entry) {
+  const text = entry?.textContent || "";
+  const match = text.match(/(?:被引用次数：|被引用次数:|Cited by\s+)([\d,]+)/i);
+  return match ? Number(match[1].replace(/,/g, "")) || 0 : 0;
+};
+
+scholar.sortCurrentPageByCitations = function (direction = "desc") {
+  const container = document.querySelector("#gs_res_ccl_mid");
+  if (!container) {
+    return false;
+  }
+
+  const entries = scholar.collectResultEntries(document);
+  const queryKey = scholar.getSearchKey(scholar.getBaseUrl());
+  if (
+    !scholar.defaultResultOrder ||
+    scholar.defaultResultOrder.key !== queryKey
+  ) {
+    scholar.defaultResultOrder = { key: queryKey, entries: entries.slice() };
+  }
+
+  if (direction === "default") {
+    scholar.applyResultOrder(
+      container,
+      scholar.defaultResultOrder.entries.filter((entry) =>
+        entries.includes(entry),
+      ),
+    );
+    return true;
+  }
+
+  const multiplier = direction === "asc" ? 1 : -1;
+  const sortedEntries = entries
+    .map((entry, index) => ({
+      entry,
+      index,
+      citations: scholar.getCitationCount(entry),
+    }))
+    .sort(
+      (left, right) =>
+        multiplier * (left.citations - right.citations) ||
+        left.index - right.index,
+    )
+    .map(({ entry }) => entry);
+
+  scholar.applyResultOrder(container, sortedEntries);
+  return true;
+};
+
+scholar.applyResultOrder = function (container, sortedEntries) {
+  sortedEntries.forEach((entry) => container.appendChild(entry));
+
+  if (typeof filter !== "undefined" && Array.isArray(filter.managedEntries)) {
+    const sortedSet = new Set(sortedEntries);
+    filter.managedEntries = sortedEntries.concat(
+      filter.managedEntries.filter((entry) => !sortedSet.has(entry)),
+    );
+  }
 };
 
 scholar.getResultKey = function (entry) {
