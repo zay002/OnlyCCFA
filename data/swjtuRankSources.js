@@ -4388,7 +4388,11 @@ const swjtuRankSources = {
     },
     {
       title: "IEEE Conference on Computer Vision and Pattern Recognition",
-      aliases: [],
+      aliases: [
+        "CVPR",
+        "IEEE/CVF Conference on Computer Vision and Pattern Recognition",
+        "IEEE/CVF Computer Vision and Pattern Recognition Conference",
+      ],
       tags: [{ source: "swjtuJournal", value: "A类" }],
     },
     {

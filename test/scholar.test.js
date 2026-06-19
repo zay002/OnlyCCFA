@@ -180,6 +180,10 @@ assert.strictEqual(
   ),
   "International Conference on Machine Learning",
 );
+assert.strictEqual(
+  scholar.inferVenueFromUrl("https://proceedings.mlr.press/v48/amodei16.html"),
+  "International Conference on Machine Learning",
+);
 
 scholar.copyText("fallback BibTeX").then(() => {
   assert.strictEqual(fallbackCopied, true);
@@ -204,6 +208,13 @@ assert.strictEqual(
   scholar.extractVenue(
     "G Michel, G Nikolentzos, JF Lutzeyer - International ..., 2023 - proceedings.mlr.press",
     "https://proceedings.mlr.press/v202/michel23a.html",
+  ),
+  "International Conference on Machine Learning",
+);
+assert.strictEqual(
+  scholar.extractVenue(
+    "D Amodei, S Ananthanarayanan - ... machine learning, 2016 - proceedings.mlr.press",
+    "https://proceedings.mlr.press/v48/amodei16.html",
   ),
   "International Conference on Machine Learning",
 );
@@ -378,6 +389,28 @@ assert.strictEqual(
     "short-container-title": ["ICIP"],
   }),
   "IEEE International Conference on Image Processing (ICIP)",
+);
+assert.strictEqual(
+  scholar.getCrossrefContainerTitle({
+    "container-title": [
+      "Lecture Notes in Computer Science",
+      "Computer Vision – ECCV 2020",
+    ],
+  }),
+  "European Conference on Computer Vision",
+);
+assert.strictEqual(
+  scholar.getCrossrefContainerTitle({
+    "container-title": [
+      "Lecture Notes in Computer Science",
+      "Computer Vision – ECCV 2020 Workshops",
+    ],
+  }),
+  "European Conference on Computer Vision Workshops",
+);
+assert.strictEqual(
+  scholar.getSearchResultVenueCacheKey("AIM 2020 Challenge", "2020"),
+  "searchVenueV2|aim 2020 challenge|2020",
 );
 assert.strictEqual(
   scholar.shouldFetchSearchResultVenue({
@@ -853,6 +886,15 @@ async function runAsyncTests() {
   const ijcvTitle =
     "Deep learning-based point cloud registration: A comprehensive survey and taxonomy";
   const tpamiTitle = "PathNet: Path-selective point cloud denoising";
+  const grnetTitle =
+    "GRNet: Gridding Residual Network for Dense Point Cloud Completion";
+  const maxvitTitle = "MaxViT: Multi-axis Vision Transformer";
+  const aimTitle =
+    "AIM 2020 Challenge on Learned Image Signal Processing Pipeline";
+  const gvnnTitle =
+    "gvnn: Neural Network Library for Geometric Computer Vision";
+  const medicalTitle =
+    "Medical Image Segmentation: A Review of Modern Architectures";
   scholar.searchResultVenueCache = new Map();
   scholar.searchResultVenueInflight = new Map();
   scholar.searchResultVenueQueue = [];
@@ -889,6 +931,60 @@ async function runAsyncTests() {
         },
       });
     }
+    if (queryTitle === grnetTitle || queryTitle === maxvitTitle) {
+      return JSON.stringify({
+        message: {
+          items: [
+            {
+              title: [queryTitle],
+              issued: {
+                "date-parts": [[queryTitle === grnetTitle ? 2020 : 2022]],
+              },
+              "container-title": [
+                "Lecture Notes in Computer Science",
+                `Computer Vision – ECCV ${queryTitle === grnetTitle ? 2020 : 2022}`,
+              ],
+            },
+          ],
+        },
+      });
+    }
+    if (
+      queryTitle === aimTitle ||
+      queryTitle === gvnnTitle ||
+      queryTitle === medicalTitle
+    ) {
+      return JSON.stringify({
+        message: {
+          items: [
+            {
+              title: [queryTitle],
+              issued: {
+                "date-parts": [
+                  [
+                    queryTitle === gvnnTitle
+                      ? 2016
+                      : queryTitle === medicalTitle
+                        ? 2023
+                        : 2020,
+                  ],
+                ],
+              },
+              "container-title": [
+                "Lecture Notes in Computer Science",
+                `Computer Vision – ECCV ${
+                  queryTitle === gvnnTitle
+                    ? 2016
+                    : queryTitle === medicalTitle
+                      ? 2022
+                      : 2020
+                } Workshops`,
+              ],
+            },
+          ],
+        },
+      });
+    }
     return JSON.stringify({ message: { items: [] } });
   };
 
@@ -915,6 +1011,46 @@ async function runAsyncTests() {
       venue: "Lecture Notes in Computer Science",
     }),
     "European Conference on Computer Vision",
+  );
+  assert.strictEqual(
+    await scholar.fetchSearchResultVenue({
+      title: grnetTitle,
+      year: "2020",
+      venue: "Lecture Notes in Computer Science",
+    }),
+    "European Conference on Computer Vision",
+  );
+  assert.strictEqual(
+    await scholar.fetchSearchResultVenue({
+      title: maxvitTitle,
+      year: "2022",
+      venue: "Lecture Notes in Computer Science",
+    }),
+    "European Conference on Computer Vision",
+  );
+  assert.strictEqual(
+    await scholar.fetchSearchResultVenue({
+      title: aimTitle,
+      year: "2020",
+      venue: "Lecture Notes in Computer Science",
+    }),
+    "European Conference on Computer Vision Workshops",
+  );
+  assert.strictEqual(
+    await scholar.fetchSearchResultVenue({
+      title: gvnnTitle,
+      year: "2016",
+      venue: "Lecture Notes in Computer Science",
+    }),
+    "European Conference on Computer Vision Workshops",
+  );
+  assert.strictEqual(
+    await scholar.fetchSearchResultVenue({
+      title: medicalTitle,
+      year: "2022",
+      venue: "Lecture Notes in Computer Science",
+    }),
+    "European Conference on Computer Vision Workshops",
   );
   assert.strictEqual(
     await scholar.fetchSearchResultVenue({

@@ -197,10 +197,27 @@ const cvprTags = rankSources.resolveVenueText(
   "IEEE/CVF Conference on Computer Vision and Pattern Recognition",
 );
 assert.ok(cvprTags.some((tag) => tag.source === "ei"));
+assert.ok(
+  cvprTags.some((tag) => tag.source === "coreRank" && tag.value === "A*"),
+);
+assert.ok(cvprTags.some((tag) => tag.source === "thcpl" && tag.value === "A"));
+assert.ok(
+  cvprTags.some((tag) => tag.source === "swjtuJournal" && tag.value === "A类"),
+);
 assert.ok(!cvprTags.some((tag) => tag.source === "sci"));
 assert.ok(!cvprTags.some((tag) => tag.source === "jcr"));
 assert.ok(!cvprTags.some((tag) => tag.source === "casUpgraded"));
-assert.ok(!cvprTags.some((tag) => tag.source === "swjtuJournal"));
+
+const iccvTags = rankSources.resolveVenueText(
+  "International Conference on Computer Vision",
+);
+assert.ok(
+  iccvTags.some((tag) => tag.source === "coreRank" && tag.value === "A*"),
+);
+assert.ok(iccvTags.some((tag) => tag.source === "thcpl" && tag.value === "A"));
+assert.ok(
+  iccvTags.some((tag) => tag.source === "swjtuJournal" && tag.value === "A类"),
+);
 
 const sigcommTags = rankSources.resolveVenueText(
   "ACM Conference on Applications, Technologies, Architectures, and Protocols for Computer Communication",

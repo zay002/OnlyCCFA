@@ -41,6 +41,12 @@ scholar.cvfVenueHints = [
   },
 ];
 scholar.pmlrVolumeVenues = {
+  v32: "International Conference on Machine Learning",
+  v37: "International Conference on Machine Learning",
+  v48: "International Conference on Machine Learning",
+  v70: "International Conference on Machine Learning",
+  v80: "International Conference on Machine Learning",
+  v97: "International Conference on Machine Learning",
   v119: "International Conference on Machine Learning",
   v139: "International Conference on Machine Learning",
   v162: "International Conference on Machine Learning",
@@ -505,10 +511,21 @@ scholar.isShortContainerAcronym = function (text) {
   return /^[A-Z][A-Z0-9&-]{1,10}$/.test(String(text || "").trim());
 };
 
+scholar.normalizeCrossrefContainerTitle = function (title) {
+  const text = String(title || "").trim();
+  if (/computer vision\s*[-–]\s*eccv\s+\d{4}\s+workshops?/i.test(text)) {
+    return "European Conference on Computer Vision Workshops";
+  }
+  if (/computer vision\s*[-–]\s*eccv\s+\d{4}\b/i.test(text)) {
+    return "European Conference on Computer Vision";
+  }
+  return text;
+};
+
 scholar.getCrossrefContainerTitle = function (item) {
   const containerTitle = (item?.["container-title"] || [])
-    .find((title) => String(title || "").trim())
-    ?.trim();
+    .map((title) => scholar.normalizeCrossrefContainerTitle(title))
+    .find((title) => title && !scholar.isGenericSearchResultVenue(title));
   if (!containerTitle) {
     return "";
   }
@@ -584,7 +601,7 @@ scholar.withTimeout = function (promise, timeout, fallback = "") {
 };
 
 scholar.getSearchResultVenueCacheKey = function (title, year) {
-  return `searchVenue|${scholar.normalizeTitleForMatch(title)}|${year || ""}`;
+  return `searchVenueV2|${scholar.normalizeTitleForMatch(title)}|${year || ""}`;
 };
 
 scholar.getCachedSearchResultVenue = function (title, year) {

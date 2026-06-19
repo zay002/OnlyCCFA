@@ -2685,7 +2685,11 @@ const thcplRankSources = {
     },
     {
       title: "IEEE Conference on Computer Vision and Pattern Recognition",
-      aliases: ["CVPR"],
+      aliases: [
+        "CVPR",
+        "IEEE/CVF Conference on Computer Vision and Pattern Recognition",
+        "IEEE/CVF Computer Vision and Pattern Recognition Conference",
+      ],
       tags: [
         {
           source: "thcpl",

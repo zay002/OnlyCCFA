@@ -322,7 +322,11 @@ const coreRankSources = {
     },
     {
       title: "IEEE Conference on Computer Vision and Pattern Recognition",
-      aliases: ["CVPR"],
+      aliases: [
+        "CVPR",
+        "IEEE/CVF Conference on Computer Vision and Pattern Recognition",
+        "IEEE/CVF Computer Vision and Pattern Recognition Conference",
+      ],
       tags: [
         {
           source: "coreRank",
@@ -352,7 +356,11 @@ const coreRankSources = {
     },
     {
       title: "IEEE International Conference on Computer Vision",
-      aliases: ["ICCV"],
+      aliases: [
+        "ICCV",
+        "International Conference on Computer Vision",
+        "IEEE/CVF International Conference on Computer Vision",
+      ],
       tags: [
         {
           source: "coreRank",
