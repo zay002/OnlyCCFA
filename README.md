@@ -47,7 +47,7 @@ OnlyCCFA 是一个科研检索浏览器扩展。它把 CCF、CORE/ICORE、JCR、
 
 [OnlyCCFA - Chrome Web Store](https://chromewebstore.google.com/detail/onlyccfa/cgbjdimlhdcjinagiacapnkmhpjkeabh)
 
-GitHub Release 通常更新更快。想提前测试新功能时，可以下载 release zip，在 `chrome://extensions` 开启开发者模式后用 `Load unpacked` 加载。
+GitHub Release 通常更新更快。想提前测试新功能时，可以下载 release zip，在 `chrome://extensions` 开启开发者模式后用 `Load unpacked(加载未打包的扩展程序)` 加载。
 
 ## 数据来源
 
@@ -94,4 +94,4 @@ OnlyCCFA 由 [Zhaoyang Li](https://github.com/zay002) 维护，基于 [CCFrank /
 
 ## License
 
-OnlyCCFA 使用 MIT License 发布。原始 CCFrank 版权声明已保留。OnlyCCFA 修改部分 copyright 2026 Zhaoyang Li。
+OnlyCCFA 使用 MIT License 发布, copyright 2026 Zhaoyang Li。
