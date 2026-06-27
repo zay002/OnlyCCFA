@@ -7,6 +7,7 @@ const extensionUrl =
 const statsFile = process.env.CWS_STATS_FILE || "stats/cws-users.json";
 const svgFile = process.env.CWS_SVG_FILE || "assets/cws-users.svg";
 const statsTimeZone = process.env.CWS_STATS_TIME_ZONE || "Asia/Shanghai";
+const statsLagDays = Number(process.env.CWS_STATS_LAG_DAYS || 2);
 
 function todayIsoDate(date = new Date(), timeZone = statsTimeZone) {
   if (process.env.CWS_STATS_DATE) {
@@ -24,6 +25,16 @@ function todayIsoDate(date = new Date(), timeZone = statsTimeZone) {
   }).formatToParts(date);
   const getPart = (type) => parts.find((part) => part.type === type)?.value;
   return `${getPart("year")}-${getPart("month")}-${getPart("day")}`;
+}
+
+function addDaysIsoDate(isoDate, days) {
+  const date = new Date(`${isoDate}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
+function observedIsoDate(date = todayIsoDate()) {
+  return addDaysIsoDate(date, -statsLagDays);
 }
 
 function escapeXml(value) {
@@ -222,7 +233,7 @@ function generateSvg(stats) {
   <path d="M 11 8 C 190 3, 512 7, 710 11 M 714 11 C 717 74, 715 151, 711 211 M 708 214 C 523 218, 177 216, 12 211 M 9 211 C 4 145, 7 78, 11 8" fill="none" stroke="#292524" stroke-width="1.3" opacity="0.7"/>
   <text x="24" y="24" fill="#1c1917" font-family="'Comic Sans MS', 'Segoe Print', cursive" font-size="16" font-weight="700">Chrome Web Store users</text>
   <text x="${width - 24}" y="24" fill="#1d4ed8" font-family="'Comic Sans MS', 'Segoe Print', cursive" font-size="16" font-weight="700" text-anchor="end">${latest.users} users</text>
-  <text x="${width - 24}" y="43" fill="#57534e" font-family="'Comic Sans MS', 'Segoe Print', cursive" font-size="11" text-anchor="end">Updated ${escapeXml(
+  <text x="${width - 24}" y="43" fill="#57534e" font-family="'Comic Sans MS', 'Segoe Print', cursive" font-size="11" text-anchor="end">Data through ${escapeXml(
     latest.date,
   )}</text>
   ${ticks.join("\n  ")}
@@ -252,7 +263,7 @@ function generateSvg(stats) {
 }
 
 const users = await fetchUserCount();
-const statsDate = todayIsoDate();
+const statsDate = observedIsoDate();
 const stats = upsertToday(readStats(statsFile), users, statsDate);
 
 fs.mkdirSync(path.dirname(statsFile), { recursive: true });
@@ -260,4 +271,6 @@ fs.mkdirSync(path.dirname(svgFile), { recursive: true });
 fs.writeFileSync(statsFile, JSON.stringify(stats, null, 2) + "\n");
 fs.writeFileSync(svgFile, generateSvg(stats));
 
-console.log(`Tracked ${users} Chrome Web Store users for ${statsDate}.`);
+console.log(
+  `Tracked ${users} Chrome Web Store users for ${statsDate} (lag ${statsLagDays} days).`,
+);
