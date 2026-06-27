@@ -726,6 +726,24 @@ assert.deepStrictEqual(
   workshopEntry.rankHost.children.map((child) => child.textContent),
   ["Workshop (not main)", "CCF A"],
 );
+
+const profileWorkshopEntry = fakeScholarEntry();
+assert.strictEqual(
+  scholar.appendVenueRank(
+    {},
+    "IEEE/CVF Conference on Computer Vision and Pattern Recognition",
+    profileWorkshopEntry,
+    {
+      workshopText:
+        "CVPR 2026 Workshop on 3D Geometry Generation for Scientific Computing",
+    },
+  ),
+  true,
+);
+assert.deepStrictEqual(
+  profileWorkshopEntry.rankHost.children.map((child) => child.textContent),
+  ["Workshop (not main)", "CCF A"],
+);
 scholar.rankSpanList = [];
 
 assert.strictEqual(typeof scholar.appendAuthorBadges, "function");

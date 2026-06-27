@@ -2018,7 +2018,9 @@ scholar.appendVenueRank = function (node, venue, entry, context = {}) {
   let matched = false;
   const isWorkshop = scholar.isWorkshopVenue(
     venue,
-    context.url || node?.href || node?.[0]?.href || "",
+    `${context.url || node?.href || node?.[0]?.href || ""} ${
+      context.workshopText || ""
+    }`,
   );
   const rankVenue = scholar.getRegularVenueForRank(venue);
 
@@ -2248,6 +2250,7 @@ scholar.appendRanks = function () {
           detailVenue &&
           scholar.appendVenueRank(node, detailVenue, entry, {
             url: data.url,
+            workshopText: data.venue,
           })
         ) {
           if (typeof filter !== "undefined") {
