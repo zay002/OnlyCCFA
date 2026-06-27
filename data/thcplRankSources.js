@@ -3124,7 +3124,7 @@ const thcplRankSources = {
     },
     {
       title: "ACM International Conference on Multimedia",
-      aliases: ["ACM MM"],
+      aliases: ["ACM MM", "ACM Multimedia"],
       tags: [
         {
           source: "thcpl",

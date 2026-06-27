@@ -208,6 +208,31 @@ assert.ok(!cvprTags.some((tag) => tag.source === "sci"));
 assert.ok(!cvprTags.some((tag) => tag.source === "jcr"));
 assert.ok(!cvprTags.some((tag) => tag.source === "casUpgraded"));
 
+assert.strictEqual(
+  rankSources.normalizeText(
+    "Proceedings of the 30th ACM International Conference on Multimedia, 2022",
+  ),
+  "PROCEEDINGS OF THE ACM INTERNATIONAL CONFERENCE ON MULTIMEDIA",
+);
+const acmMmTags = rankSources.resolveVenueText(
+  "Proceedings of the 30th ACM International Conference on Multimedia, 2022",
+);
+assert.ok(
+  acmMmTags.some((tag) => tag.source === "coreRank" && tag.value === "A*"),
+);
+const acmMmShortTags = rankSources.resolveVenueText("ACM Multimedia");
+assert.ok(
+  acmMmShortTags.some((tag) => tag.source === "coreRank" && tag.value === "A*"),
+);
+assert.ok(
+  acmMmShortTags.some((tag) => tag.source === "thcpl" && tag.value === "A"),
+);
+assert.ok(
+  acmMmShortTags.some(
+    (tag) => tag.source === "swjtuJournal" && tag.value === "A类",
+  ),
+);
+
 const iccvTags = rankSources.resolveVenueText(
   "International Conference on Computer Vision",
 );

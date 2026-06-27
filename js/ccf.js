@@ -34,6 +34,7 @@ ccf.normalizeVenueText = function (text) {
     .replace(/[‐‑‒–—]/g, "-")
     .replace(/[^A-Z0-9+-]+/g, " ")
     .replace(/\b(19|20)\d{2}\b/g, " ")
+    .replace(/\b\d+(ST|ND|RD|TH)\b/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 };
@@ -49,7 +50,15 @@ ccf.getVenueTokens = function (text) {
 
 ccf.getVenueAlias = function (normalizedVenue) {
   const aliasVenue = normalizedVenue.replace(/-/g, " ");
-  const aliases = {
+  const exactAliases = {
+    "ACM MULTIMEDIA": "ACM MM",
+  };
+
+  if (exactAliases[aliasVenue]) {
+    return exactAliases[aliasVenue];
+  }
+
+  const containsAliases = {
     "ADVANCES IN NEURAL INFORMATION PROCESSING SYSTEMS": "NeurIPS",
     "CONFERENCE AND WORKSHOP ON NEURAL INFORMATION PROCESSING SYSTEMS":
       "NeurIPS",
@@ -64,9 +73,9 @@ ccf.getVenueAlias = function (normalizedVenue) {
     "INTERNATIONAL CONFERENCE ON IMAGE PROCESSING": "ICIP",
   };
 
-  for (let alias in aliases) {
+  for (let alias in containsAliases) {
     if (aliasVenue.includes(alias)) {
-      return aliases[alias];
+      return containsAliases[alias];
     }
   }
 
@@ -231,6 +240,13 @@ ccf.getRankInfo = function (refine, type) {
       rankInfo.info += "Not Found\n";
     } else {
       let full = ccf.abbrFull[refine];
+      if (full === undefined) {
+        const alias = ccf.getVenueAlias(ccf.normalizeVenueText(refine));
+        if (alias && ccf.abbrFull[alias]) {
+          refine = alias;
+          full = ccf.abbrFull[alias];
+        }
+      }
       url = ccf.fullUrl[full];
       if (full === undefined) {
         refine = refine.substring(0, refine.length - 1);

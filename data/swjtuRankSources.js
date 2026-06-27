@@ -83,7 +83,7 @@ const swjtuRankSources = {
     },
     {
       title: "ACM International Conference on Multimedia",
-      aliases: [],
+      aliases: ["ACM Multimedia"],
       tags: [{ source: "swjtuJournal", value: "A类" }],
     },
     {

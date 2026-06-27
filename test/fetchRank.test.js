@@ -132,3 +132,107 @@ fetchFromDblpApi(
   site,
 );
 assert.strictEqual(appended.length, appendedAfterError);
+
+const integrationSource = [
+  "js/ccf.js",
+  "data/ccfRankUrl.js",
+  "data/ccfRankAbbr.js",
+  "data/ccfRankFull.js",
+  "data/ccfFullUrl.js",
+  "data/ccfAbbrFull.js",
+  "data/coreRankSources.js",
+  "data/thcplRankSources.js",
+  "data/swjtuRankSources.js",
+  "js/rankSources.js",
+  "js/fetchRank.js",
+].map((path) => fs.readFileSync(path, "utf8"));
+const integrationContext = {
+  console,
+  apiCache: {
+    setItem() {},
+  },
+  $(tagName) {
+    return {
+      tagName,
+      classes: [],
+      attrs: {},
+      children: [],
+      addClass(className) {
+        this.classes.push(className);
+        return this;
+      },
+      attr(name, value) {
+        this.attrs[name] = value;
+        return this;
+      },
+      text(value) {
+        this.textContent = value;
+        return this;
+      },
+      append(child) {
+        this.children.push(child);
+        return this;
+      },
+    };
+  },
+};
+const integration = vm.runInNewContext(
+  `${integrationSource.join("\n")}; ({ fetchFromCache, ccf, rankSources });`,
+  integrationContext,
+);
+const acmMmAppended = [];
+integration.fetchFromCache(
+  {
+    resp: {
+      hit: [
+        {
+          info: {
+            venue: "ACM Multimedia",
+          },
+        },
+      ],
+    },
+    flag: true,
+  },
+  {},
+  "You Only Hypothesize Once: Point Cloud Registration with Rotation-equivariant Descriptors.",
+  "Wang",
+  "2022",
+  {
+    rankSpanList: [
+      function (refine, type) {
+        return integration.ccf.getRankSpan(refine, type);
+      },
+    ],
+    appendRankBadge(_node, badge) {
+      acmMmAppended.push(badge);
+    },
+  },
+);
+assert.ok(
+  acmMmAppended.some((badge) => badge.attrs?.["data-rank-value"] === "CCF A"),
+);
+assert.ok(
+  !acmMmAppended.some((badge) => badge.attrs?.["data-rank-value"] === "CCF C"),
+);
+assert.ok(
+  acmMmAppended.some(
+    (badge) =>
+      badge.attrs?.["data-rank-source"] === "coreRank" &&
+      badge.attrs?.["data-rank-value"] === "A*",
+  ),
+);
+assert.ok(
+  acmMmAppended.some(
+    (badge) =>
+      badge.attrs?.["data-rank-source"] === "thcpl" &&
+      badge.attrs?.["data-rank-value"] === "A",
+  ),
+);
+assert.ok(
+  acmMmAppended.some(
+    (badge) =>
+      badge.attrs?.["data-rank-source"] === "swjtuJournal" &&
+      badge.attrs?.["data-rank-value"] === "A类",
+  ),
+);

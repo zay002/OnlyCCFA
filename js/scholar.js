@@ -23,6 +23,7 @@ scholar.searchResultVenueActiveCount = 0;
 scholar.searchResultVenueQueue = [];
 scholar.searchResultVenueTimeout = 2500;
 scholar.googleCitationCooldownUntil = 0;
+scholar.searchResultsObserverStarted = false;
 scholar.cvfVenueHints = [
   {
     pattern: /(^|\s)CVPR(?:W?(?:19|20)\d{2}|(?:19|20)\d{2}W?)?(\s|$)/i,
@@ -64,10 +65,39 @@ scholar.run = function () {
   let url = window.location.pathname;
   if (url == "/scholar") {
     scholar.appendRank();
+    scholar.observeSearchResults();
   } else if (url == "/citations") {
     scholar.appendRanks(); // 页面加载时先处理一次作者主页上的条目
     scholar.observeCitations(); // 然后设置观察者以处理动态加载的条目
   }
+};
+
+scholar.observeSearchResults = function (
+  doc = typeof document === "undefined" ? null : document,
+) {
+  if (
+    scholar.searchResultsObserverStarted ||
+    typeof MutationObserver === "undefined"
+  ) {
+    return;
+  }
+
+  const target = doc?.querySelector?.("#gs_res_ccl_mid");
+  if (!target) {
+    return;
+  }
+
+  scholar.searchResultsObserverStarted = true;
+  let timer = null;
+  const observer = new MutationObserver(() => {
+    clearTimeout(timer);
+    timer = setTimeout(() => scholar.appendRank(), 80);
+  });
+  observer.observe(target, {
+    childList: true,
+    subtree: true,
+    characterData: true,
+  });
 };
 
 scholar.normalizeUrlForVenueHint = function (url) {
@@ -169,17 +199,23 @@ scholar.hasWorkshopSignal = function (...texts) {
   );
 };
 
+scholar.cleanExtractedVenue = function (venue) {
+  const yearMatch = String(venue || "").match(/,\s*(19|20)\d{2}\b/);
+  return (yearMatch ? venue.substring(0, yearMatch.index) : venue).trim();
+};
+
+scholar.extractEmbeddedProceedingsVenue = function (metadata) {
+  const match = String(metadata || "").match(/Proceedings\s+of\b/i);
+  return match ? scholar.cleanExtractedVenue(metadata.slice(match.index)) : "";
+};
+
 scholar.extractVenue = function (metadata, url) {
   const parts = (metadata || "").split(/\s[-–—]\s/);
   if (parts.length < 2) {
-    return "";
+    return scholar.extractEmbeddedProceedingsVenue(metadata);
   }
 
-  let venue = parts[1].trim();
-  let yearMatch = venue.match(/,\s*(19|20)\d{2}\b/);
-  if (yearMatch) {
-    venue = venue.substring(0, yearMatch.index);
-  }
+  let venue = scholar.cleanExtractedVenue(parts[1]);
 
   const inferredVenue = scholar.inferVenueFromUrl(url);
   if (inferredVenue && scholar.isTruncatedVenue(venue)) {
@@ -1491,6 +1527,10 @@ scholar.getResultTags = function (entry) {
     .filter(Boolean);
 };
 
+scholar.hasResultRankBadges = function (entry) {
+  return scholar.getResultTags(entry).length > 0;
+};
+
 scholar.getPdfUrl = function (entry) {
   const pdfLink =
     entry.querySelector(".gs_or_ggsm a") ||
@@ -2109,9 +2149,8 @@ scholar.appendRank = function () {
     scholar.appendResultActions(this);
     scholar.appendAuthorBadges(this);
 
-    if ($(this).hasClass("ccf-ranked")) {
-      return;
-    }
+    const hasExistingRankBadges =
+      $(this).hasClass("ccf-ranked") && scholar.hasResultRankBadges(this);
 
     let node = $(this).find("h3 > a");
     if (node.length) {
@@ -2124,6 +2163,9 @@ scholar.appendRank = function () {
           url: node[0]?.href || "",
         })
       ) {
+        return;
+      }
+      if (hasExistingRankBadges) {
         return;
       }
       let data = $(this)
@@ -2215,9 +2257,8 @@ scholar.appendRanks = function () {
     scholar.appendResultActions(entry);
     scholar.appendAuthorBadges(entry);
 
-    if ($(entry).hasClass("ccf-ranked")) {
-      return;
-    }
+    const hasExistingRankBadges =
+      $(entry).hasClass("ccf-ranked") && scholar.hasResultRankBadges(entry);
 
     let node = $(entry).find("td.gsc_a_t > a.gsc_a_at, td.gsc_a_t > a").first();
     if (!node.length) {
@@ -2238,6 +2279,9 @@ scholar.appendRanks = function () {
         url: data.url,
       })
     ) {
+      return;
+    }
+    if (hasExistingRankBadges) {
       return;
     }
 

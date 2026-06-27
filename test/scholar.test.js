@@ -4,6 +4,7 @@ const vm = require("vm");
 
 const source = fs.readFileSync("js/scholar.js", "utf8");
 let fallbackCopied = false;
+const fakeSearchResultsTarget = {};
 const fakeDocument = {
   addEventListener() {},
   body: {
@@ -31,6 +32,9 @@ const fakeDocument = {
   querySelectorAll() {
     return [];
   },
+  querySelector(selector) {
+    return selector === "#gs_res_ccl_mid" ? fakeSearchResultsTarget : null;
+  },
 };
 const fakeNavigator = {
   clipboard: {
@@ -41,11 +45,21 @@ const fakeNavigator = {
 };
 const fakeFilter = { managedEntries: [] };
 const apiCacheStore = new Map();
-const scholar = vm.runInNewContext(`${source}; scholar;`, {
+let observedSearchResults = null;
+const context = {
   console,
   URL,
   URLSearchParams,
   setTimeout,
+  clearTimeout,
+  MutationObserver: class {
+    constructor(callback) {
+      this.callback = callback;
+    }
+    observe(target, config) {
+      observedSearchResults = { target, config, callback: this.callback };
+    }
+  },
   document: fakeDocument,
   navigator: fakeNavigator,
   filter: fakeFilter,
@@ -92,7 +106,8 @@ const scholar = vm.runInNewContext(`${source}; scholar;`, {
       },
     };
   },
-});
+};
+const scholar = vm.runInNewContext(`${source}; scholar;`, context);
 
 function fakeLink(href, textContent = "") {
   return {
@@ -116,6 +131,19 @@ assert.strictEqual(
     "R Girshick - Proceedings of the IEEE international conference on computer vision, 2015 - openaccess.thecvf.com",
   ),
   "Proceedings of the IEEE international conference on computer vision",
+);
+
+assert.strictEqual(
+  scholar.extractVenue(
+    "H Wang, Y Liu, Z Dong, W Wang Proceedings of the 30th ACM International Conference on Multimedia, 2022 dl.acm.org",
+  ),
+  "Proceedings of the 30th ACM International Conference on Multimedia",
+);
+assert.strictEqual(
+  scholar.extractVenue(
+    "H Wang, Y Liu, Z Dong, W WangProceedings of the 30th ACM International Conference on Multimedia, 2022 dl.acm.org",
+  ),
+  "Proceedings of the 30th ACM International Conference on Multimedia",
 );
 
 assert.strictEqual(
@@ -186,6 +214,11 @@ assert.strictEqual(
   scholar.inferVenueFromUrl("https://proceedings.mlr.press/v48/amodei16.html"),
   "International Conference on Machine Learning",
 );
+
+scholar.searchResultsObserverStarted = false;
+scholar.observeSearchResults();
+assert.strictEqual(observedSearchResults.target, fakeSearchResultsTarget);
+assert.strictEqual(observedSearchResults.config.characterData, true);
 
 scholar.copyText("fallback BibTeX").then(() => {
   assert.strictEqual(fallbackCopied, true);
@@ -700,6 +733,117 @@ assert.deepStrictEqual(
   rankHost.children.map((child) => child.textContent),
   ["CCF A", "西南交大计算机C类", "SCI"],
 );
+assert.strictEqual(
+  scholar.hasResultRankBadges({ querySelectorAll: () => [] }),
+  false,
+);
+assert.strictEqual(
+  scholar.hasResultRankBadges({
+    querySelectorAll: () => rankHost.children,
+  }),
+  true,
+);
+
+{
+  const originalDollar = context.$;
+  const originalAppendVenueRank = scholar.appendVenueRank;
+  const originalAppendResultActions = scholar.appendResultActions;
+  const originalAppendAuthorBadges = scholar.appendAuthorBadges;
+  const originalScheduleSearchResultVenueRank =
+    scholar.scheduleSearchResultVenueRank;
+  const rankedSearchEntry = {
+    classes: new Set(["ccf-ranked"]),
+    querySelectorAll(selector) {
+      if (selector === ".ccf-rank, .rank-source") {
+        return [
+          {
+            className: "ccf-rank ccf-c",
+            dataset: { rankSource: "ccf", rankValue: "CCF C" },
+            textContent: "CCF C",
+          },
+        ];
+      }
+      return [];
+    },
+  };
+  const titleSelection = {
+    length: 1,
+    0: {
+      href: "https://dl.acm.org/doi/10.1145/3503161.3547781",
+    },
+    text() {
+      return "You only hypothesize once: Point cloud registration with rotation-equivariant descriptors";
+    },
+  };
+  const metadata =
+    "H Wang, Y Liu, Z Dong, W Wang Proceedings of the 30th ACM International Conference on Multimedia, 2022 dl.acm.org";
+  let directVenue = "";
+  let fallbackScheduled = false;
+
+  context.$ = function (target) {
+    if (target === "#gs_res_ccl_mid > div > div.gs_ri") {
+      return {
+        each(callback) {
+          callback.call(rankedSearchEntry, 0);
+        },
+      };
+    }
+    if (target === rankedSearchEntry) {
+      return {
+        hasClass(className) {
+          return rankedSearchEntry.classes.has(className);
+        },
+        addClass(className) {
+          rankedSearchEntry.classes.add(className);
+          return this;
+        },
+        find(selector) {
+          if (selector === "h3 > a") {
+            return titleSelection;
+          }
+          if (selector === "div.gs_a") {
+            return {
+              text() {
+                return metadata;
+              },
+            };
+          }
+          return {
+            length: 0,
+            text() {
+              return "";
+            },
+          };
+        },
+      };
+    }
+    return originalDollar(target);
+  };
+  scholar.appendResultActions = function () {};
+  scholar.appendAuthorBadges = function () {};
+  scholar.appendVenueRank = function (_node, venue, entry) {
+    assert.strictEqual(entry, rankedSearchEntry);
+    directVenue = venue;
+    return true;
+  };
+  scholar.scheduleSearchResultVenueRank = function () {
+    fallbackScheduled = true;
+    return true;
+  };
+
+  scholar.appendRank();
+  assert.strictEqual(
+    directVenue,
+    "Proceedings of the 30th ACM International Conference on Multimedia",
+  );
+  assert.strictEqual(fallbackScheduled, false);
+
+  context.$ = originalDollar;
+  scholar.appendVenueRank = originalAppendVenueRank;
+  scholar.appendResultActions = originalAppendResultActions;
+  scholar.appendAuthorBadges = originalAppendAuthorBadges;
+  scholar.scheduleSearchResultVenueRank = originalScheduleSearchResultVenueRank;
+}
 
 const workshopEntry = fakeScholarEntry();
 scholar.rankSpanList = [
@@ -788,6 +932,12 @@ assert.strictEqual(
     "2023 IEEE/CVF Conference on Computer Vision and Pattern Recognition, 1922-1960, 2023",
   ),
   "2023 IEEE/CVF Conference on Computer Vision and Pattern Recognition",
+);
+assert.strictEqual(
+  scholar.extractCitationVenue(
+    "Proceedings of the 30th ACM International Conference on Multimedia, 2022",
+  ),
+  "Proceedings of the 30th ACM International Conference on Multimedia",
 );
 
 assert.strictEqual(

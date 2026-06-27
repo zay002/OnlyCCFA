@@ -92,7 +92,7 @@ const coreRankSources = {
     },
     {
       title: "ACM Multimedia",
-      aliases: ["ACMMM"],
+      aliases: ["ACMMM", "ACM International Conference on Multimedia"],
       tags: [
         {
           source: "coreRank",

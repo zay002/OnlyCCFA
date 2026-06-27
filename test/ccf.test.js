@@ -45,6 +45,20 @@ assertVenueRank(
   "A",
 );
 assertVenueRank(
+  "Proceedings of the 30th ACM International Conference on Multimedia, 2022",
+  "A",
+);
+assertVenueRank(
+  "Proceedings of the 30th ACM International Conference on Multimedia 2022 dl.acm.org",
+  "A",
+);
+assertVenueRank("ACM Multimedia Asia", "C");
+assert.strictEqual(ccf.getRankInfo("ACM Multimedia", "abbr").ranks[0], "A");
+assert.strictEqual(
+  ccf.getVenueDisplayName("ACM MM", "abbr"),
+  "ACM International Conference on Multimedia",
+);
+assertVenueRank(
   "IEEE International Conference on Systems, Man, and Cybernetics (SMC)",
   "C",
 );

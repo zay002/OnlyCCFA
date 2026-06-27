@@ -73,6 +73,13 @@ function rankTags(venue) {
   ],
   ["ICCV full", "International Conference on Computer Vision", "A"],
   ["ECCV full", "European Conference on Computer Vision", "B"],
+  ["ACM MM DBLP venue short name", "ACM Multimedia", "A"],
+  [
+    "ACM MM proceedings with ordinal",
+    "Proceedings of the 30th ACM International Conference on Multimedia, 2022",
+    "A",
+  ],
+  ["ACM Multimedia Asia remains C", "ACM Multimedia Asia", "C"],
   [
     "MICCAI hyphen",
     "International Conference on Medical Image Computing and Computer-Assisted Intervention",
@@ -90,6 +97,9 @@ function rankTags(venue) {
     "Conference on Neural Information Processing Systems",
     "coreRank:A*",
   ],
+  ["ACM MM CORE short name", "ACM Multimedia", "coreRank:A*"],
+  ["ACM MM THCPL short name", "ACM Multimedia", "thcpl:A"],
+  ["ACM MM SWJTU short name", "ACM Multimedia", "swjtuJournal:A类"],
   ["ECCV CORE", "European Conference on Computer Vision", "coreRank:A*"],
   ["计算机学报 北大核心", "计算机学报", "pkuCore:"],
   ["计算机学报 CCF中文", "计算机学报", "swjtuCcfChinese:T1"],

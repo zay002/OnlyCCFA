@@ -18,6 +18,7 @@ rankSources.normalizeText = function (text) {
     .replace(/\bTRANS\b/g, " TRANSACTIONS ")
     .replace(/[^A-Z0-9\u4E00-\u9FFF]+/g, " ")
     .replace(/\b(19|20)\d{2}\b/g, " ")
+    .replace(/\b\d+(ST|ND|RD|TH)\b/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 };
