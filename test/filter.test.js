@@ -166,7 +166,7 @@ assert.strictEqual(defaultSettings.defaultFilter, "A");
 assert.strictEqual(defaultSettings.hideUnranked, true);
 assert.strictEqual(JSON.stringify(defaultSettings.selectedRanks), "[]");
 assert.strictEqual(defaultSettings.panelCollapsed, false);
-assert.strictEqual(defaultSettings.showSelectedTagsOnly, true);
+assert.strictEqual(defaultSettings.showSelectedTagsOnly, false);
 
 filter.siteConfig = scholarConfig;
 filter.saveSettings({
@@ -245,9 +245,9 @@ filter.settings = {
 };
 filter.applyBadgeVisibility();
 assert.strictEqual(ccfBadge.style.display, "");
-assert.strictEqual(hiddenCcfBadge.style.display, "none");
+assert.strictEqual(hiddenCcfBadge.style.display, "");
 assert.strictEqual(selectedSourceBadge.style.display, "");
-assert.strictEqual(hiddenSourceBadge.style.display, "none");
+assert.strictEqual(hiddenSourceBadge.style.display, "");
 filter.settings = {
   selectedRanks: [],
   selectedSignals: [],

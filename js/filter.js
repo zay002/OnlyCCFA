@@ -253,10 +253,6 @@ const filter = {
             <option value="all">${t("all")}</option>
           </select>
         </label>
-        <label class="ccf-filter-check">
-          <input type="checkbox" data-setting="showSelectedTagsOnly">
-          <span>${t("showSelectedTagsOnly")}</span>
-        </label>
       </div>
       <div class="ccf-filter-stats" aria-live="polite"></div>
       ${sortControls}
@@ -273,8 +269,6 @@ const filter = {
       this.settings.hideUnranked;
     filterDiv.querySelector('[data-setting="signalMode"]').value =
       this.settings.signalMode;
-    filterDiv.querySelector('[data-setting="showSelectedTagsOnly"]').checked =
-      this.settings.showSelectedTagsOnly;
     filterDiv.querySelectorAll("[data-signal]").forEach((input) => {
       input.checked = this.settings.selectedSignals.includes(
         input.dataset.signal,
@@ -640,37 +634,8 @@ const filter = {
   applyBadgeVisibility() {
     const badgeSelector =
       ".onlyccfa-rank-badges .ccf-rank, .onlyccfa-rank-badges .rank-source";
-    const selectedRanks = (this.settings?.selectedRanks || []).filter(
-      (rank) => rank !== "ALL",
-    );
-    const selectedSignals = this.settings?.selectedSignals || [];
-
-    if (!this.settings?.showSelectedTagsOnly) {
-      document.querySelectorAll(badgeSelector).forEach((badge) => {
-        badge.style.display = "";
-      });
-      return;
-    }
-
-    const visibleSignals = new Set([
-      ...selectedRanks.map((rank) => `ccf${rank}`),
-      ...selectedSignals,
-    ]);
-
-    if (visibleSignals.size === 0) {
-      document.querySelectorAll(badgeSelector).forEach((badge) => {
-        badge.style.display = "";
-      });
-      return;
-    }
-
     document.querySelectorAll(badgeSelector).forEach((badge) => {
-      const badgeSignals = this.getBadgeSignalIds(badge);
-      badge.style.display = badgeSignals.some((signal) =>
-        visibleSignals.has(signal),
-      )
-        ? ""
-        : "none";
+      badge.style.display = "";
     });
   },
 
@@ -734,7 +699,7 @@ const filter = {
       deepTargetCount: 60,
       panelPosition: null,
       panelCollapsed: false,
-      showSelectedTagsOnly: true,
+      showSelectedTagsOnly: false,
     };
 
     try {
@@ -780,10 +745,7 @@ const filter = {
           typeof parsed.panelCollapsed === "boolean"
             ? parsed.panelCollapsed
             : defaults.panelCollapsed,
-        showSelectedTagsOnly:
-          typeof parsed.showSelectedTagsOnly === "boolean"
-            ? parsed.showSelectedTagsOnly
-            : defaults.showSelectedTagsOnly,
+        showSelectedTagsOnly: false,
       };
     } catch (error) {
       return defaults;
@@ -828,7 +790,6 @@ const filter = {
             ? this.clampPanelPosition(settings.panelPosition)
             : null,
           panelCollapsed: Boolean(settings.panelCollapsed),
-          showSelectedTagsOnly: Boolean(settings.showSelectedTagsOnly),
         }),
       );
     } catch (error) {
@@ -1094,12 +1055,6 @@ const filter = {
         }
         this.saveSettings(this.settings);
         this.applyFilter();
-      }
-
-      if (e.target.dataset.setting === "showSelectedTagsOnly") {
-        this.settings.showSelectedTagsOnly = e.target.checked;
-        this.saveSettings(this.settings);
-        this.applyBadgeVisibility();
       }
 
       if (e.target.dataset.setting === "defaultFilter") {
