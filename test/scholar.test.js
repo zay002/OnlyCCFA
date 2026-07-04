@@ -46,6 +46,7 @@ const fakeNavigator = {
 const fakeFilter = { managedEntries: [] };
 const apiCacheStore = new Map();
 let observedSearchResults = null;
+let lastAuthorContext = null;
 const context = {
   console,
   URL,
@@ -72,7 +73,8 @@ const context = {
     },
   },
   authorSources: {
-    resolveAuthors(authors) {
+    resolveAuthors(authors, authorContext) {
+      lastAuthorContext = authorContext;
       return authors.includes("姚期智")
         ? [{ source: "casAcademician", matchedName: "姚期智" }]
         : [];
@@ -914,6 +916,9 @@ authorBadgeEntry.querySelector = function (selector) {
 scholar.appendAuthorBadges(authorBadgeEntry);
 assert.ok(authorBadgeEntry.rankHost);
 assert.strictEqual(authorBadgeEntry.dataset.onlyccfaAuthorRanked, "true");
+assert.strictEqual(lastAuthorContext.title, "Untitled");
+assert.strictEqual(lastAuthorContext.venue, "Journal of the ACM");
+assert.ok(lastAuthorContext.authors.includes("姚期智"));
 
 assert.strictEqual(
   scholar.extractCitationVenue(
@@ -1359,6 +1364,10 @@ async function runAsyncTests() {
   const resolvedEntry = fakeScholarEntry();
   const resolvedVenues = [];
   const displayedVenues = [];
+  let resolvedFilterApplyCount = 0;
+  fakeFilter.applyFilter = function () {
+    resolvedFilterApplyCount += 1;
+  };
   scholar.fetchSearchResultVenue = async function () {
     return "International Journal of Computer Vision";
   };
@@ -1385,6 +1394,8 @@ async function runAsyncTests() {
   assert.deepStrictEqual(displayedVenues, [
     "International Journal of Computer Vision",
   ]);
+  assert.strictEqual(resolvedFilterApplyCount, 1);
+  delete fakeFilter.applyFilter;
 
   let fallbackCount = 0;
   const scheduledResolvedEntry = fakeScholarEntry();

@@ -84,6 +84,55 @@ function appendRankSourceSpansForDblpRef(node, refine, type, site) {
   appendRankSourceSpans(node, getDblpVenueText(refine, type), site);
 }
 
+function getDblpVenueDisplayName(refine, type) {
+  const fallback = getDblpVenueText(refine, type);
+  const match =
+    typeof ccf != "undefined" && typeof ccf.resolveVenueText == "function"
+      ? ccf.resolveVenueText(fallback || refine)
+      : null;
+  if (match && typeof ccf.getVenueDisplayName == "function") {
+    return ccf.getVenueDisplayName(match.refine, match.type, fallback);
+  }
+  if (
+    typeof ccf != "undefined" &&
+    typeof ccf.getVenueDisplayName == "function"
+  ) {
+    return ccf.getVenueDisplayName(refine, type, fallback);
+  }
+  return fallback;
+}
+
+function setDblpVenueName(node, refine, type, site) {
+  if (!site || typeof site.setVenueName != "function") {
+    return;
+  }
+
+  const entry =
+    typeof site.getEntryFromRankAnchor == "function"
+      ? site.getEntryFromRankAnchor(node)
+      : typeof site.getEntryFromNode == "function"
+        ? site.getEntryFromNode(node)
+        : null;
+  if (entry) {
+    site.setVenueName(entry, getDblpVenueDisplayName(refine, type));
+  }
+}
+
+function applyFilterAfterRankUpdate() {
+  if (typeof filter != "undefined" && typeof filter.applyFilter == "function") {
+    filter.applyFilter();
+  }
+}
+
+function appendDblpRank(node, refine, type, site) {
+  for (let getRankSpan of site.rankSpanList) {
+    appendRankSpan(node, getRankSpan(refine, type), site);
+  }
+  appendRankSourceSpansForDblpRef(node, refine, type, site);
+  setDblpVenueName(node, refine, type, site);
+  applyFilterAfterRankUpdate();
+}
+
 function fetchRank(node, title, authorA, year, site) {
   const manifest = chrome.runtime.getManifest();
   const version = manifest.version;
@@ -120,26 +169,15 @@ function fetchFromCache(cached, node, title, authorA, year, site) {
       dblp_abbr = resp.hit[0].info.venue;
     }
 
-    for (let getRankSpan of site.rankSpanList) {
-      // console.log("with abbr");
-      appendRankSpan(node, getRankSpan(dblp_abbr, "abbr"), site);
-    }
-    appendRankSourceSpansForDblpRef(node, dblp_abbr, "abbr", site);
+    appendDblpRank(node, dblp_abbr, "abbr", site);
   } else if (dblp_url == "/journals/pacmpl/pacmpl") {
     // Process PACM PL conferences using centralized helper function
     dblp_url = processPacmPlJournal(resp);
 
-    for (let getRankSpan of site.rankSpanList) {
-      appendRankSpan(node, getRankSpan(dblp_url, "url"), site);
-    }
-    appendRankSourceSpansForDblpRef(node, dblp_url, "url", site);
+    appendDblpRank(node, dblp_url, "url", site);
   } else {
     // console.log("dblp_url is not empty");
-    for (let getRankSpan of site.rankSpanList) {
-      // console.log("with url");
-      appendRankSpan(node, getRankSpan(dblp_url, "url"), site);
-    }
-    appendRankSourceSpansForDblpRef(node, dblp_url, "url", site);
+    appendDblpRank(node, dblp_url, "url", site);
   }
 }
 
@@ -235,26 +273,15 @@ function fetchFromDblpApi(query_url, node, title, authorA, year, site) {
         } else {
           dblp_abbr = resp.hit[0].info.venue;
         }
-        for (let getRankSpan of site.rankSpanList) {
-          // console.log("with abbr");
-          appendRankSpan(node, getRankSpan(dblp_abbr, "abbr"), site);
-        }
-        appendRankSourceSpansForDblpRef(node, dblp_abbr, "abbr", site);
+        appendDblpRank(node, dblp_abbr, "abbr", site);
       }
       // Process PACM PL conferences using centralized helper function
       else if (dblp_url == "/journals/pacmpl/pacmpl") {
         dblp_url = processPacmPlJournal(resp);
 
-        for (let getRankSpan of site.rankSpanList) {
-          appendRankSpan(node, getRankSpan(dblp_url, "url"), site);
-        }
-        appendRankSourceSpansForDblpRef(node, dblp_url, "url", site);
+        appendDblpRank(node, dblp_url, "url", site);
       } else {
-        for (let getRankSpan of site.rankSpanList) {
-          // console.log("with url");
-          appendRankSpan(node, getRankSpan(dblp_url, "url"), site);
-        }
-        appendRankSourceSpansForDblpRef(node, dblp_url, "url", site);
+        appendDblpRank(node, dblp_url, "url", site);
       }
     }
   };

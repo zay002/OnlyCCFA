@@ -5,7 +5,7 @@
 
 <p align="center">
   <a href="https://github.com/zay002/OnlyCCFA">
-    <img alt="OnlyCCFA version" src="https://img.shields.io/badge/OnlyCCFA-v0.7.4-EA4AAA?logo=github&logoColor=%23EA4AAA">
+    <img alt="OnlyCCFA version" src="https://img.shields.io/badge/OnlyCCFA-v0.8.0-EA4AAA?logo=github&logoColor=%23EA4AAA">
   </a>
   <a href="https://chromewebstore.google.com/detail/onlyccfa/cgbjdimlhdcjinagiacapnkmhpjkeabh">
     <img alt="Chrome Web Store" src="https://img.shields.io/badge/Chrome%20Web%20Store-OnlyCCFA-4285F4?logo=googlechrome&logoColor=white">
@@ -20,14 +20,14 @@
   <a href="./README.md">中文</a> | English
 </p>
 
-OnlyCCFA is a browser extension for academic search. It adds CCF, CORE/ICORE, JCR, CAS, SCI, EI, TH-CPL, Chinese core journal, field TOP and author-identity badges directly to Google Scholar, IEEE Xplore, Semantic Scholar, dblp, Connected Papers and Web of Science, so paper screening, BibTeX export and Zotero cleanup take less manual work.
+OnlyCCFA is a browser extension for academic search. It adds CCF, CORE/ICORE, JCR, CAS, SCI, EI, TH-CPL, Chinese core journal, field TOP and Chinese research-identity badges directly to Google Scholar, IEEE Xplore, Semantic Scholar, dblp, Connected Papers and Web of Science, so paper screening, BibTeX export and Zotero cleanup take less manual work.
 
 ## What It Does
 
 - **Shows venue signals at a glance**: CCF A/B/C, CORE A\*/A, JCR Q1/Q2, CAS 1/2/TOP, SCI/EI, TH-CPL, Chinese core journals, SWJTU-derived lists and field TOP badges stay visible as separate sources instead of being collapsed into a vague score.
 - **Filters real search pages**: Google Scholar, Semantic Scholar and IEEE Xplore get a side panel for badge combinations.
 - **Sorts Scholar results by citations**: reorder the current Google Scholar page from high to low or low to high citation count, then restore the original order when needed.
-- **Works well for Chinese research workflows**: Chinese core journals, TH-CPL, CAS/CAE academicians, NSFC Distinguished Young Scholar seed names and field signals for robotics, communications, electrical engineering, control and mechanical engineering are supported.
+- **Works well for Chinese research workflows**: Chinese core journals, TH-CPL, CAS/CAE academicians, NSFC Distinguished Young Scholar / Young Scientists Fund A seed names, and context-aware author disambiguation for English Scholar results are supported.
 - **Handles workshops and ambiguous names more carefully**: workshops get their own marker; ECCV, CVPR, ICCV, ICML and other common conference edge cases are covered by regression tests.
 - **Fits the collecting workflow**: Google Scholar deep filtering, profile-page badges, single/batch BibTeX export and Zotero Connector synchronization are built in.
 
@@ -51,7 +51,7 @@ GitHub Releases usually update faster. To test new builds early, download the re
 
 ## Data
 
-OnlyCCFA keeps its badge data auditable and easy to revert, including CCF, CORE/ICORE, JCR 2025, CAS upgraded partition 2025, TH-CPL, Chinese core journals, SWJTU-derived lists and public author-identity lists. The JCR refresh was informed by [hitfyd/ShowJCR](https://github.com/hitfyd/ShowJCR), and CORE/ICORE collection was informed by [benkeks/icore-ranks](https://github.com/benkeks/icore-ranks).
+OnlyCCFA keeps its badge data auditable and easy to revert, including CCF, CORE/ICORE, JCR 2025, CAS upgraded partition 2025, TH-CPL, Chinese core journals, SWJTU-derived lists and public author-identity lists. Author identity signals prefer official or reproducible CAS/CAE/NSFC-style sources; third-party pages are used only as seeds. The JCR refresh was informed by [hitfyd/ShowJCR](https://github.com/hitfyd/ShowJCR), and CORE/ICORE collection was informed by [benkeks/icore-ranks](https://github.com/benkeks/icore-ranks).
 
 Badges are search aids, not final academic judgments. Always follow the official standard required by your school, lab, funder or venue.
 

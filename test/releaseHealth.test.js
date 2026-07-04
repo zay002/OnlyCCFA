@@ -24,5 +24,13 @@ assert.ok(result.summary.releaseEntries.includes("manifest.json"));
 assert.ok(result.summary.releaseEntries.includes("script.js"));
 
 assert.ok(result.summary.dataSources.journalRankSources.records > 20000);
-assert.ok(result.summary.dataSources.authorRankSources.records > 4000);
+assert.ok(result.summary.dataSources.authorRankSources.records > 4500);
+assert.ok(
+  result.summary.dataSources.authorRankSources.sources
+    .distinguishedYoungScholar >= 1000,
+);
+assert.ok(
+  result.summary.dataSources.authorRankSources.supplementRecordsWithProvenance >
+    0,
+);
 assert.ok(result.summary.dataSources.swjtuRankSources.records > 1000);

@@ -54,7 +54,32 @@ assert.ok(officialEnglishTags.some((tag) => tag.source === "caeAcademician"));
 assert.strictEqual(authorSources.resolveAuthors(["A Yao"]).length, 0);
 assert.strictEqual(authorSources.resolveAuthors(["X Wang"]).length, 0);
 assert.strictEqual(authorSources.resolveAuthors(["Liu Tao"]).length, 0);
-assert.strictEqual(authorSources.resolveAuthors(["Wang Xiaoyun"]).length, 0);
+assert.ok(
+  !authorSources
+    .resolveAuthors(["Wang Xiaoyun"])
+    .some((tag) => ["casAcademician", "caeAcademician"].includes(tag.source)),
+);
+
+const wangXiaoyunCasTags = authorSources.resolveAuthors(["王小云"]);
+assert.ok(wangXiaoyunCasTags.some((tag) => tag.source === "casAcademician"));
+assert.ok(!wangXiaoyunCasTags.some((tag) => tag.source === "caeAcademician"));
+
+const wangXiaoyunCaeTags = authorSources.resolveAuthors(["王晓云"]);
+assert.ok(wangXiaoyunCaeTags.some((tag) => tag.source === "caeAcademician"));
+assert.ok(!wangXiaoyunCaeTags.some((tag) => tag.source === "casAcademician"));
+
+const cryptanalysisTags = authorSources.resolveAuthors(["D Feng", "X Wang"], {
+  title: "Cryptanalysis of the Hash Functions MD4 and RIPEMD",
+  snippet:
+    "Cryptanalysis of MD4 and RIPEMD by Dengguo Feng, Xiaoyun Wang, Xuejia Lai, and Hongbo Yu.",
+  authors: ["D Feng", "X Wang", "X Lai", "H Yu"],
+});
+const cryptanalysisCasTag = cryptanalysisTags.find(
+  (tag) => tag.source === "casAcademician",
+);
+assert.ok(cryptanalysisCasTag);
+assert.strictEqual(cryptanalysisCasTag.matchedName, "王小云");
+assert.ok(cryptanalysisCasTag.confidence >= 80);
 
 const unknownTags = authorSources.resolveAuthors(["Unknown Person"]);
 assert.strictEqual(unknownTags.length, 0);

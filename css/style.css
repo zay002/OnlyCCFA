@@ -153,6 +153,11 @@
   background-color: #8f3f71;
 }
 
+.rank-source-talent-candidate {
+  background-color: #6b7280;
+  border: 1px dashed #374151;
+}
+
 .rank-source-default {
   background-color: #6c757d;
 }

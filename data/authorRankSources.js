@@ -20,6 +20,10 @@ const authorRankSources = {
       label: "工程院院士",
       className: "rank-source-talent",
     },
+    talentCandidate: {
+      label: "人才信号?",
+      className: "rank-source-talent-candidate",
+    },
   },
   records: [
     {
@@ -30233,11 +30237,37 @@ const authorRankSources = {
     },
     {
       name: "王小云",
+      id: "person:wang-xiaoyun-cas",
+      cnName: "王小云",
+      enNames: ["Xiaoyun Wang", "Wang Xiaoyun"],
+      nameForms: ["X Wang", "X. Wang"],
       aliases: [
         "Wang Xiaoyun",
         "Xiaoyun Wang",
         "Wang Xiao Yun",
         "Xiao Yun Wang",
+      ],
+      affiliations: [
+        "清华大学",
+        "山东大学",
+        "Tsinghua University",
+        "Shandong University",
+      ],
+      fields: ["cryptography", "information security", "hash function"],
+      keywords: ["cryptanalysis", "MD4", "RIPEMD", "hash functions", "SM3"],
+      coauthors: [
+        "Dengguo Feng",
+        "Xuejia Lai",
+        "Hongbo Yu",
+        "D Feng",
+        "X Lai",
+        "H Yu",
+      ],
+      provenance: [
+        {
+          source: "CAS academician official list",
+          url: "https://casad.cas.cn/ysxx2022/ysmd/qtys/",
+        },
       ],
       tags: [
         {
@@ -30693,11 +30723,21 @@ const authorRankSources = {
     },
     {
       name: "王晓云",
+      id: "person:wang-xiaoyun-cae",
+      cnName: "王晓云",
+      enNames: ["Xiaoyun Wang", "Wang Xiaoyun"],
+      nameForms: ["X Wang", "X. Wang"],
       aliases: [
         "Wang Xiaoyun",
         "Xiaoyun Wang",
         "Wang Xiao Yun",
         "Xiao Yun Wang",
+      ],
+      provenance: [
+        {
+          source: "CAE academician official list",
+          url: "https://en.cae.cn/cae/html/en/col2229/column_2229_1.html",
+        },
       ],
       tags: [
         {
@@ -40722,3 +40762,6884 @@ const authorRankSources = {
     },
   ],
 };
+
+// BEGIN GENERATED DYS SUPPLEMENT
+authorRankSources.dysSupplementRecords = [
+  {
+    id: "person:dys-seed-827e-738e",
+    name: "艾玎",
+    cnName: "艾玎",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6bd5-5f66-8d85",
+    name: "毕彦超",
+    cnName: "毕彦超",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8521-65f6-9752",
+    name: "蔡时青",
+    cnName: "蔡时青",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-66f9-9e4f",
+    name: "曹鹏",
+    cnName: "曹鹏",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-66f9-5f66-751f",
+    name: "曹彦生",
+    cnName: "曹彦生",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-66fe-6770",
+    name: "曾杰",
+    cnName: "曾杰",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-66fe-5e86-5b58",
+    name: "曾庆存",
+    cnName: "曾庆存",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8f66-5ef6-79d1",
+    name: "车延科",
+    cnName: "车延科",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9648-6668",
+    name: "陈晨",
+    cnName: "陈晨",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9648-6625-5149",
+    name: "陈春光",
+    cnName: "陈春光",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9648-6d77-6ce2",
+    name: "陈海波",
+    cnName: "陈海波",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9648-6d77-751f",
+    name: "陈海生",
+    cnName: "陈海生",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9648-5170-82ac",
+    name: "陈兰芬",
+    cnName: "陈兰芬",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9648-826f-6021",
+    name: "陈良怡",
+    cnName: "陈良怡",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9648-84c9",
+    name: "陈蓉",
+    cnName: "陈蓉",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9648-5b9e",
+    name: "陈实",
+    cnName: "陈实",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9648-6811-742a",
+    name: "陈树琪",
+    cnName: "陈树琪",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9648-6653-6e05",
+    name: "陈晓清",
+    cnName: "陈晓清",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9648-65b0",
+    name: "陈新",
+    cnName: "陈新",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9648-76ca-5cf0",
+    name: "陈益峰",
+    cnName: "陈益峰",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9648-52c7",
+    name: "陈勇",
+    cnName: "陈勇",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9648-4e91-9701",
+    name: "陈云霁",
+    cnName: "陈云霁",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8c0c-5c0f-7ef4",
+    name: "谌小维",
+    cnName: "谌小维",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-7a0b-65b9-76ca",
+    name: "程方益",
+    cnName: "程方益",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-7a0b-660a",
+    name: "程昊",
+    cnName: "程昊",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-7a0b-7ea2",
+    name: "程红",
+    cnName: "程红",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-7a0b-5f00-7532",
+    name: "程开甲",
+    cnName: "程开甲",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-7a0b-6653",
+    name: "程晓",
+    cnName: "程晓",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-7a0b-946b-5f6c",
+    name: "程鑫彬",
+    cnName: "程鑫彬",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8fdf-6960",
+    name: "迟楠",
+    cnName: "迟楠",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-50a8-8bda-8fdb",
+    name: "储诚进",
+    cnName: "储诚进",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5d14-5b8f-5fd7",
+    name: "崔宏志",
+    cnName: "崔宏志",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5d14-5b97-5f3a",
+    name: "崔宗强",
+    cnName: "崔宗强",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6234-5e86",
+    name: "戴庆",
+    cnName: "戴庆",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6234-5f67-8679",
+    name: "戴彧虹",
+    cnName: "戴彧虹",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6234-5b50-9ad8",
+    name: "戴子高",
+    cnName: "戴子高",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-72c4-589e-5cf0",
+    name: "狄增峰",
+    cnName: "狄增峰",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-7fdf-6210",
+    name: "翟成",
+    cnName: "翟成",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-4e01-6945-68ee",
+    name: "丁楅森",
+    cnName: "丁楅森",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-4e01-5f6c",
+    name: "丁彬",
+    cnName: "丁彬",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-4e01-8d35-5e7f",
+    name: "丁贵广",
+    cnName: "丁贵广",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8463-5fc5-94a6",
+    name: "董必钦",
+    cnName: "董必钦",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8463-6d77-8363",
+    name: "董海荣",
+    cnName: "董海荣",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8463-5efa-534e",
+    name: "董建华",
+    cnName: "董建华",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-675c-5efa-5fe0",
+    name: "杜建忠",
+    cnName: "杜建忠",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6a0a-6c5f-8389",
+    name: "樊江莉",
+    cnName: "樊江莉",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-65b9-6b63",
+    name: "方正",
+    cnName: "方正",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-51af-56fd-745e",
+    name: "冯国瑞",
+    cnName: "冯国瑞",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-51af-6c5f-534e",
+    name: "冯江华",
+    cnName: "冯江华",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-4ed8-5de7-59b9",
+    name: "付巧妹",
+    cnName: "付巧妹",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5085-7ee7-9633",
+    name: "傅继阳",
+    cnName: "傅继阳",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9ad8-5927-660e",
+    name: "高大明",
+    cnName: "高大明",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9ad8-660a",
+    name: "高昊",
+    cnName: "高昊",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9ad8-5e86-857e",
+    name: "高庆蕾",
+    cnName: "高庆蕾",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9ad8-4ed5-658c",
+    name: "高仕斌",
+    cnName: "高仕斌",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9ad8-5f66-5f81",
+    name: "高彦征",
+    cnName: "高彦征",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9ad8-539f-5b81",
+    name: "高原宁",
+    cnName: "高原宁",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6208-60e0-660e",
+    name: "戈惠明",
+    cnName: "戈惠明",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-845b-5b50-4e49",
+    name: "葛子义",
+    cnName: "葛子义",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5bab-5360-5764",
+    name: "宫占坤",
+    cnName: "宫占坤",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9f9a-653f",
+    name: "龚政",
+    cnName: "龚政",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8c37-8d85-8c6a",
+    name: "谷超豪",
+    cnName: "谷超豪",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-987e-534e-52c7",
+    name: "顾华勇",
+    cnName: "顾华勇",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-987e-8bf5-82ac",
+    name: "顾诵芬",
+    cnName: "顾诵芬",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-90ed-4e9a-9f99",
+    name: "郭亚龙",
+    cnName: "郭亚龙",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-90ed-5fd7-5149",
+    name: "郭志光",
+    cnName: "郭志光",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-97e9-90a6-6210",
+    name: "韩邦成",
+    cnName: "韩邦成",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-90dd-6625-96e8",
+    name: "郝春雨",
+    cnName: "郝春雨",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-90dd-7ea2-4f1f",
+    name: "郝红伟",
+    cnName: "郝红伟",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-4f55-65ed-8f89",
+    name: "何旭辉",
+    cnName: "何旭辉",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6d2a-9759",
+    name: "洪静",
+    cnName: "洪静",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-4faf-4e91-5fb7",
+    name: "侯云德",
+    cnName: "侯云德",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-80e1-6e05-534e",
+    name: "胡清华",
+    cnName: "胡清华",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9ec4-8fea-9896",
+    name: "黄迪颖",
+    cnName: "黄迪颖",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9ec4-6c49-6c11",
+    name: "黄汉民",
+    cnName: "黄汉民",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9ec4-8f89",
+    name: "黄辉",
+    cnName: "黄辉",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9ec4-6606",
+    name: "黄昆",
+    cnName: "黄昆",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9ec4-78ca",
+    name: "黄磊",
+    cnName: "黄磊",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9ec4-6c5d-9526",
+    name: "黄汝锦",
+    cnName: "黄汝锦",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9ec4-65ed-534e",
+    name: "黄旭华",
+    cnName: "黄旭华",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9ec4-5ef6-5f3a",
+    name: "黄延强",
+    cnName: "黄延强",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9ec4-6c38-5b89",
+    name: "黄永安",
+    cnName: "黄永安",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9ec4-6c38-712f",
+    name: "黄永焯",
+    cnName: "黄永焯",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8d3e-6653-519b",
+    name: "贾晓军",
+    cnName: "贾晓军",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8d3e-5f66-5174",
+    name: "贾彦兴",
+    cnName: "贾彦兴",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8d3e-5b87",
+    name: "贾宇",
+    cnName: "贾宇",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6c5f-667a-52c7",
+    name: "江智勇",
+    cnName: "江智勇",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-59dc-957f-6d9b",
+    name: "姜长涛",
+    cnName: "姜长涛",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-848b-91d1-6d0b",
+    name: "蒋金洋",
+    cnName: "蒋金洋",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-7126-4e3d-9896",
+    name: "焦丽颖",
+    cnName: "焦丽颖",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-91d1-6021-6fc2",
+    name: "金怡濂",
+    cnName: "金怡濂",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-7a7a-7f3a",
+    name: "空缺",
+    cnName: "空缺",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5b54-7167-80dc",
+    name: "孔照胜",
+    cnName: "孔照胜",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5321-534e",
+    name: "匡华",
+    cnName: "匡华",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-84dd-6590",
+    name: "蓝斐",
+    cnName: "蓝斐",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-51b7-96e8-6b23",
+    name: "冷雨欣",
+    cnName: "冷雨欣",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-5a75-9896",
+    name: "李婵颖",
+    cnName: "李婵颖",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-4ece-521a",
+    name: "李从刚",
+    cnName: "李从刚",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-9053-8c6b",
+    name: "李道豫",
+    cnName: "李道豫",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-5fb7-4ec1",
+    name: "李德仁",
+    cnName: "李德仁",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-5cf0",
+    name: "李峰",
+    cnName: "李峰",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-521a",
+    name: "李刚",
+    cnName: "李刚",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-56fd-826f",
+    name: "李国良",
+    cnName: "李国良",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-5efa-6811",
+    name: "李建树",
+    cnName: "李建树",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-5251-950b",
+    name: "李剑锋",
+    cnName: "李剑锋",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-78ca",
+    name: "李磊",
+    cnName: "李磊",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-4e3d",
+    name: "李丽",
+    cnName: "李丽",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-660e",
+    name: "李明",
+    cnName: "李明",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-84c9",
+    name: "李蓉",
+    cnName: "李蓉",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-601d-4eae",
+    name: "李思亮",
+    cnName: "李思亮",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-6d9b",
+    name: "李涛",
+    cnName: "李涛",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-536b",
+    name: "李卫",
+    cnName: "李卫",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-536b-534e",
+    name: "李卫华",
+    cnName: "李卫华",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-6b66-534e",
+    name: "李武华",
+    cnName: "李武华",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-5148-950b",
+    name: "李先锋",
+    cnName: "李先锋",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-8fce-5149",
+    name: "李迎光",
+    cnName: "李迎光",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-4e8e",
+    name: "李于",
+    cnName: "李于",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-6bd3-9f99",
+    name: "李毓龙",
+    cnName: "李毓龙",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-632f-58f0",
+    name: "李振声",
+    cnName: "李振声",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-6574-6797",
+    name: "李整林",
+    cnName: "李整林",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-6b63-5f3a",
+    name: "李正强",
+    cnName: "李正强",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-674e-5fd7-4f1f",
+    name: "李志伟",
+    cnName: "李志伟",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5ec9-7389-6ce2",
+    name: "廉玉波",
+    cnName: "廉玉波",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6881-4f5c-5802",
+    name: "梁作堂",
+    cnName: "梁作堂",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5ed6-534e",
+    name: "廖华",
+    cnName: "廖华",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5ed6-857e",
+    name: "廖蕾",
+    cnName: "廖蕾",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6797-9704-6c9b",
+    name: "林霄沛",
+    cnName: "林霄沛",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6797-6653",
+    name: "林晓",
+    cnName: "林晓",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6797-707c-950b",
+    name: "林灼锋",
+    cnName: "林灼锋",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5218-6ce2",
+    name: "刘波",
+    cnName: "刘波",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5218-627f-82b3",
+    name: "刘承芳",
+    cnName: "刘承芳",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5218-4e1c-751f",
+    name: "刘东生",
+    cnName: "刘东生",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5218-66f4-751f",
+    name: "刘更生",
+    cnName: "刘更生",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5218-5e7f-4e49",
+    name: "刘广义",
+    cnName: "刘广义",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5218-6d77-65fa",
+    name: "刘海旺",
+    cnName: "刘海旺",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5218-5efa-4e9a",
+    name: "刘建亚",
+    cnName: "刘建亚",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5218-52b2-677e",
+    name: "刘劲松",
+    cnName: "刘劲松",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5218-8fde-5e86",
+    name: "刘连庆",
+    cnName: "刘连庆",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5218-6500",
+    name: "刘攀",
+    cnName: "刘攀",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5218-57f9-5ff5",
+    name: "刘培念",
+    cnName: "刘培念",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5218-9510-5e73",
+    name: "刘锐平",
+    cnName: "刘锐平",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5218-80dc-5229",
+    name: "刘胜利",
+    cnName: "刘胜利",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5218-65b0-534e",
+    name: "刘新华",
+    cnName: "刘新华",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5218-6d0b",
+    name: "刘洋",
+    cnName: "刘洋",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5218-9896",
+    name: "刘颖",
+    cnName: "刘颖",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5218-6c38-5766",
+    name: "刘永坦",
+    cnName: "刘永坦",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5218-4e91-6dee",
+    name: "刘云淮",
+    cnName: "刘云淮",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5218-518d-6bc5",
+    name: "刘再毅",
+    cnName: "刘再毅",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5218-4e89",
+    name: "刘争",
+    cnName: "刘争",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5218-6b63-7337",
+    name: "刘正猷",
+    cnName: "刘正猷",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-67f3-536b-5e73",
+    name: "柳卫平",
+    cnName: "柳卫平",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-67f3-632f-5cf0",
+    name: "柳振峰",
+    cnName: "柳振峰",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-67f3-632f-946b",
+    name: "柳振鑫",
+    cnName: "柳振鑫",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9f99-5efa-6210",
+    name: "龙建成",
+    cnName: "龙建成",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9f99-4e16-5175",
+    name: "龙世兵",
+    cnName: "龙世兵",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5362-5b5d-5f3a",
+    name: "卢孝强",
+    cnName: "卢孝强",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5362-5174",
+    name: "卢兴",
+    cnName: "卢兴",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9c81-4f2f-57d9",
+    name: "鲁伯埙",
+    cnName: "鲁伯埙",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9c81-519b-52c7",
+    name: "鲁军勇",
+    cnName: "鲁军勇",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9646-536b-5175",
+    name: "陆卫兵",
+    cnName: "陆卫兵",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5415-7ee7-6210",
+    name: "吕继成",
+    cnName: "吕继成",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5415-53cb-519b",
+    name: "吕友军",
+    cnName: "吕友军",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-683e-65b0-519b",
+    name: "栾新军",
+    cnName: "栾新军",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-7f57-5764",
+    name: "罗坤",
+    cnName: "罗坤",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9a86-519b-59d4",
+    name: "骆军委",
+    cnName: "骆军委",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9a6c-5316-817e",
+    name: "马化腾",
+    cnName: "马化腾",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9a6c-5584-7965",
+    name: "马善祥",
+    cnName: "马善祥",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9a6c-5e05",
+    name: "马帅",
+    cnName: "马帅",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9a6c-4e07-797a",
+    name: "马万祺",
+    cnName: "马万祺",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9a6c-4e91",
+    name: "马云",
+    cnName: "马云",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-95f5-6069-6cfd",
+    name: "闵恩泽",
+    cnName: "闵恩泽",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-660e-4e1c",
+    name: "明东",
+    cnName: "明东",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-7f2a-5c0f-5e73",
+    name: "缪小平",
+    cnName: "缪小平",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5e74-5ea6",
+    name: "年度",
+    cnName: "年度",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-519c-6751-6539-9769-7684-5148-884c-8005",
+    name: "农村改革的先行者",
+    cnName: "农村改革的先行者",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6f58-5175",
+    name: "潘兵",
+    cnName: "潘兵",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6f58-4e19-624d",
+    name: "潘丙才",
+    cnName: "潘丙才",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6f58-7eb2",
+    name: "潘纲",
+    cnName: "潘纲",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6f58-5dcd-5cfb",
+    name: "潘巍峻",
+    cnName: "潘巍峻",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f6d-627f-5fd7",
+    name: "彭承志",
+    cnName: "彭承志",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f6d-6728-6839",
+    name: "彭木根",
+    cnName: "彭木根",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f6d-5b87-65b0",
+    name: "彭宇新",
+    cnName: "彭宇新",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9f50-6da6-4e1c",
+    name: "齐润东",
+    cnName: "齐润东",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-94b1-4e03-864e",
+    name: "钱七虎",
+    cnName: "钱七虎",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-79e6-6210-5cf0",
+    name: "秦成峰",
+    cnName: "秦成峰",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-79e6-56fd-653f",
+    name: "秦国政",
+    cnName: "秦国政",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9752-683c-52d2-5409-65e5-683c-4e50",
+    name: "青格勒吉日格乐",
+    cnName: "青格勒吉日格乐",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-66f2-9009-8f89",
+    name: "曲选辉",
+    cnName: "曲选辉",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5168-4f1f",
+    name: "全伟",
+    cnName: "全伟",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-4eba-6c11-5de5-5320",
+    name: "人民工匠",
+    cnName: "人民工匠",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-4eba-6c11-6559-80b2-5bb6",
+    name: "人民教育家",
+    cnName: "人民教育家",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-4eba-6c11-6977-6a21",
+    name: "人民楷模",
+    cnName: "人民楷模",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-4eba-6c11-79d1-5b66-5bb6",
+    name: "人民科学家",
+    cnName: "人民科学家",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-4eba-6c11-536b-58eb",
+    name: "人民卫士",
+    cnName: "人民卫士",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-4eba-6c11-533b-62a4-5de5-4f5c-8005",
+    name: "人民医护工作者",
+    cnName: "人民医护工作者",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-4eba-6c11-827a-672f-5bb6",
+    name: "人民艺术家",
+    cnName: "人民艺术家",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-4eba-6c11-82f1-96c4",
+    name: "人民英雄",
+    cnName: "人民英雄",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8363-8a89-79f0-53f7",
+    name: "荣誉称号",
+    cnName: "荣誉称号",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-90b5-6d9b",
+    name: "邵涛",
+    cnName: "邵涛",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6c88-4fca",
+    name: "沈俊",
+    cnName: "沈俊",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6c88-6653-9a85",
+    name: "沈晓骅",
+    cnName: "沈晓骅",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5e08-660c-7eea",
+    name: "师昌绪",
+    cnName: "师昌绪",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-77f3-5cf0",
+    name: "石峰",
+    cnName: "石峰",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-77f3-4f1f-7fa4",
+    name: "石伟群",
+    cnName: "石伟群",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-53f2-70b3-950b",
+    name: "史炳锋",
+    cnName: "史炳锋",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-53f2-5927-6797",
+    name: "史大林",
+    cnName: "史大林",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-82cf-826f-78a7",
+    name: "苏良碧",
+    cnName: "苏良碧",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5b59-98de",
+    name: "孙飞",
+    cnName: "孙飞",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5b59-5bb6-680b",
+    name: "孙家栋",
+    cnName: "孙家栋",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5b59-5efa-56fd",
+    name: "孙建国",
+    cnName: "孙建国",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5b59-5065",
+    name: "孙健",
+    cnName: "孙健",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5b59-9e93-5ca9",
+    name: "孙麓岩",
+    cnName: "孙麓岩",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5b59-536b-73b2",
+    name: "孙卫玲",
+    cnName: "孙卫玲",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5b59-900a",
+    name: "孙逊",
+    cnName: "孙逊",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8c2d-5b89-6c5f",
+    name: "谭安江",
+    cnName: "谭安江",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8c2d-660e-4e7e",
+    name: "谭明乾",
+    cnName: "谭明乾",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6c64-5e73-5e73",
+    name: "汤平平",
+    cnName: "汤平平",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5510-671d-751f",
+    name: "唐朝生",
+    cnName: "唐朝生",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5510-91d1-8f89",
+    name: "唐金辉",
+    cnName: "唐金辉",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5510-4e9a-6885",
+    name: "唐亚梅",
+    cnName: "唐亚梅",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9676-5c0f-8363",
+    name: "陶小荣",
+    cnName: "陶小荣",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9676-6653-660e",
+    name: "陶晓明",
+    cnName: "陶晓明",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-7530-534e-96e8",
+    name: "田华雨",
+    cnName: "田华雨",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-7530-8f89",
+    name: "田辉",
+    cnName: "田辉",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5c60-5466-5466",
+    name: "屠呦呦",
+    cnName: "屠呦呦",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6c6a-6000-8fdc",
+    name: "汪怀远",
+    cnName: "汪怀远",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6c6a-540d-6000",
+    name: "汪名怀",
+    cnName: "汪名怀",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-7231-6167",
+    name: "王爱慧",
+    cnName: "王爱慧",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-521d",
+    name: "王初",
+    cnName: "王初",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-5927-73e9",
+    name: "王大珩",
+    cnName: "王大珩",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-5927-4e2d",
+    name: "王大中",
+    cnName: "王大中",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-53d1-6d32",
+    name: "王发洲",
+    cnName: "王发洲",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-521a",
+    name: "王刚",
+    cnName: "王刚",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-5149-81e3",
+    name: "王光臣",
+    cnName: "王光臣",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-6d77-658c",
+    name: "王海斌",
+    cnName: "王海斌",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-6d77-51e4",
+    name: "王海凤",
+    cnName: "王海凤",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-5065-541b",
+    name: "王健君",
+    cnName: "王健君",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-91d1-52c7",
+    name: "王金勇",
+    cnName: "王金勇",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-664b-519b",
+    name: "王晋军",
+    cnName: "王晋军",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-529b-54f2",
+    name: "王力哲",
+    cnName: "王力哲",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-7acb-5cf0",
+    name: "王立峰",
+    cnName: "王立峰",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-6797",
+    name: "王林",
+    cnName: "王林",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-59d7-59d7",
+    name: "王姗姗",
+    cnName: "王姗姗",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-4e66-8302",
+    name: "王书茂",
+    cnName: "王书茂",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-94c1",
+    name: "王铁",
+    cnName: "王铁",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-4f1f",
+    name: "王伟",
+    cnName: "王伟",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-5c0f-8c1f",
+    name: "王小谟",
+    cnName: "王小谟",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-5c0f-840d",
+    name: "王小萍",
+    cnName: "王小萍",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-6653-4f1f",
+    name: "王晓伟",
+    cnName: "王晓伟",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-9009",
+    name: "王选",
+    cnName: "王选",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-5e94-7965",
+    name: "王应祥",
+    cnName: "王应祥",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-76c8-76c8",
+    name: "王盈盈",
+    cnName: "王盈盈",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-6c38-5e86",
+    name: "王永庆",
+    cnName: "王永庆",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-6c38-5fd7",
+    name: "王永志",
+    cnName: "王永志",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-6cfd-5c71",
+    name: "王泽山",
+    cnName: "王泽山",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-589e-5168",
+    name: "王增全",
+    cnName: "王增全",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-632f-5f3a",
+    name: "王振强",
+    cnName: "王振强",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-632f-4e49",
+    name: "王振义",
+    cnName: "王振义",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-6b63-6c79",
+    name: "王正汹",
+    cnName: "王正汹",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-5fd7-4f1f",
+    name: "王志伟",
+    cnName: "王志伟",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-738b-5fe0-8bda",
+    name: "王忠诚",
+    cnName: "王忠诚",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6e29-658c",
+    name: "温斌",
+    cnName: "温斌",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-7fc1-7ea2-660e",
+    name: "翁红明",
+    cnName: "翁红明",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5deb-6c38-777f",
+    name: "巫永睿",
+    cnName: "巫永睿",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5434-4e01-8d22",
+    name: "吴丁财",
+    cnName: "吴丁财",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5434-6000-6625",
+    name: "吴怀春",
+    cnName: "吴怀春",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5434-529b-6ce2",
+    name: "吴力波",
+    cnName: "吴力波",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5434-826f-955b",
+    name: "吴良镛",
+    cnName: "吴良镛",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5434-5b5f-8d85",
+    name: "吴孟超",
+    cnName: "吴孟超",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5434-6c34-6797",
+    name: "吴水林",
+    cnName: "吴水林",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5434-6587-4fca",
+    name: "吴文俊",
+    cnName: "吴文俊",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5434-52c7",
+    name: "吴勇",
+    cnName: "吴勇",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5434-957f-5f81",
+    name: "吴长征",
+    cnName: "吴长征",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5434-5f81-9552",
+    name: "吴征镒",
+    cnName: "吴征镒",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5434-5fe0-5e86",
+    name: "吴忠庆",
+    cnName: "吴忠庆",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-4f0d-5fd7-9cb2",
+    name: "伍志鲲",
+    cnName: "伍志鲲",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6b66-6d77-658c",
+    name: "武海斌",
+    cnName: "武海斌",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5411-70e8",
+    name: "向烨",
+    cnName: "向烨",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8c22-6842-9752",
+    name: "谢桂青",
+    cnName: "谢桂青",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8c22-6656",
+    name: "谢晖",
+    cnName: "谢晖",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8c22-5bb6-9e9f",
+    name: "谢家麟",
+    cnName: "谢家麟",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8c22-5c0f-8363",
+    name: "谢小荣",
+    cnName: "谢小荣",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f90-98de",
+    name: "徐飞",
+    cnName: "徐飞",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f90-5149-5baa",
+    name: "徐光宪",
+    cnName: "徐光宪",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f90-91d1-5bcc",
+    name: "徐金富",
+    cnName: "徐金富",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f90-5f3a",
+    name: "徐强",
+    cnName: "徐强",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f90-6811-6c38",
+    name: "徐树永",
+    cnName: "徐树永",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f90-7ef4-6797",
+    name: "徐维林",
+    cnName: "徐维林",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f90-6587-6e0a",
+    name: "徐文渊",
+    cnName: "徐文渊",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-859b-5176-5764",
+    name: "薛其坤",
+    cnName: "薛其坤",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-859b-5929",
+    name: "薛天",
+    cnName: "薛天",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-9122-4fca-654f",
+    name: "鄢俊敏",
+    cnName: "鄢俊敏",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-95eb-632f-4e9a",
+    name: "闫振亚",
+    cnName: "闫振亚",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-664f-5411-534e",
+    name: "晏向华",
+    cnName: "晏向华",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6768-741b",
+    name: "杨琛",
+    cnName: "杨琛",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6768-51ac-6885",
+    name: "杨冬梅",
+    cnName: "杨冬梅",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6768-6052-6743",
+    name: "杨恒权",
+    cnName: "杨恒权",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6768-8f89",
+    name: "杨辉",
+    cnName: "杨辉",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6768-519b",
+    name: "杨军",
+    cnName: "杨军",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6768-5764-5fb7",
+    name: "杨坤德",
+    cnName: "杨坤德",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6768-529b",
+    name: "杨力",
+    cnName: "杨力",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6768-5b81",
+    name: "杨宁",
+    cnName: "杨宁",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6768-4e0a-5cf0",
+    name: "杨上峰",
+    cnName: "杨上峰",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6768-7389-8d85",
+    name: "杨玉超",
+    cnName: "杨玉超",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6768-8fd0-5175",
+    name: "杨运兵",
+    cnName: "杨运兵",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-59da-7ea2-6770",
+    name: "姚红杰",
+    cnName: "姚红杰",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-59da-5c0f-864e",
+    name: "姚小虎",
+    cnName: "姚小虎",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-59da-88d5-8d35",
+    name: "姚裕贵",
+    cnName: "姚裕贵",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-53f6-7b03-6b63",
+    name: "叶笃正",
+    cnName: "叶笃正",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-53f6-6811-96c6",
+    name: "叶树集",
+    cnName: "叶树集",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6e38-7ecf-78a7",
+    name: "游经碧",
+    cnName: "游经碧",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6e38-96e8-8499",
+    name: "游雨蒙",
+    cnName: "游雨蒙",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-4e8e-6625-7ea2",
+    name: "于春红",
+    cnName: "于春红",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-4e8e-6d77-9e4f",
+    name: "于海鹏",
+    cnName: "于海鹏",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-4e8e-9ece",
+    name: "于黎",
+    cnName: "于黎",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-4e8e-654f",
+    name: "于敏",
+    cnName: "于敏",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-4e8e-6f2a",
+    name: "于漪",
+    cnName: "于漪",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-4f59-5f66",
+    name: "余彦",
+    cnName: "余彦",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-865e-5409-6d77",
+    name: "虞吉海",
+    cnName: "虞吉海",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8881-9686-5e73",
+    name: "袁隆平",
+    cnName: "袁隆平",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8881-8343",
+    name: "袁荃",
+    cnName: "袁荃",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8881-6587-5e73",
+    name: "袁文平",
+    cnName: "袁文平",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8881-589e-4f1f",
+    name: "袁增伟",
+    cnName: "袁增伟",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8881-5fd7-521a",
+    name: "袁志刚",
+    cnName: "袁志刚",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-82d1-4e16-5251",
+    name: "苑世剑",
+    cnName: "苑世剑",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-963f-6f2b",
+    name: "张阿漫",
+    cnName: "张阿漫",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-672c-5a01",
+    name: "张本威",
+    cnName: "张本威",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-6668",
+    name: "张晨",
+    cnName: "张晨",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-6668-8f89",
+    name: "张晨辉",
+    cnName: "张晨辉",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-5f1b",
+    name: "张弛",
+    cnName: "张弛",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-5b58-6d69",
+    name: "张存浩",
+    cnName: "张存浩",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-4e1c",
+    name: "张东",
+    cnName: "张东",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-5e7f-6e05",
+    name: "张广清",
+    cnName: "张广清",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-5efa",
+    name: "张建",
+    cnName: "张建",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-5efa-534e",
+    name: "张建华",
+    cnName: "张建华",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-6770",
+    name: "张杰",
+    cnName: "张杰",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-8fdb-6210",
+    name: "张进成",
+    cnName: "张进成",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-9756",
+    name: "张靖",
+    cnName: "张靖",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-78ca",
+    name: "张磊",
+    cnName: "张磊",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-7acb-5f3a",
+    name: "张立强",
+    cnName: "张立强",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-9f99",
+    name: "张龙",
+    cnName: "张龙",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-6587-5f6c",
+    name: "张文彬",
+    cnName: "张文彬",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-71ee-6797",
+    name: "张燮林",
+    cnName: "张燮林",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-65b0-96e8",
+    name: "张新雨",
+    cnName: "张新雨",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-8273-950b",
+    name: "张艳锋",
+    cnName: "张艳锋",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-5f71",
+    name: "张影",
+    cnName: "张影",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-745c",
+    name: "张瑜",
+    cnName: "张瑜",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-6b63-5f6a",
+    name: "张正彪",
+    cnName: "张正彪",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5f20-5353-5143",
+    name: "张卓元",
+    cnName: "张卓元",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-7ae0-798f-7965",
+    name: "章福祥",
+    cnName: "章福祥",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8d75-4f20-5cf0",
+    name: "赵传峰",
+    cnName: "赵传峰",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8d75-8fbe-6167",
+    name: "赵达慧",
+    cnName: "赵达慧",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8d75-516c-535a",
+    name: "赵公博",
+    cnName: "赵公博",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8d75-5b8f-4f1f",
+    name: "赵宏伟",
+    cnName: "赵宏伟",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8d75-534e-7ae0",
+    name: "赵华章",
+    cnName: "赵华章",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8d75-5efa-56fd",
+    name: "赵建国",
+    cnName: "赵建国",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8d75-664b-8363",
+    name: "赵晋荣",
+    cnName: "赵晋荣",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8d75-7acb-4e1c",
+    name: "赵立东",
+    cnName: "赵立东",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8d75-9e4f-519b",
+    name: "赵鹏军",
+    cnName: "赵鹏军",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8d75-5f3a",
+    name: "赵强",
+    cnName: "赵强",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8d75-6653-4e3d",
+    name: "赵晓丽",
+    cnName: "赵晓丽",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8d75-5fe0-8d24",
+    name: "赵忠贤",
+    cnName: "赵忠贤",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-90d1-5b8f-5ead",
+    name: "郑宏庭",
+    cnName: "郑宏庭",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-90d1-534e",
+    name: "郑华",
+    cnName: "郑华",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-90d1-54f2-654f",
+    name: "郑哲敏",
+    cnName: "郑哲敏",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-949f-4f1f-6c11",
+    name: "钟伟民",
+    cnName: "钟伟民",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-949f-7fbd-6b66",
+    name: "钟羽武",
+    cnName: "钟羽武",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5468-5b8f-4f1f",
+    name: "周宏伟",
+    cnName: "周宏伟",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5468-6d01",
+    name: "周洁",
+    cnName: "周洁",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5468-9e4f",
+    name: "周鹏",
+    cnName: "周鹏",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5468-987a-6842",
+    name: "周顺桂",
+    cnName: "周顺桂",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5468-6587-6167",
+    name: "周文慧",
+    cnName: "周文慧",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5468-6b23-60a6",
+    name: "周欣悦",
+    cnName: "周欣悦",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5468-5174-6c5f",
+    name: "周兴江",
+    cnName: "周兴江",
+    year: null,
+    provenance: [
+      {
+        source: "Maigoo research honor seed",
+        url: "https://www.maigoo.com/news/529622.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "seed",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-5468-5fd7-521a",
+    name: "周志刚",
+    cnName: "周志刚",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6731-6ce2",
+    name: "朱波",
+    cnName: "朱波",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6731-5609",
+    name: "朱嘉",
+    cnName: "朱嘉",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6731-542c",
+    name: "朱听",
+    cnName: "朱听",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6731-6c38-7fa4",
+    name: "朱永群",
+    cnName: "朱永群",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-6731-4f5c-5cf0",
+    name: "朱作峰",
+    cnName: "朱作峰",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+  {
+    id: "person:dys-seed-8a3e-658c",
+    name: "訾斌",
+    cnName: "訾斌",
+    year: 2019,
+    provenance: [
+      {
+        source: "Maigoo 2019 NSFC Distinguished Young Scholar seed",
+        url: "https://www.maigoo.com/news/524880.html",
+      },
+    ],
+    tags: [
+      {
+        source: "distinguishedYoungScholar",
+        value: "2019",
+      },
+    ],
+  },
+];
+authorRankSources.dysSupplementRecords.forEach(function (record) {
+  const existing = authorRankSources.records.find(function (item) {
+    return item.name === record.name || item.cnName === record.name;
+  });
+  if (existing) {
+    existing.provenance = (existing.provenance || []).concat(
+      record.provenance || [],
+    );
+    const hasDys = (existing.tags || []).some(function (tag) {
+      return tag.source === "distinguishedYoungScholar";
+    });
+    if (!hasDys) {
+      existing.tags = (existing.tags || []).concat(record.tags || []);
+    }
+    return;
+  }
+  authorRankSources.records.push(record);
+});
+// END GENERATED DYS SUPPLEMENT

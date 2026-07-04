@@ -18,12 +18,16 @@ const dataSourceChecks = [
   {
     globalName: "authorRankSources",
     relativePath: "data/authorRankSources.js",
-    minRecords: 4000,
+    minRecords: 4500,
     requiredSources: [
       "distinguishedYoungScholar",
       "casAcademician",
       "caeAcademician",
+      "talentCandidate",
     ],
+    minSourceCounts: {
+      distinguishedYoungScholar: 1000,
+    },
   },
   {
     globalName: "swjtuRankSources",
@@ -92,7 +96,37 @@ function checkDataSource(root, check, errors) {
     }
   });
 
-  return { records };
+  const sources = {};
+  (data?.records || []).forEach((record) => {
+    (record.tags || []).forEach((tag) => {
+      sources[tag.source] = (sources[tag.source] || 0) + 1;
+    });
+  });
+
+  Object.entries(check.minSourceCounts || {}).forEach(([source, minCount]) => {
+    if ((sources[source] || 0) < minCount) {
+      errors.push(
+        `${check.globalName}.${source} has ${sources[source] || 0} records; expected at least ${minCount}`,
+      );
+    }
+  });
+
+  const supplementRecords = Array.isArray(data?.dysSupplementRecords)
+    ? data.dysSupplementRecords
+    : [];
+  const supplementRecordsWithProvenance = supplementRecords.filter(
+    (record) => record.id && record.name && record.tags && record.provenance,
+  ).length;
+  if (
+    check.globalName === "authorRankSources" &&
+    supplementRecords.length !== supplementRecordsWithProvenance
+  ) {
+    errors.push(
+      `${check.globalName} has supplemental records without id/name/tags/provenance`,
+    );
+  }
+
+  return { records, sources, supplementRecordsWithProvenance };
 }
 
 function checkReleaseHealth(root = path.resolve(__dirname, "..")) {

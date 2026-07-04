@@ -5,7 +5,7 @@
 
 <p align="center">
   <a href="https://github.com/zay002/OnlyCCFA">
-    <img alt="OnlyCCFA version" src="https://img.shields.io/badge/OnlyCCFA-v0.7.4-EA4AAA?logo=github&logoColor=%23EA4AAA">
+    <img alt="OnlyCCFA version" src="https://img.shields.io/badge/OnlyCCFA-v0.8.0-EA4AAA?logo=github&logoColor=%23EA4AAA">
   </a>
   <a href="https://chromewebstore.google.com/detail/onlyccfa/cgbjdimlhdcjinagiacapnkmhpjkeabh">
     <img alt="Chrome Web Store" src="https://img.shields.io/badge/Chrome%20Web%20Store-OnlyCCFA-4285F4?logo=googlechrome&logoColor=white">
@@ -20,14 +20,14 @@
   中文 | <a href="./README_en.md">English</a>
 </p>
 
-OnlyCCFA 是一个科研检索浏览器扩展。它把 CCF、CORE/ICORE、JCR、中科院分区、SCI、EI、TH-CPL、中文核心、方向 TOP、作者身份等标签直接放进 Google Scholar、IEEE Xplore、Semantic Scholar、dblp、Connected Papers 和 Web of Science，让论文筛选、引用导出和 Zotero 整理少一点重复劳动。
+OnlyCCFA 是一个科研检索浏览器扩展。它把 CCF、CORE/ICORE、JCR、中科院分区、SCI、EI、TH-CPL、中文核心、方向 TOP 和中文科研身份信号直接放进 Google Scholar、IEEE Xplore、Semantic Scholar、dblp、Connected Papers 和 Web of Science，让论文筛选、引用导出和 Zotero 整理少一点重复劳动。
 
 ## 你会得到什么
 
 - **一眼看清 venue 信号**：CCF A/B/C、CORE A\*/A、JCR Q1/Q2、中科院 1区/2区/TOP、SCI/EI、TH-CPL、中文核心、SWJTU 目录和多个方向 TOP 标签并列展示，不合成含糊总分。
 - **直接筛选当前检索结果**：Google Scholar、Semantic Scholar 和 IEEE Xplore 支持侧边筛选面板，可按标签组合过滤。
 - **按引用数重排 Scholar 页面**：在 Google Scholar 当前页按引用数从高到低或从低到高排序，也可以一键恢复默认顺序。
-- **更适合中文科研场景**：覆盖中文核心、TH-CPL、两院院士、国家杰青种子名单，以及机器人、通信、电气、控制、机械等方向信号。
+- **更适合中文科研场景**：覆盖中文核心、TH-CPL、两院院士、国家杰青/青年科学基金 A 类种子名单，并在英文 Scholar 结果中结合题名、合作者和关键词消歧作者身份。
 - **少踩 workshop 和缩写歧义坑**：workshop 单独标记；ECCV、CVPR、ICCV、ICML 等常见会议有回归测试保护，尽量避免把简称、LNCS 或异步回退误识别成错误标签。
 - **面向整理工作流**：支持 Google Scholar 深度筛选、个人主页标注、单篇/批量 BibTeX 导出，并让 Zotero Connector 只看到筛选后的候选结果。
 
@@ -51,7 +51,7 @@ GitHub Release 通常更新更快。想提前测试新功能时，可以下载 r
 
 ## 数据来源
 
-OnlyCCFA 使用可审计、可回滚的数据文件维护标签来源，包括 CCF、CORE/ICORE、JCR 2025、中科院升级版 2025、TH-CPL、中文核心、SWJTU 目录和公开作者身份名单。JCR 更新参考 [hitfyd/ShowJCR](https://github.com/hitfyd/ShowJCR)，CORE/ICORE 采集方式参考 [benkeks/icore-ranks](https://github.com/benkeks/icore-ranks)。
+OnlyCCFA 使用可审计、可回滚的数据文件维护标签来源，包括 CCF、CORE/ICORE、JCR 2025、中科院升级版 2025、TH-CPL、中文核心、SWJTU 目录和公开作者身份名单。作者身份信号优先使用 CAS/CAE/NSFC 等官方或可复核来源，第三方页面只作为 seed。JCR 更新参考 [hitfyd/ShowJCR](https://github.com/hitfyd/ShowJCR)，CORE/ICORE 采集方式参考 [benkeks/icore-ranks](https://github.com/benkeks/icore-ranks)。
 
 所有标签都是检索辅助信息，不替代学校、学院、基金或期刊会议官方标准。
 

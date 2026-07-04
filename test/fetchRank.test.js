@@ -44,6 +44,9 @@ const { fetchFromCache, fetchFromDblpApi } = vm.runInNewContext(
   context,
 );
 
+const tpamiNode = {};
+const tpamiEntry = {};
+const venueNames = [];
 const site = {
   rankSpanList: [
     function (dblpUrl, type) {
@@ -55,6 +58,14 @@ const site = {
   appendRankBadge(_node, badge) {
     appended.push(badge);
   },
+  getEntryFromRankAnchor(node) {
+    assert.strictEqual(node, tpamiNode);
+    return tpamiEntry;
+  },
+  setVenueName(entry, venueName) {
+    assert.strictEqual(entry, tpamiEntry);
+    venueNames.push(venueName);
+  },
 };
 
 fetchFromCache(
@@ -63,7 +74,7 @@ fetchFromCache(
     resp: { hit: [{ info: {} }] },
     flag: true,
   },
-  {},
+  tpamiNode,
   "A TPAMI paper",
   "Author",
   "2025",
@@ -71,6 +82,9 @@ fetchFromCache(
 );
 
 assert.ok(appended.some((badge) => badge.type === "ccf-rank"));
+assert.deepStrictEqual(venueNames, [
+  "IEEE Transactions on Pattern Analysis and Machine Intelligence",
+]);
 assert.ok(
   appended.some(
     (badge) =>
@@ -146,11 +160,18 @@ const integrationSource = [
   "js/rankSources.js",
   "js/fetchRank.js",
 ].map((path) => fs.readFileSync(path, "utf8"));
+const integrationFilter = {
+  count: 0,
+  applyFilter() {
+    this.count += 1;
+  },
+};
 const integrationContext = {
   console,
   apiCache: {
     setItem() {},
   },
+  filter: integrationFilter,
   $(tagName) {
     return {
       tagName,
@@ -181,6 +202,8 @@ const integration = vm.runInNewContext(
   integrationContext,
 );
 const acmMmAppended = [];
+const acmMmEntry = {};
+const acmMmVenueNames = [];
 integration.fetchFromCache(
   {
     resp: {
@@ -207,8 +230,19 @@ integration.fetchFromCache(
     appendRankBadge(_node, badge) {
       acmMmAppended.push(badge);
     },
+    getEntryFromRankAnchor() {
+      return acmMmEntry;
+    },
+    setVenueName(entry, venueName) {
+      assert.strictEqual(entry, acmMmEntry);
+      acmMmVenueNames.push(venueName);
+    },
   },
 );
+assert.deepStrictEqual(acmMmVenueNames, [
+  "ACM International Conference on Multimedia",
+]);
+assert.strictEqual(integrationFilter.count, 1);
 assert.ok(
   acmMmAppended.some((badge) => badge.attrs?.["data-rank-value"] === "CCF A"),
 );

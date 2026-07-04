@@ -510,28 +510,20 @@ const filter = {
           : [];
     const selectedSignals = state.selectedSignals || [];
     const signalMode = state.signalMode || "any";
-    const rankFilterActive =
-      selectedRanks.length > 0 && !selectedRanks.includes("ALL");
+    const selectedRankSignals = selectedRanks
+      .filter((rank) => rank !== "ALL")
+      .map((rank) => `ccf${rank}`);
+    const selectedFilterSignals = selectedRankSignals.concat(selectedSignals);
 
-    if (!rankFilterActive) {
-      return this.matchesSelectedSignals(entry, selectedSignals, signalMode);
-    }
-
-    const ranks = this.getEntryRanks(entry);
-    if (ranks.length === 0) {
-      if (siteConfig.strictRankFilter) {
-        return false;
-      }
-
-      return (
-        !siteConfig.hideUnranked &&
-        this.matchesSelectedSignals(entry, selectedSignals, signalMode)
-      );
+    if (this.matchesSelectedSignals(entry, selectedFilterSignals, signalMode)) {
+      return true;
     }
 
     return (
-      ranks.some((rank) => selectedRanks.includes(rank)) &&
-      this.matchesSelectedSignals(entry, selectedSignals, signalMode)
+      selectedRankSignals.length > 0 &&
+      this.getEntrySignalIds(entry).length === 0 &&
+      !siteConfig.strictRankFilter &&
+      !siteConfig.hideUnranked
     );
   },
 

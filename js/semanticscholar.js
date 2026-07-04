@@ -388,9 +388,8 @@ semanticscholar.appendAuthorBadges = function (entry) {
     return false;
   }
 
-  const tags = authorSources.resolveAuthors(
-    semanticscholar.extractAuthors(entry),
-  );
+  const resultData = semanticscholar.getResultData(entry);
+  const tags = authorSources.resolveAuthors(resultData.authors, resultData);
   entry.dataset.onlyccfaAuthorRanked = "true";
   if (tags.length === 0) {
     return false;

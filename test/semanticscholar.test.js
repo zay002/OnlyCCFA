@@ -14,6 +14,7 @@ const context = {
     callback();
   },
 };
+let lastSemanticAuthorContext = null;
 context.$ = function (node) {
   return {
     append(child) {
@@ -65,6 +66,15 @@ context.ccf = {
   },
 };
 context.fetchRank = function () {};
+context.authorSources = {
+  resolveAuthors(_authors, authorContext) {
+    lastSemanticAuthorContext = authorContext;
+    return [{ source: "casAcademician", matchedName: "测试作者" }];
+  },
+  getTagSpan(tag) {
+    return { className: "rank-source", textContent: tag.source };
+  },
+};
 
 const { scholar, semanticscholar } = vm.runInNewContext(
   `${source.join("\n")}; ({ scholar, semanticscholar });`,
@@ -133,6 +143,16 @@ function fakeNode(textContent, href = "") {
 }
 
 function fakeSemanticEntry() {
+  const entry = {
+    dataset: {},
+    rankHost: null,
+  };
+  const titleHost = {
+    insertAdjacentElement(position, node) {
+      assert.strictEqual(position, "afterend");
+      entry.rankHost = node;
+    },
+  };
   const nodes = {
     title: fakeNode(
       "Segment Anything",
@@ -143,37 +163,49 @@ function fakeSemanticEntry() {
     snippet: fakeNode("A foundation model for promptable segmentation."),
     pdf: fakeNode("PDF", "https://arxiv.org/pdf/2304.02643.pdf"),
   };
+  nodes.title.closest = function (selector) {
+    return selector === "h2,h3" ? titleHost : null;
+  };
   const authors = [fakeNode("Alexander Kirillov"), fakeNode("Eric Mintun")];
 
-  return {
-    querySelector(selector) {
-      if (/venue/i.test(selector)) {
-        return nodes.venue;
-      }
-      if (/year/i.test(selector)) {
-        return nodes.year;
-      }
-      if (/title/i.test(selector) && /a/.test(selector)) {
-        return nodes.title;
-      }
-      if (/abstract|snippet|tldr/i.test(selector)) {
-        return nodes.snippet;
-      }
-      if (/pdf/i.test(selector)) {
-        return nodes.pdf;
-      }
+  entry.querySelector = function (selector) {
+    if (selector === ".onlyccfa-rank-badges") {
+      return entry.rankHost;
+    }
+    if (selector === ".onlyccfa-result-actions") {
       return null;
-    },
-    querySelectorAll(selector) {
-      if (/author/i.test(selector)) {
-        return authors;
-      }
-      if (selector === "a") {
-        return [nodes.title, nodes.pdf];
-      }
-      return [];
-    },
+    }
+    if (selector === ".onlyccfa-venue-name") {
+      return null;
+    }
+    if (/venue/i.test(selector)) {
+      return nodes.venue;
+    }
+    if (/year/i.test(selector)) {
+      return nodes.year;
+    }
+    if (/title/i.test(selector) && /a/.test(selector)) {
+      return nodes.title;
+    }
+    if (/abstract|snippet|tldr/i.test(selector)) {
+      return nodes.snippet;
+    }
+    if (/pdf/i.test(selector)) {
+      return nodes.pdf;
+    }
+    return null;
   };
+  entry.querySelectorAll = function (selector) {
+    if (/author/i.test(selector)) {
+      return authors;
+    }
+    if (selector === "a") {
+      return [nodes.title, nodes.pdf];
+    }
+    return [];
+  };
+
+  return entry;
 }
 
 function fakeClassList() {
@@ -309,6 +341,14 @@ assert.deepStrictEqual(
   ),
   ["Workshop (not main)", "CCF A"],
 );
+
+const semanticAuthorEntry = fakeSemanticEntry();
+semanticAuthorEntry.dataset = {};
+semanticAuthorEntry.rankHost = null;
+semanticscholar.appendAuthorBadges(semanticAuthorEntry);
+assert.strictEqual(lastSemanticAuthorContext.title, "Segment Anything");
+assert.strictEqual(lastSemanticAuthorContext.venue, "ICCV");
+assert.ok(lastSemanticAuthorContext.authors.includes("Alexander Kirillov"));
 
 const semanticConflictEntry = fakeRankedSemanticEntry();
 semanticscholar.appendRankBadge(

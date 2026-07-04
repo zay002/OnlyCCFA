@@ -4,7 +4,7 @@
     "description": "Extension name."
   },
   "extDesc": {
-    "message": "筛选 Google 学术与 Semantic Scholar，导出可靠 BibTeX，减少冗余搜索结果。",
+    "message": "为学术搜索显示 CCF/JCR/CORE 与院士、杰青等中文科研身份信号，支持筛选、排序和 BibTeX。",
     "description": "Extension description."
   }
 }

@@ -1,8 +1,8 @@
 {
   "name": "onlyccfa",
-  "version": "0.7.4",
+  "version": "0.8.0",
   "private": true,
-  "description": "Chrome extension that filters Google Scholar and Semantic Scholar results, exports reliable BibTeX, and makes Zotero Connector respect filters.",
+  "description": "Chrome extension that labels academic search results with venue ranks, Chinese research identity signals, citation sorting, BibTeX export, and Zotero-friendly filters.",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -20,8 +20,9 @@
   },
   "scripts": {
     "prepare": "husky",
-    "format:check": "prettier --check README.md README_en.md PrivacyPolicy.md manifest.json package.json package-lock.json _locales/**/*.json css/filter.css css/style.css data/openRankSources.js data/coreRankSources.js data/authorRankSources.js data/swjtuRankSources.js data/thcplRankSources.js js/apiCache.js js/authorSources.js js/background.js js/bibtex.js js/ccf.js js/fetchRank.js js/filter.js js/i18n.js js/ieeexplore.js js/rankSources.js js/scholar.js js/semanticscholar.js scripts/benchmark-rank-matching.mjs scripts/check-release-health.js scripts/generate-core-rank-sources.mjs scripts/package-release.js scripts/track-cws-users.mjs test/**/*.js .github/workflows/*.yaml",
+    "format:check": "prettier --check README.md README_en.md PrivacyPolicy.md manifest.json package.json package-lock.json _locales/**/*.json css/filter.css css/style.css data/openRankSources.js data/coreRankSources.js data/authorRankSources.js data/swjtuRankSources.js data/thcplRankSources.js js/apiCache.js js/authorSources.js js/background.js js/bibtex.js js/ccf.js js/fetchRank.js js/filter.js js/i18n.js js/ieeexplore.js js/rankSources.js js/scholar.js js/semanticscholar.js scripts/benchmark-rank-matching.mjs scripts/check-release-health.js scripts/generate-author-rank-sources.mjs scripts/generate-core-rank-sources.mjs scripts/package-release.js scripts/track-cws-users.mjs test/**/*.js .github/workflows/*.yaml",
     "benchmark:rank": "node scripts/benchmark-rank-matching.mjs",
+    "data:authors": "node scripts/generate-author-rank-sources.mjs",
     "stats:cws": "node scripts/track-cws-users.mjs",
     "package": "node scripts/package-release.js",
     "check:release": "node scripts/check-release-health.js",

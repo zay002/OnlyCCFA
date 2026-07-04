@@ -89,6 +89,13 @@ const richEntry = entry([
     }),
   },
 ]);
+const ccfAOnlyEntry = entry([{ kind: "ccf", node: node("CCF A") }]);
+const eiOnlyEntry = entry([
+  {
+    kind: "source",
+    node: node("EI", { dataset: { rankSource: "ei", rankValue: "" } }),
+  },
+]);
 
 assert.strictEqual(
   JSON.stringify(filter.getEntryRanks(richEntry)),
@@ -115,11 +122,50 @@ assert.strictEqual(
   true,
 );
 assert.strictEqual(
+  filter.shouldShowEntry(ccfAOnlyEntry, {
+    currentFilter: "A",
+    siteConfig: config,
+    selectedRanks: ["A"],
+    selectedSignals: ["ei"],
+    signalMode: "any",
+  }),
+  true,
+);
+assert.strictEqual(
+  filter.shouldShowEntry(eiOnlyEntry, {
+    currentFilter: "A",
+    siteConfig: config,
+    selectedRanks: ["A"],
+    selectedSignals: ["ei"],
+    signalMode: "any",
+  }),
+  true,
+);
+assert.strictEqual(
+  filter.shouldShowEntry(ccfAOnlyEntry, {
+    currentFilter: "A",
+    siteConfig: config,
+    selectedRanks: ["A"],
+    selectedSignals: ["ei"],
+    signalMode: "all",
+  }),
+  false,
+);
+assert.strictEqual(
   filter.shouldShowEntry(richEntry, {
     currentFilter: "A",
     siteConfig: config,
     selectedSignals: ["casTop"],
     signalMode: "any",
+  }),
+  true,
+);
+assert.strictEqual(
+  filter.shouldShowEntry(richEntry, {
+    currentFilter: "A",
+    siteConfig: config,
+    selectedSignals: ["casTop"],
+    signalMode: "all",
   }),
   false,
 );

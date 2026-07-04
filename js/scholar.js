@@ -2035,9 +2035,8 @@ scholar.appendAuthorBadges = function (entry) {
     return false;
   }
 
-  const tags = authorSources.resolveAuthors(
-    scholar.getResultData(entry).authors,
-  );
+  const resultData = scholar.getResultData(entry);
+  const tags = authorSources.resolveAuthors(resultData.authors, resultData);
   entry.dataset.onlyccfaAuthorRanked = "true";
   if (tags.length === 0) {
     return false;
@@ -2119,9 +2118,13 @@ scholar.appendResolvedSearchResultVenueRank = async function (
       return false;
     }
     scholar.setVenueName(entry, resolvedVenue);
-    return scholar.appendVenueRank(node, resolvedVenue, entry, {
+    const matched = scholar.appendVenueRank(node, resolvedVenue, entry, {
       url: data.url,
     });
+    if (matched && typeof filter !== "undefined" && filter.applyFilter) {
+      filter.applyFilter();
+    }
+    return matched;
   } catch (error) {
     if (typeof fallback === "function") {
       fallback();

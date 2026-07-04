@@ -4,7 +4,7 @@
     "description": "Extension name."
   },
   "extDesc": {
-    "message": "Filters Google Scholar and Semantic Scholar, exports reliable BibTeX, and keeps noisy results out.",
+    "message": "Adds venue ranks and Chinese research identity signals to academic search, with filters, citation sorting and BibTeX export.",
     "description": "Extension description."
   }
 }
