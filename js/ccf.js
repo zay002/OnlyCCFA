@@ -94,7 +94,12 @@ ccf.findAbbrInVenue = function (normalizedVenue) {
     const pattern = new RegExp(
       `(^|[^A-Z0-9-])${candidate.escaped}(?=$|[^A-Z0-9-]|-$|-(?:19|20)?\\d{2}\\b)`,
     );
-    if (candidate.normalized.length > 1 && pattern.test(searchableVenue)) {
+    if (
+      candidate.normalized.length > 1 &&
+      (candidate.normalized.length > 2 ||
+        normalizedVenue === candidate.normalized) &&
+      pattern.test(searchableVenue)
+    ) {
       return candidate.abbr;
     }
   }

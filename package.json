@@ -1,6 +1,6 @@
 {
   "name": "onlyccfa",
-  "version": "0.8.0.1",
+  "version": "0.8.1",
   "private": true,
   "description": "Chrome extension that labels academic search results with venue ranks, Chinese research identity signals, citation sorting, BibTeX export, and Zotero-friendly filters.",
   "license": "MIT",
