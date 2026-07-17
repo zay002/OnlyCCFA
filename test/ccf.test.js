@@ -30,6 +30,11 @@ assertVenueRank("Proceedings of the ACM SIGMOD International Conference", "A");
 assertVenueRank("Artificial Intelligence", "A");
 assertVenueRank("AI, 2024", "A");
 assertVenueRank("AAAI Conference on Artificial Intelligence", "A");
+assertVenueRank(
+  "Forty-third International Conference on Machine Learning",
+  "A",
+);
+assertVenueRank("Forty-third International Conference on Machine ...", "A");
 assertVenueRank("Engineering Applications of Artificial Intelligence", "C");
 assertVenueRank("Signal Processing", "C");
 assertVenueRank("MICCAI", "B");
@@ -99,6 +104,10 @@ assert.strictEqual(
 
 assert.strictEqual(
   ccf.resolveVenueText("New Paradigm in AI and Concurrent Engineering ..."),
+  null,
+);
+assert.strictEqual(
+  ccf.resolveVenueText("International Conference on ..."),
   null,
 );
 

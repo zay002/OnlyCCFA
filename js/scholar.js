@@ -2062,6 +2062,7 @@ scholar.appendVenueRank = function (node, venue, entry, context = {}) {
     }`,
   );
   const rankVenue = scholar.getRegularVenueForRank(venue);
+  let resolvedRankVenue = rankVenue;
 
   if (isWorkshop) {
     scholar.appendWorkshopBadge(node, entry);
@@ -2081,13 +2082,14 @@ scholar.appendVenueRank = function (node, venue, entry, context = {}) {
         typeof ccf.getVenueDisplayName === "function"
           ? ccf.getVenueDisplayName(venueMatch.refine, venueMatch.type, venue)
           : venueMatch.refine || venue;
+      resolvedRankVenue = displayName;
       scholar.setVenueName(entry, displayName);
       matched = true;
     }
   }
 
   if (typeof rankSources != "undefined" && rankSources.resolveVenueText) {
-    const tags = rankSources.resolveVenueText(rankVenue);
+    const tags = rankSources.resolveVenueText(resolvedRankVenue);
     if (tags.length > 0) {
       tags.forEach((tag) => {
         scholar.appendRankBadge(node, rankSources.getTagSpan(tag), entry);

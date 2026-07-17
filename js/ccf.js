@@ -35,6 +35,10 @@ ccf.normalizeVenueText = function (text) {
     .replace(/[^A-Z0-9+-]+/g, " ")
     .replace(/\b(19|20)\d{2}\b/g, " ")
     .replace(/\b\d+(ST|ND|RD|TH)\b/g, " ")
+    .replace(
+      /\b[A-Z]+-(?:FIRST|SECOND|THIRD|FOURTH|FIFTH|SIXTH|SEVENTH|EIGHTH|NINTH)\b/g,
+      " ",
+    )
     .replace(/\s+/g, " ")
     .trim();
 };
@@ -156,11 +160,20 @@ ccf.getFullNameIndex = function () {
   return ccf.fullNameIndexCache;
 };
 
-ccf.findFullNameInVenue = function (normalizedVenue) {
+ccf.findFullNameInVenue = function (normalizedVenue, isTruncated = false) {
   const index = ccf.getFullNameIndex();
   const exact = index.byNormalizedName.get(normalizedVenue);
   if (exact) {
     return exact;
+  }
+
+  if (isTruncated) {
+    const prefixMatches = index.candidates.filter((candidate) =>
+      candidate.normalized.startsWith(`${normalizedVenue} `),
+    );
+    if (prefixMatches.length === 1) {
+      return prefixMatches[0].fullName;
+    }
   }
 
   const venueTokens = new Set(ccf.getVenueTokens(normalizedVenue));
@@ -184,35 +197,37 @@ ccf.findFullNameInVenue = function (normalizedVenue) {
 
 ccf.resolveVenueText = function (venueText) {
   const normalizedVenue = ccf.normalizeVenueText(venueText);
+  const isTruncated = /…|\.\.\./.test(String(venueText || ""));
+  const cacheKey = `${normalizedVenue}|${isTruncated}`;
   if (normalizedVenue.length == 0) {
     return null;
   }
-  if (ccf.resolveCache.has(normalizedVenue)) {
-    return ccf.resolveCache.get(normalizedVenue);
+  if (ccf.resolveCache.has(cacheKey)) {
+    return ccf.resolveCache.get(cacheKey);
   }
 
   let alias = ccf.getVenueAlias(normalizedVenue);
   if (alias && ccf.abbrFull[alias]) {
     const match = { refine: alias, type: "abbr" };
-    ccf.resolveCache.set(normalizedVenue, match);
+    ccf.resolveCache.set(cacheKey, match);
     return match;
   }
 
   let abbr = ccf.findAbbrInVenue(normalizedVenue);
   if (abbr) {
     const match = { refine: abbr, type: "abbr" };
-    ccf.resolveCache.set(normalizedVenue, match);
+    ccf.resolveCache.set(cacheKey, match);
     return match;
   }
 
-  let fullName = ccf.findFullNameInVenue(normalizedVenue);
+  let fullName = ccf.findFullNameInVenue(normalizedVenue, isTruncated);
   if (fullName) {
     const match = { refine: fullName, type: "publication" };
-    ccf.resolveCache.set(normalizedVenue, match);
+    ccf.resolveCache.set(cacheKey, match);
     return match;
   }
 
-  ccf.resolveCache.set(normalizedVenue, null);
+  ccf.resolveCache.set(cacheKey, null);
   return null;
 };
 
