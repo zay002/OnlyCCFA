@@ -72,6 +72,11 @@ function rankTags(venue) {
     "A",
   ],
   ["ICCV full", "International Conference on Computer Vision", "A"],
+  [
+    "ICCV proceedings with pages",
+    "Proceedings of the IEEE International Conference on Computer Vision, 4405-4413",
+    "A",
+  ],
   ["ECCV full", "European Conference on Computer Vision", "B"],
   ["ACM MM DBLP venue short name", "ACM Multimedia", "A"],
   [
