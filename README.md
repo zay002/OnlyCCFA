@@ -1,3 +1,6 @@
+
+</think>
+
 <h1 align="center">
   <img src="./onlyccfa_logo.png" width="48" height="48" alt="OnlyCCFA logo" valign="middle">
   OnlyCCFA
@@ -47,7 +50,7 @@ OnlyCCFA 是一个科研检索浏览器扩展。它把 CCF、CORE/ICORE、JCR、
 
 [OnlyCCFA - Chrome Web Store](https://chromewebstore.google.com/detail/onlyccfa/cgbjdimlhdcjinagiacapnkmhpjkeabh)
 
-GitHub Release 通常更新更快。想提前测试新功能时，可以下载 release zip，在 `chrome://extensions` 开启开发者模式后用 `Load unpacked(加载未打包的扩展程序)` 加载。
+GitHub Releases 页面（[链接](https://github.com/zay002/OnlyCCFA/releases)）通常更新更快。想提前测试新功能时，可以下载 release zip，在 `chrome://extensions` 开启开发者模式后用 `Load unpacked(加载未打包的扩展程序)` 加载。
 
 ## 数据来源
 
