@@ -16,6 +16,7 @@ const filter = {
   isApplyingDomFilter: false,
   deepCountOptions: [20, 40, 60, 80, 100],
   signalOptions: [
+    { id: "preprint", zh: "预印本", en: "Preprint" },
     { id: "sci", zh: "SCI", en: "SCI" },
     { id: "jcrQ1", zh: "JCR Q1", en: "JCR Q1" },
     { id: "jcrQ2", zh: "JCR Q2", en: "JCR Q2" },
@@ -288,6 +289,25 @@ const filter = {
   setupDynamicContentHandler() {
     const target = document.querySelector(this.siteConfig.triggerSelector);
 
+    if (
+      this.siteConfig.observeMutations &&
+      typeof MutationObserver != "undefined" &&
+      target
+    ) {
+      const reapplyFilter = this.debounce(() => {
+        if (this.isApplyingDomFilter) {
+          return;
+        }
+        this.applyFilter();
+      }, 50);
+      const observer = new MutationObserver(reapplyFilter);
+      observer.observe(target, { childList: true, subtree: true });
+    }
+
+    if (this.siteConfig.site === "scholarCitations") {
+      return;
+    }
+
     if (typeof IntersectionObserver != "undefined" && target) {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
@@ -306,21 +326,6 @@ const filter = {
         this.applyFilter();
       }, 200),
     );
-
-    if (
-      this.siteConfig.observeMutations &&
-      typeof MutationObserver != "undefined" &&
-      target
-    ) {
-      const reapplyFilter = this.debounce(() => {
-        if (this.isApplyingDomFilter) {
-          return;
-        }
-        this.applyFilter();
-      }, 50);
-      const observer = new MutationObserver(reapplyFilter);
-      observer.observe(target, { childList: true, subtree: true });
-    }
   },
 
   applyFilter() {
@@ -329,9 +334,10 @@ const filter = {
     }
 
     const entries = this.getFilterEntries();
+    const state = this.getActiveFilterState();
     const visibility = entries.map((entry) => ({
       entry,
-      shouldShow: this.shouldShowEntry(entry, this.getActiveFilterState()),
+      shouldShow: this.shouldShowEntry(entry, state),
     }));
 
     if (this.siteConfig.site === "scholar") {
@@ -546,6 +552,9 @@ const filter = {
     this.getEntryRanks(entry).forEach((rank) => {
       signals.add(`ccf${rank}`);
     });
+    if (entry.querySelector?.(".ccf-rank.ccf-p")) {
+      signals.add("preprint");
+    }
 
     Array.from(entry.querySelectorAll(".rank-source")).forEach((node) => {
       this.getRankSourceSignalIds(node).forEach((signal) => {
@@ -619,6 +628,9 @@ const filter = {
     const className =
       typeof badge.className === "string" ? badge.className : "";
     if (className.split(/\s+/).includes("ccf-rank")) {
+      if (className.split(/\s+/).includes("ccf-p")) {
+        return ["preprint"];
+      }
       return this.getEntryRanks({
         querySelectorAll: () => [badge],
       }).map((rank) => `ccf${rank}`);

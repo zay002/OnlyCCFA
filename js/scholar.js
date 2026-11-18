@@ -67,8 +67,8 @@ scholar.run = function () {
     scholar.appendRank();
     scholar.observeSearchResults();
   } else if (url == "/citations") {
-    scholar.appendRanks(); // 页面加载时先处理一次作者主页上的条目
-    scholar.observeCitations(); // 然后设置观察者以处理动态加载的条目
+    scholar.appendRanks(scholar.getCitationEntries());
+    scholar.observeCitations();
   }
 };
 
@@ -556,6 +556,24 @@ scholar.buildCrossrefBibtexUrl = function (doi) {
   return `https://api.crossref.org/works/${encodeURIComponent(
     doi,
   )}/transform/application/x-bibtex`;
+};
+
+scholar.getArxivPreprintBadge = function (entry, venue, url, metadata = "") {
+  const arxivUrl =
+    /^https?:\/\/(?:[a-z0-9-]+\.)?arxiv\.org\/(?:abs|pdf|html)\//i;
+  if (
+    entry.querySelector?.(".ccf-rank.ccf-p") ||
+    (!/^arxiv(?:\s+(?:preprint|e-?prints?)\b|\s*:|\s*$)/i.test(venue) &&
+      !/ - arxiv\.org\s*$/i.test(metadata) &&
+      !arxivUrl.test(url) &&
+      !Array.from(entry.querySelectorAll?.('a[href*="arxiv.org/"]') || []).some(
+        (link) => arxivUrl.test(link.href),
+      ))
+  ) {
+    return null;
+  }
+
+  return ccf.getRankSpan("/journals/corr/corr", "url");
 };
 
 scholar.buildArxivApiUrl = function (arxivId) {
@@ -1835,7 +1853,7 @@ scholar.getCcfRankPriority = function (badge) {
   const value = scholar.getBadgeRankValue(badge);
   const text = String(value || scholar.getBadgeNode(badge)?.textContent || "");
   const rank = (text.match(/\bCCF\s+([ABC])\b/i) || [])[1]?.toUpperCase();
-  return { A: 300, B: 200, C: 100 }[rank] || 0;
+  return { A: 300, B: 200, C: 100 }[rank] || (value === "Preprint" ? 1 : 0);
 };
 
 scholar.removeBadgeNode = function (node) {
@@ -1885,7 +1903,15 @@ scholar.reconcileCcfRankBadge = function (host, badge) {
   }
 
   const incomingPriority = scholar.getCcfRankPriority(badge);
-  const existingBadges = Array.from(host.querySelectorAll(".ccf-rank"));
+  const allBadges = Array.from(host.querySelectorAll(".ccf-rank"));
+  if (scholar.getBadgeRankValue(badge) === "Preprint") {
+    return allBadges.some(
+      (existing) => scholar.getBadgeRankValue(existing) === "Preprint",
+    );
+  }
+  const existingBadges = allBadges.filter(
+    (existing) => scholar.getBadgeRankValue(existing) !== "Preprint",
+  );
   const strongestExisting = existingBadges.reduce(
     (best, node) => Math.max(best, scholar.getCcfRankPriority(node)),
     0,
@@ -2162,6 +2188,15 @@ scholar.appendRank = function () {
       let title = node.text();
       let metadata = $(this).find("div.gs_a").text();
       let venue = scholar.extractVenue(metadata, node[0]?.href || "");
+      const preprintBadge = scholar.getArxivPreprintBadge(
+        this.closest?.("#gs_res_ccl_mid > div") || this,
+        venue,
+        node[0]?.href,
+        metadata,
+      );
+      if (preprintBadge) {
+        scholar.appendRankBadge(node, preprintBadge, this);
+      }
       $(this).addClass("ccf-ranked");
       if (
         scholar.appendVenueRank(node, venue, this, {
@@ -2238,80 +2273,97 @@ if (typeof document !== "undefined") {
 }
 
 scholar.observeCitations = function () {
-  console.debug("Start citations ...");
-  const observer = new MutationObserver((mutationsList, observer) => {
-    for (const mutation of mutationsList) {
-      if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
-        // 检查是否有新的文献项被添加到列表
-        scholar.appendRanks();
-      }
+  const tableBody = document.getElementById("gsc_a_b");
+  if (!tableBody) {
+    return;
+  }
+
+  const observer = new MutationObserver((mutations) => {
+    const addedRows = mutations.flatMap(({ addedNodes }) =>
+      Array.from(addedNodes).filter((node) => node.matches?.("tr.gsc_a_tr")),
+    );
+    if (addedRows.length > 0) {
+      scholar.appendRanks(addedRows);
     }
   });
+  observer.observe(tableBody, { childList: true });
+};
 
-  // 开始观察文献列表的变化
-  const targetNode = document.getElementById("gsc_a_b");
-  if (targetNode) {
-    observer.observe(targetNode, { childList: true, subtree: true });
+scholar.rankedCitationRows = new WeakSet();
+
+scholar.appendRanks = async function (entries) {
+  for (const [index, entry] of entries.entries()) {
+    if (index % 4 === 0) {
+      await scholar.wait(0);
+    }
+    if (entry.isConnected && !scholar.rankedCitationRows.has(entry)) {
+      scholar.appendCitationRank(entry, index);
+    }
   }
 };
 
-scholar.appendRanks = function () {
-  let elements = $("tr.gsc_a_tr");
-  elements.each(function (index) {
-    const entry = this;
-    scholar.appendResultActions(entry);
-    scholar.appendAuthorBadges(entry);
+scholar.appendCitationRank = function (entry, index) {
+  const node = $(entry).find("td.gsc_a_t > a.gsc_a_at, td.gsc_a_t > a").first();
+  if (!node.length) {
+    return;
+  }
+  scholar.rankedCitationRows.add(entry);
+  scholar.appendResultActions(entry);
+  scholar.appendAuthorBadges(entry);
 
-    const hasExistingRankBadges =
-      $(entry).hasClass("ccf-ranked") && scholar.hasResultRankBadges(entry);
+  const data = scholar.getResultData(entry);
+  const preprintBadge = scholar.getArxivPreprintBadge(
+    entry,
+    data.venue,
+    data.url,
+  );
+  if (preprintBadge) {
+    scholar.appendRankBadge(node, preprintBadge, entry);
+  }
+  const fetchFallbackRank = function () {
+    const author = (data.authors[0] || "").split(/\s+/).pop() || "";
+    setTimeout(function () {
+      fetchRank(node, data.title, author, data.year, scholar);
+    }, 100 * index);
+  };
 
-    let node = $(entry).find("td.gsc_a_t > a.gsc_a_at, td.gsc_a_t > a").first();
-    if (!node.length) {
-      return;
-    }
+  $(entry).addClass("ccf-ranked");
+  if (
+    scholar.appendVenueRank(node, data.venue, entry, {
+      url: data.url,
+    })
+  ) {
+    return;
+  }
+  if (
+    scholar.shouldFetchCitationDetailVenue(data.venue) &&
+    scholar.getCitationDetailUrl(entry)
+  ) {
+    scholar.fetchCitationDetailVenue(entry).then(function (detailVenue) {
+      if (!entry.isConnected) {
+        return;
+      }
+      const preprintBadge = scholar.getArxivPreprintBadge(
+        entry,
+        detailVenue,
+        data.url,
+      );
+      if (preprintBadge) {
+        scholar.appendRankBadge(node, preprintBadge, entry);
+      }
+      if (
+        detailVenue &&
+        scholar.appendVenueRank(node, detailVenue, entry, {
+          url: data.url,
+          workshopText: data.venue,
+        })
+      ) {
+        return;
+      }
+      fetchFallbackRank();
+    });
+    return;
+  }
 
-    const data = scholar.getResultData(entry);
-    const fetchFallbackRank = function () {
-      const author = (data.authors[0] || "").split(/\s+/).pop() || "";
-      setTimeout(function () {
-        fetchRank(node, data.title, author, data.year, scholar);
-      }, 100 * index);
-    };
-
-    $(entry).addClass("ccf-ranked");
-    if (
-      scholar.appendVenueRank(node, data.venue, entry, {
-        url: data.url,
-      })
-    ) {
-      return;
-    }
-    if (hasExistingRankBadges) {
-      return;
-    }
-
-    if (
-      scholar.shouldFetchCitationDetailVenue(data.venue) &&
-      scholar.getCitationDetailUrl(entry)
-    ) {
-      scholar.fetchCitationDetailVenue(entry).then(function (detailVenue) {
-        if (
-          detailVenue &&
-          scholar.appendVenueRank(node, detailVenue, entry, {
-            url: data.url,
-            workshopText: data.venue,
-          })
-        ) {
-          if (typeof filter !== "undefined") {
-            filter.applyFilter();
-          }
-          return;
-        }
-        fetchFallbackRank();
-      });
-      return;
-    }
-
-    fetchFallbackRank();
-  });
+  fetchFallbackRank();
 };

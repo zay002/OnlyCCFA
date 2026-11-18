@@ -84,6 +84,11 @@ const context = {
     },
   },
   ccf: {
+    getRankSpan(refine, type) {
+      assert.strictEqual(refine, "/journals/corr/corr");
+      assert.strictEqual(type, "url");
+      return { className: "ccf-rank ccf-p", textContent: "Preprint" };
+    },
     resolveVenueText(venue) {
       return /Computer Vision and Pattern Recognition/.test(venue)
         ? { refine: "CVPR", type: "abbr" }
@@ -974,6 +979,32 @@ assert.strictEqual(
 assert.strictEqual(citationData.year, "2010");
 assert.strictEqual(citationData.venue, "Journal of Machine Learning Research");
 assert.strictEqual(
+  scholar.getArxivPreprintBadge(
+    citationEntry,
+    "arXiv preprint arXiv:2401.12345",
+    "",
+  ).className,
+  "ccf-rank ccf-p",
+);
+assert.strictEqual(
+  scholar.getArxivPreprintBadge(
+    {
+      querySelectorAll: () => [{ href: "https://arxiv.org/html/2401.12345" }],
+    },
+    citationData.venue,
+    citationData.url,
+  ).textContent,
+  "Preprint",
+);
+assert.strictEqual(
+  scholar.getArxivPreprintBadge(
+    citationEntry,
+    citationData.venue,
+    "https://example.org/arxiv.org/abs/2401.12345",
+  ),
+  null,
+);
+assert.strictEqual(
   citationData.metadata,
   "A Author, B Researcher - Journal of Machine Learning Research 11, 2079-2107, 2010",
 );
@@ -1038,6 +1069,39 @@ assert.strictEqual(
 );
 
 async function runAsyncTests() {
+  const table = {};
+  const newRow = {
+    isConnected: true,
+    matches: (selector) => selector === "tr.gsc_a_tr",
+  };
+  const originalAppendRanks = scholar.appendRanks;
+  const originalAppendCitationRank = scholar.appendCitationRank;
+  const processedRows = [];
+  let pendingRows;
+  fakeDocument.getElementById = (id) => (id === "gsc_a_b" ? table : null);
+  scholar.appendCitationRank = (row) => {
+    processedRows.push(row);
+    scholar.rankedCitationRows.add(row);
+  };
+  scholar.appendRanks = (rows) => {
+    pendingRows = originalAppendRanks(rows);
+  };
+  scholar.observeCitations();
+  assert.strictEqual(observedSearchResults.target, table);
+  assert.strictEqual(observedSearchResults.config.subtree, undefined);
+  observedSearchResults.callback([{ addedNodes: [{}] }]);
+  assert.strictEqual(pendingRows, undefined);
+  observedSearchResults.callback([
+    { addedNodes: [newRow, {}] },
+    { addedNodes: [newRow] },
+  ]);
+  assert.deepStrictEqual(processedRows, []);
+  await pendingRows;
+  assert.deepStrictEqual(processedRows, [newRow]);
+  delete fakeDocument.getElementById;
+  scholar.appendRanks = originalAppendRanks;
+  scholar.appendCitationRank = originalAppendCitationRank;
+
   let running = 0;
   let maxRunning = 0;
   const result = await scholar.mapWithConcurrency(

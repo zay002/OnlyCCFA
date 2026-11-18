@@ -265,7 +265,7 @@ semanticscholar.getCcfRankPriority = function (badge) {
     value || semanticscholar.getBadgeNode(badge)?.textContent || "",
   );
   const rank = (text.match(/\bCCF\s+([ABC])\b/i) || [])[1]?.toUpperCase();
-  return { A: 300, B: 200, C: 100 }[rank] || 0;
+  return { A: 300, B: 200, C: 100 }[rank] || (value === "Preprint" ? 1 : 0);
 };
 
 semanticscholar.removeBadgeNode = function (node) {
@@ -292,7 +292,15 @@ semanticscholar.shouldSkipCcfRankBadge = function (host, badge) {
   }
 
   const incomingPriority = semanticscholar.getCcfRankPriority(badge);
-  const existingBadges = Array.from(host.querySelectorAll(".ccf-rank"));
+  const allBadges = Array.from(host.querySelectorAll(".ccf-rank"));
+  if (semanticscholar.getBadgeRankValue(badge) === "Preprint") {
+    return allBadges.some(
+      (existing) => semanticscholar.getBadgeRankValue(existing) === "Preprint",
+    );
+  }
+  const existingBadges = allBadges.filter(
+    (existing) => semanticscholar.getBadgeRankValue(existing) !== "Preprint",
+  );
   const strongestExisting = existingBadges.reduce(
     (best, node) => Math.max(best, semanticscholar.getCcfRankPriority(node)),
     0,
@@ -461,23 +469,27 @@ semanticscholar.appendRanks = function () {
     semanticscholar.appendResultActions(entry);
     semanticscholar.appendAuthorBadges(entry);
 
-    if (
-      entry.classList.contains("ccf-ranked") &&
-      entry.dataset.onlyccfaVenueText ===
-        semanticscholar.normalizeVenueText(
-          entry.querySelector(semanticscholar.venueSelector)?.textContent || "",
-        )
-    ) {
-      return;
-    }
-
     const titleLink = entry.querySelector(semanticscholar.titleSelector);
     const venueNode = entry.querySelector(semanticscholar.venueSelector);
     const venue = semanticscholar.normalizeVenueText(
       venueNode?.textContent || "",
     );
-
-    if (!venue) {
+    const preprintBadge = scholar.getArxivPreprintBadge(
+      entry,
+      venue,
+      titleLink?.href,
+    );
+    if (preprintBadge) {
+      semanticscholar.appendRankBadge(
+        titleLink || venueNode,
+        preprintBadge,
+        entry,
+      );
+    }
+    if (
+      entry.classList.contains("ccf-ranked") &&
+      entry.dataset.onlyccfaVenueText === venue
+    ) {
       return;
     }
 
@@ -487,7 +499,11 @@ semanticscholar.appendRanks = function () {
       return;
     }
 
-    if (!titleLink || entry.dataset.onlyccfaDblpLookupQueued === "true") {
+    if (
+      !venue ||
+      !titleLink ||
+      entry.dataset.onlyccfaDblpLookupQueued === "true"
+    ) {
       return;
     }
 

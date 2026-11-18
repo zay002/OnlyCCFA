@@ -119,7 +119,11 @@ function setDblpVenueName(node, refine, type, site) {
 }
 
 function applyFilterAfterRankUpdate() {
-  if (typeof filter != "undefined" && typeof filter.applyFilter == "function") {
+  if (
+    typeof filter != "undefined" &&
+    filter.siteConfig?.site !== "scholarCitations" &&
+    typeof filter.applyFilter == "function"
+  ) {
     filter.applyFilter();
   }
 }

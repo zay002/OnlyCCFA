@@ -24,6 +24,7 @@ const filter = vm.runInNewContext(`${i18nSource}; ${source}; filter;`, {
 function node(text, attrs = {}) {
   return {
     textContent: text,
+    className: (attrs.classes || []).join(" "),
     dataset: attrs.dataset || {},
     classList: {
       contains(className) {
@@ -36,6 +37,14 @@ function node(text, attrs = {}) {
 function entry(nodes) {
   return {
     style: { display: "" },
+    querySelector(selector) {
+      if (selector === ".ccf-rank.ccf-p") {
+        return this.querySelectorAll(".ccf-rank").find((badge) =>
+          badge.classList.contains("ccf-p"),
+        );
+      }
+      return null;
+    },
     querySelectorAll(selector) {
       if (selector === ".ccf-rank") {
         return nodes
@@ -112,6 +121,35 @@ assert.ok(
 assert.ok(filter.getEntrySignalIds(richEntry).includes("casAcademician"));
 
 const config = filter.getSiteConfig("scholar.google.com", "/scholar");
+const preprintBadge = node("PreprintarXiv: Preprint", {
+  classes: ["ccf-rank", "ccf-p"],
+  dataset: { rankSource: "ccf", rankValue: "Preprint" },
+});
+const preprintEntry = entry([
+  { kind: "ccf", node: node("CCF A") },
+  { kind: "ccf", node: preprintBadge },
+]);
+assert.deepStrictEqual(Array.from(filter.getBadgeSignalIds(preprintBadge)), [
+  "preprint",
+]);
+const preprintAndCcf = {
+  currentFilter: "A",
+  siteConfig: config,
+  selectedSignals: ["preprint"],
+  signalMode: "all",
+};
+assert.strictEqual(filter.shouldShowEntry(preprintEntry, preprintAndCcf), true);
+assert.strictEqual(
+  filter.shouldShowEntry(ccfAOnlyEntry, preprintAndCcf),
+  false,
+);
+assert.strictEqual(
+  filter.shouldShowEntry(ccfAOnlyEntry, {
+    ...preprintAndCcf,
+    signalMode: "any",
+  }),
+  true,
+);
 assert.strictEqual(
   filter.shouldShowEntry(richEntry, {
     currentFilter: "A",
